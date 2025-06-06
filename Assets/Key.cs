@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Key : MonoBehaviour
 {
     public string label = "A"; // The text to display
-    private float depth = 0.0f;
-
-    public float Depth { get => depth; set => depth = Math.Min(Math.Max(value, -1.0f), 1.0f); }
+    public Material keyMaterial;
+    public float alpha = 1.0f;
 
     void Start()
     {
@@ -30,15 +26,21 @@ public class Key : MonoBehaviour
         textMesh.alignment = TextAlignment.Center;
         textMesh.color = Color.white;
 
-        Material material = GetComponent<Renderer>().material;
-        material.SetFloat("_Mode", 3); // Set rendering mode to Transparent
-        material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        material.SetInt("_ZWrite", 0);
-        material.DisableKeyword("_ALPHATEST_ON");
-        material.EnableKeyword("_ALPHABLEND_ON");
-        material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-        material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-        material.color = (Color.gray * 0.3f).WithAlpha(1.0f - Math.Abs(Depth) * 0.8f);
+        keyMaterial = GetComponent<Renderer>().material;
+        keyMaterial.SetFloat("_Mode", 3); // Set rendering mode to Transparent
+        keyMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        keyMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        keyMaterial.SetInt("_ZWrite", 0);
+        keyMaterial.DisableKeyword("_ALPHATEST_ON");
+        keyMaterial.EnableKeyword("_ALPHABLEND_ON");
+        keyMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        keyMaterial.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+
+        keyMaterial.color = new Color(0.15f, 0.15f, 0.15f, alpha);
+    }
+
+    void Update()
+    {
+        keyMaterial.color = new Color(0.15f, 0.15f, 0.15f, alpha);
     }
 }

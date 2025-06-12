@@ -3,14 +3,21 @@ using UnityEngine;
 
 public class KeyboardContext : MonoBehaviour
 {
+    private const float INACTIVE_NEXT_DEPTH = -2.0f;
+    private const float NEXT_DEPTH = -0.5f;
+    private const float CURR_DEPTH = 0.0f;
+    private const float PREV_DEPTH = 1.0f;
+    private const float INACTIVE_PREV_DEPTH = 10.0f;
+    private const float DEPTH_MOV_TIME_SEC = 0.1f;
+    private static readonly float[] DEPTHS = { INACTIVE_NEXT_DEPTH, NEXT_DEPTH, CURR_DEPTH, PREV_DEPTH, INACTIVE_PREV_DEPTH };
+
     public GameObject keyPrefab; // Prefab for the keys
     public float keySize = 1.0f / 15.5f;
     public float keySpacing = 0.5f / 15.5f;
-    private float depth;
-    public float Depth
+    public float Depth { get; set; }
+    public float TargetDepth
     {
-        get => depth;
-        set => depth = Mathf.Clamp(value, -1.0f, 1.0f);
+        get => DEPTHS[(int)State];
     }
     public float Alpha
     {
@@ -25,8 +32,50 @@ public class KeyboardContext : MonoBehaviour
             return new Plane(normal, position);
         }
     }
-    private List<Key> keys = new List<Key>();
-    private List<List<string>> keyLayout = new List<List<string>>()
+    public Plane TargetPlane
+    {
+        get
+        {
+            Vector3 position = transform.parent != null
+                ? transform.parent.TransformPoint(new Vector3(0, 0, TargetDepth))
+                : transform.TransformPoint(new Vector3(0, 0, TargetDepth));
+            Vector3 normal = -transform.forward;
+            return new Plane(normal, position);
+        }
+    }
+
+    private float depthSpeed = 1.0f;
+    private KeyboardState state = KeyboardState.Initial;
+    internal KeyboardState State
+    {
+        get => state;
+        set
+        {
+            int prevState = (int)state;
+            state = value;
+            if (state.IsActive())
+            {
+                gameObject.SetActive(true);
+            }
+
+            if (state == KeyboardState.InactiveNext)
+            {
+                Depth = INACTIVE_NEXT_DEPTH;
+            }
+            else if (state == KeyboardState.InactivePrevious)
+            {
+                Depth = INACTIVE_PREV_DEPTH;
+            }
+            else if (prevState < DEPTHS.Length)
+            {
+                Depth = DEPTHS[prevState];
+            }
+            depthSpeed = (TargetDepth - Depth) / DEPTH_MOV_TIME_SEC;
+        }
+    }
+
+    private readonly List<Key> keys = new();
+    private readonly List<List<string>> keyLayout = new()
     {
         new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
         new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
@@ -35,7 +84,7 @@ public class KeyboardContext : MonoBehaviour
 
     void Start()
     {
-        transform.position = new Vector3(0, 0, depth);
+        transform.position = new Vector3(0, 0, Depth);
 
         float x0 = -(9.0f * keySpacing + 9.0f * keySize) / 2.0f;
         float y0 = -0.5f + 3 * keySpacing + 2.5f * keySize;
@@ -62,10 +111,40 @@ public class KeyboardContext : MonoBehaviour
 
     void Update()
     {
+        if (Depth != TargetDepth)
+        {
+            Depth += depthSpeed * Time.deltaTime;
+            if ((depthSpeed > 0 && Depth >= TargetDepth) || (depthSpeed < 0 && Depth <= TargetDepth))
+            {
+                Depth = TargetDepth;
+                if (!State.IsActive())
+                {
+                    gameObject.SetActive(false);
+                }
+            }
+        }
         foreach (Key key in keys)
         {
             key.alpha = Alpha;
         }
-        transform.localPosition = new Vector3(0, 0, depth);
+        transform.localPosition = new Vector3(0, 0, Depth);
+    }
+}
+
+public enum KeyboardState
+{
+    InactiveNext,
+    Next,
+    Current,
+    Previous,
+    InactivePrevious,
+    Initial,
+}
+
+public static class KeyboardStateExtensions
+{
+    public static bool IsActive(this KeyboardState state)
+    {
+        return state != KeyboardState.InactiveNext && state != KeyboardState.InactivePrevious;
     }
 }

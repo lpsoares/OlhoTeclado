@@ -17,11 +17,11 @@ public class EyeTracker : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        print(leftEye.position + " " + rightEye.position + " -- " + leftEye.forward + " " + rightEye.forward);
-    }
-
+    /// <summary>
+    /// Estimates the current gaze point based on the eye positions and gaze depth.
+    /// </summary>
+    /// <param name="keyboardContexts"></param>
+    /// <returns></returns>
     public GazePoint GetCurrentGazePoint(List<KeyboardContext> keyboardContexts)
     {
         if (keyboardContexts == null || keyboardContexts.Count == 0)
@@ -30,20 +30,39 @@ public class EyeTracker : MonoBehaviour
         EstimateGazeDepth(out float gazeDepth);
         EstimateGazePointFromDepth(cameraPos, gazeDepth, out Vector3 gazePosition, out float error);
         KeyboardContext bestContext = GetClosestContext(keyboardContexts, cameraPos, gazeDepth);
+        if (bestContext == null)
+        {
+            return GazePoint.Empty;
+        }
+        Vector3 cyclopsEyePosition = (leftEye.position + rightEye.position) / 2.0f;
+        Ray cyclopsRay = new Ray(cyclopsEyePosition, gazePosition - cyclopsEyePosition);
+        Plane contextPlane = bestContext.TargetPlane;
+        if (!contextPlane.Raycast(cyclopsRay, out float gazeInPlaneEnter))
+        {
+            return GazePoint.Empty;
+        }
+        Vector3 gazeInContext = cyclopsRay.GetPoint(gazeInPlaneEnter);
 
-        return new GazePoint(gazePosition, bestContext, error);
+        return new GazePoint(gazePosition, cyclopsRay, gazeInContext, bestContext, error);
     }
 
+    /// <summary>
+    /// Finds the closest keyboard context based on the camera position and estimated gaze depth.
+    /// </summary>
+    /// <param name="keyboardContexts"></param>
+    /// <param name="cameraPos"></param>
+    /// <param name="gazeDepth"></param>
+    /// <returns></returns>
     private static KeyboardContext GetClosestContext(List<KeyboardContext> keyboardContexts, Vector3 cameraPos, float gazeDepth)
     {
         KeyboardContext bestContext = null;
         float minDepthDiff = float.MaxValue;
         foreach (var context in keyboardContexts)
         {
-            if (context == null)
+            if (context == null || !context.State.IsActive())
                 continue;
 
-            Plane contextPlane = context.Plane;
+            Plane contextPlane = context.TargetPlane;
             // Get distance from camera position
             float distance = Vector3.Dot(contextPlane.normal, cameraPos - contextPlane.ClosestPointOnPlane(cameraPos));
             float depthDiff = Mathf.Abs(distance - gazeDepth);
@@ -57,6 +76,15 @@ public class EyeTracker : MonoBehaviour
         return bestContext;
     }
 
+    /// <summary>
+    /// Estimates the gaze point in 3D space based on the camera position and gaze depth.
+    /// This method uses the gaze rays from both eyes to find the intersection point at the specified depth.
+    /// It also calculates the error as the average distance between the two gaze points.
+    /// </summary>
+    /// <param name="cameraPos"></param>
+    /// <param name="gazeDepth"></param>
+    /// <param name="gazePosition"></param>
+    /// <param name="error"></param>
     private void EstimateGazePointFromDepth(Vector3 cameraPos, float gazeDepth, out Vector3 gazePosition, out float error)
     {
         Plane depthPlane = new Plane(Camera.main.transform.forward, cameraPos + Camera.main.transform.forward * gazeDepth);
@@ -70,6 +98,13 @@ public class EyeTracker : MonoBehaviour
         error = Vector3.Distance(leftGazePoint, rightGazePoint) / 2.0f;
     }
 
+    /// <summary>
+    /// Estimates the gaze depth based on the intersection of the gaze rays from both eyes.
+    /// This method projects the gaze rays onto a plane defined by the camera's up vector and calculates the depth
+    /// from the camera position to the intersection point of the rays.
+    /// If the intersection is behind the camera, it sets the gaze depth to a predefined infinity value.
+    /// </summary>
+    /// <param name="gazeDepth"></param>
     private void EstimateGazeDepth(out float gazeDepth)
     {
         // Project the gaze rays into plane with normal equal to camera up vector
@@ -118,15 +153,20 @@ public class EyeTracker : MonoBehaviour
 
 public class GazePoint
 {
-    public Vector3 Position { get; set; }
-    public KeyboardContext Context { get; set; }
-    public float Error { get; set; }
+    public Vector3 Position { get; }
+    public Vector3 PositionInContext { get; }
+    public Ray CyclopsRay { get; }
+    public float CyclopsGazeDepth => CyclopsRay.direction.magnitude;
+    public KeyboardContext Context { get; }
+    public float Error { get; }
 
-    public static GazePoint Empty { get; } = new GazePoint(Vector3.zero, null, Mathf.Infinity);
+    public static GazePoint Empty { get; } = new GazePoint(Vector3.zero, new Ray(), Vector3.zero, null, Mathf.Infinity);
 
-    public GazePoint(Vector3 position, KeyboardContext context, float error)
+    public GazePoint(Vector3 position, Ray cyclopsRay, Vector3 positionInContext, KeyboardContext context, float error)
     {
         Position = position;
+        CyclopsRay = cyclopsRay;
+        PositionInContext = positionInContext;
         Context = context;
         Error = error;
     }

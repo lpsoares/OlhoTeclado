@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -17,6 +18,8 @@ public class KeyboardMain : MonoBehaviour
     public InputHelpers.Button xrButton = InputHelpers.Button.PrimaryButton; // A/X button
     public List<KeyboardContext> keyboardContexts;
     private GameObject gazeDebugObject;
+    private KeyboardState state = KeyboardState.Initial;
+    
 
     void Start()
     {
@@ -35,14 +38,16 @@ public class KeyboardMain : MonoBehaviour
             Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
             Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
             Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
+            Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
+            Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
         };
+        KeyboardState[] states = { KeyboardState.InactiveNext, KeyboardState.Next, KeyboardState.Current, KeyboardState.Previous, KeyboardState.InactivePrevious };
         for (int i = 0; i < keyboardContexts.Count; i++)
         {
             keyboardContexts[i].transform.SetParent(transform);
+            keyboardContexts[i].State = states[i];
+            keyboardContexts[i].Depth = keyboardContexts[i].TargetDepth;
         }
-        keyboardContexts[0].Depth = -0.5f;
-        keyboardContexts[1].Depth = 0.0f;
-        keyboardContexts[2].Depth = 1.0f;
 
         // Instantiate a red sphere for gaze debugging
         gazeDebugObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -69,9 +74,34 @@ public class KeyboardMain : MonoBehaviour
         GazePoint gazePoint = eyeTracker.GetCurrentGazePoint(keyboardContexts);
         if (gazePoint != null && gazePoint.Context != null)
         {
-            gazeDebugObject.transform.position = gazePoint.Position;
+            gazeDebugObject.transform.position = gazePoint.PositionInContext;
             gazeDebugObject.SetActive(true);
+
+            if (state == KeyboardState.Initial)
+            {
+                if (gazePoint.Context.State == KeyboardState.Current)
+                {
+                    state = KeyboardState.Current;
+                }
+            }
+            else if (state != gazePoint.Context.State)
+            {
+                KeyboardState previousState = state;
+                state = gazePoint.Context.State;
+                int stateDiff = 0;
+                if (previousState == KeyboardState.Current && state == KeyboardState.Next)
+                {
+                    stateDiff = 1;
+                }
+                else if (previousState == KeyboardState.Current && state == KeyboardState.Previous)
+                {
+                    stateDiff = -1;
+                }
+                foreach (var context in keyboardContexts)
+                {
+                    context.State = (KeyboardState)((int)(context.State + stateDiff + 5) % 5);
+                }
+            }
         }
     }
 }
-

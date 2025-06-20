@@ -10,7 +10,7 @@ public class KeyboardMain : MonoBehaviour
 {
     public Camera mainCamera; // Assign in Inspector or find in Start
     public float distanceInFront = 2f; // Distance in front of the camera
-    public EyeTracker eyeTracker;
+    private ContextGazeInteraction contextGazeInteraction; 
     public GameObject keyboardContextPrefab;
 
     // XR input variables
@@ -28,9 +28,9 @@ public class KeyboardMain : MonoBehaviour
             mainCamera = Camera.main;
         }
 
-        if (eyeTracker == null)
+        if (contextGazeInteraction == null)
         {
-            eyeTracker = FindObjectOfType<EyeTracker>();
+            contextGazeInteraction = FindObjectOfType<ContextGazeInteraction>();
         }
 
         keyboardContexts = new List<KeyboardContext>
@@ -71,23 +71,23 @@ public class KeyboardMain : MonoBehaviour
             transform.SetPositionAndRotation(inFront, Quaternion.LookRotation(mainCamera.transform.forward, mainCamera.transform.up));
         }
 
-        GazePoint gazePoint = eyeTracker.GetCurrentGazePoint(keyboardContexts);
-        if (gazePoint != null && gazePoint.Context != null)
+        KeyboardContext context = contextGazeInteraction.GetCurrentContext(keyboardContexts, out Vector3 gazeInContext);
+        if (context != null)
         {
-            gazeDebugObject.transform.position = gazePoint.PositionInContext;
+            gazeDebugObject.transform.position = gazeInContext;
             gazeDebugObject.SetActive(true);
 
             if (state == KeyboardState.Initial)
             {
-                if (gazePoint.Context.State == KeyboardState.Current)
+                if (context.State == KeyboardState.Current)
                 {
                     state = KeyboardState.Current;
                 }
             }
-            else if (state != gazePoint.Context.State)
+            else if (state != context.State)
             {
                 KeyboardState previousState = state;
-                state = gazePoint.Context.State;
+                state = context.State;
                 int stateDiff = 0;
                 if (previousState == KeyboardState.Current && state == KeyboardState.Next)
                 {
@@ -97,9 +97,9 @@ public class KeyboardMain : MonoBehaviour
                 {
                     stateDiff = -1;
                 }
-                foreach (var context in keyboardContexts)
+                foreach (var ctx in keyboardContexts)
                 {
-                    context.State = (KeyboardState)((int)(context.State + stateDiff + 5) % 5);
+                    ctx.State = (KeyboardState)((int)(ctx.State + stateDiff + 5) % 5);
                 }
             }
         }

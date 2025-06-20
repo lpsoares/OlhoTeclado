@@ -141,6 +141,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftEye: {fileID: 1262610604}
   rightEye: {fileID: 105875559}
+--- !u!114 &88024497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88024485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89bb2463882d3c4292b28b2548b3b30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &105875558
 GameObject:
   m_ObjectHideFlags: 0
@@ -2010,6 +2022,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7116092875461039112, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 88024497}
     - targetCorrespondingSourceObject: {fileID: 7116092875461039112, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 88024491}

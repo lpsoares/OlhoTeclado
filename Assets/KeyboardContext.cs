@@ -58,15 +58,7 @@ public class KeyboardContext : MonoBehaviour
                 gameObject.SetActive(true);
             }
 
-            if (state == KeyboardState.InactiveNext)
-            {
-                Depth = INACTIVE_NEXT_DEPTH;
-            }
-            else if (state == KeyboardState.InactivePrevious)
-            {
-                Depth = INACTIVE_PREV_DEPTH;
-            }
-            else if (prevState < DEPTHS.Length)
+            if (prevState < DEPTHS.Length)
             {
                 Depth = DEPTHS[prevState];
             }

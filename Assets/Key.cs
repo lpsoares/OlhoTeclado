@@ -6,6 +6,10 @@ public class Key : MonoBehaviour
     public string label = "A"; // The text to display
     public Material keyMaterial;
     public float alpha = 1.0f;
+    public float X { get; set; } = 0.0f;
+    public float Y { get; set; } = 0.0f;
+    public float KeySize { get; set; } = 1.0f / 15.5f;
+    public bool IsCurrent { get; set; }
 
     void Start()
     {
@@ -37,10 +41,23 @@ public class Key : MonoBehaviour
         keyMaterial.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
 
         keyMaterial.color = new Color(0.15f, 0.15f, 0.15f, alpha);
+        IsCurrent = false;
+
+        transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
     }
 
     void Update()
     {
         keyMaterial.color = new Color(0.15f, 0.15f, 0.15f, alpha);
+
+        if (IsCurrent)
+        {
+            transform.localPosition = new Vector3(X, Y, -0.02f);
+        }
+        else
+        {
+            transform.localPosition = new Vector3(X, Y, 0.0f);
+        }
+        transform.localScale = new Vector3(KeySize, KeySize / 10, KeySize);
     }
 }

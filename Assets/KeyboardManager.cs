@@ -6,17 +6,21 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 // Optionally, for XR Interaction Toolkit, use UnityEngine.XR.Interaction.Toolkit;
 
-public class KeyboardMain : MonoBehaviour
+public class KeyboardManager : MonoBehaviour
 {
     public Camera mainCamera; // Assign in Inspector or find in Start
     public float distanceInFront = 2f; // Distance in front of the camera
     private ContextGazeInteraction contextGazeInteraction; 
     public GameObject keyboardContextPrefab;
 
-    // XR input variables
-    public XRNode controllerNode = XRNode.RightHand; // Change to LeftHand if needed
-    public InputHelpers.Button xrButton = InputHelpers.Button.PrimaryButton; // A/X button
+    
+    public XRNode controllerNode = XRNode.RightHand;
+    public InputHelpers.Button xrButton = InputHelpers.Button.PrimaryButton;
+
+    public bool debugGaze = true; 
+
     public List<KeyboardContext> keyboardContexts;
+
     private GameObject gazeDebugObject;
     private KeyboardState state = KeyboardState.Initial;
     
@@ -51,7 +55,7 @@ public class KeyboardMain : MonoBehaviour
 
         // Instantiate a red sphere for gaze debugging
         gazeDebugObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        gazeDebugObject.transform.localScale = Vector3.one * 0.1f; // Scale down the sphere
+        gazeDebugObject.transform.localScale = Vector3.one * 0.02f; // Scale down the sphere
         gazeDebugObject.GetComponent<Renderer>().material.color = Color.red; // Set color to red
         gazeDebugObject.SetActive(false); // Initially hide the debug object
     }
@@ -74,8 +78,15 @@ public class KeyboardMain : MonoBehaviour
         KeyboardContext context = contextGazeInteraction.GetCurrentContext(keyboardContexts, out Vector3 gazeInContext);
         if (context != null)
         {
-            gazeDebugObject.transform.position = gazeInContext;
-            gazeDebugObject.SetActive(true);
+            if (debugGaze)
+            {
+                gazeDebugObject.transform.position = gazeInContext;
+                gazeDebugObject.SetActive(true);
+            }
+            else
+            {
+                gazeDebugObject.SetActive(false);
+            }
 
             if (state == KeyboardState.Initial)
             {
@@ -100,7 +111,13 @@ public class KeyboardMain : MonoBehaviour
                 foreach (var ctx in keyboardContexts)
                 {
                     ctx.State = (KeyboardState)((int)(ctx.State + stateDiff + 5) % 5);
+                    ctx.CurrentGaze = Vector3.zero;
                 }
+            }
+
+            if (state == KeyboardState.Current)
+            {
+                context.CurrentGaze = gazeInContext;
             }
         }
     }

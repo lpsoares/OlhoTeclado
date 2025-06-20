@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class KeyboardContext : MonoBehaviour
@@ -43,6 +45,7 @@ public class KeyboardContext : MonoBehaviour
             return new Plane(normal, position);
         }
     }
+    public Vector3 CurrentGaze { get; set; }
 
     private float depthSpeed = 1.0f;
     private KeyboardState state = KeyboardState.Initial;
@@ -73,6 +76,7 @@ public class KeyboardContext : MonoBehaviour
         new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
         new List<string> { "Z", "X", "C", "V", "B", "N", "M", "." },
     };
+    private KeyboardStateMachine keyboardStateMachine;
 
     void Start()
     {
@@ -85,20 +89,23 @@ public class KeyboardContext : MonoBehaviour
         {
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
-                GameObject key = Instantiate(keyPrefab);
-                Key keyScript = key.GetComponent<Key>();
+                GameObject keyObject = Instantiate(keyPrefab);
+                Key key = keyObject.GetComponent<Key>();
                 string label = keyLayout[row][col];
-                keyScript.label = label;
-                keyScript.alpha = Alpha;
-                key.name = "Key_" + label;
+                key.label = label;
+                key.alpha = Alpha;
+                keyObject.name = "Key_" + label;
 
-                key.transform.SetParent(transform);
-                key.transform.SetLocalPositionAndRotation(new Vector3(x0 + col * (keySpacing + keySize) + row * rowDx, y0 - row * (keySpacing + keySize), 0), Quaternion.Euler(90f, 0f, 0f));
-                key.transform.localScale = new Vector3(keySize, keySize / 10, keySize);
+                keyObject.transform.SetParent(transform);
+                key.X = x0 + col * (keySpacing + keySize) + row * rowDx;
+                key.Y = y0 - row * (keySpacing + keySize);
+                key.KeySize = keySize;
 
-                keys.Add(keyScript);
+                keys.Add(key);
             }
         }
+
+        keyboardStateMachine = new KeyboardStateMachine(keys, keySize / 2.0f);
     }
 
     void Update()
@@ -120,6 +127,26 @@ public class KeyboardContext : MonoBehaviour
             key.alpha = Alpha;
         }
         transform.localPosition = new Vector3(0, 0, Depth);
+
+        if (State == KeyboardState.Current && CurrentGaze != Vector3.zero)
+        {
+            Key selectedKey = keyboardStateMachine.Update(CurrentGaze, out bool changed);
+            if (changed)
+            {
+                foreach (Key key in keys)
+                {
+                    key.IsCurrent = key == selectedKey;
+                }
+            }
+        }
+        else
+        {
+            keyboardStateMachine.Reset(); // Reset the state machine when not in current state
+            foreach (Key key in keys)
+            {
+                key.IsCurrent = false; // Reset all keys to not current
+            }
+        }
     }
 }
 
@@ -138,5 +165,88 @@ public static class KeyboardStateExtensions
     public static bool IsActive(this KeyboardState state)
     {
         return state != KeyboardState.InactiveNext && state != KeyboardState.InactivePrevious;
+    }
+}
+
+class KeyboardKeyState
+{
+    public string Label { get; set; }
+    public bool IsEmpty
+    {
+        get => string.IsNullOrEmpty(Label);
+    }
+
+    public readonly Key keyObject;
+    private readonly float keyRadius;
+    internal static readonly KeyboardKeyState Empty = new KeyboardKeyState(string.Empty, null, 0.0f);
+
+    public KeyboardKeyState(string label, Key keyObject, float keyRadius)
+    {
+        Label = label;
+        this.keyObject = keyObject;
+        this.keyRadius = keyRadius;
+    }
+
+    public float GetProbability(Vector3 gazePosition, bool isCurrent)
+    {
+        if (IsEmpty)
+        {
+            return 0.0f;
+        }
+        Vector3 keyPosition = keyObject.transform.position;
+        float distance = Mathf.Max(Vector3.Distance(gazePosition, keyPosition) - keyRadius, 0.0f);
+        // Compute the probability based on a gaussian distribution centered at the key position
+        float sigma = keyRadius;
+        if (isCurrent)
+        {
+            // For the current key, we want a higher probability
+            sigma *= 0.5f; // Reduce the spread for the current key
+        }
+        float probability = Mathf.Exp(-distance * distance / (2 * sigma * sigma));
+        return Mathf.Clamp(probability, 0.0f, 1.0f);
+    }
+}
+
+class KeyboardStateMachine
+{
+    private readonly List<KeyboardKeyState> keyStates = new();
+    private KeyboardKeyState currentState = KeyboardKeyState.Empty;
+
+
+    public KeyboardStateMachine(List<Key> keys, float keyRadius)
+    {
+        foreach (Key key in keys)
+        {
+            keyStates.Add(new KeyboardKeyState(key.label, key, keyRadius));
+        }
+    }
+
+    public Key Update(Vector3 gazePosition, out bool changed)
+    {
+        float maxProbability = 0.2f; // Minimum probability threshold to consider a key
+        KeyboardKeyState bestState = KeyboardKeyState.Empty;
+
+        foreach (KeyboardKeyState keyState in keyStates)
+        {
+            float probability = keyState.GetProbability(gazePosition, keyState == currentState);
+            if (probability > maxProbability)
+            {
+                maxProbability = probability;
+                bestState = keyState;
+            }
+        }
+
+        changed = !currentState.Equals(bestState);
+        currentState = bestState;
+        if (!currentState.IsEmpty)
+        {
+            return currentState.keyObject;
+        }
+        return null;
+    }
+
+    internal void Reset()
+    {
+        currentState = KeyboardKeyState.Empty; // Reset the current state
     }
 }

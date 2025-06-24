@@ -187,7 +187,7 @@ class KeyboardKeyState
         this.keyRadius = keyRadius;
     }
 
-    public float GetProbability(Vector3 gazePosition, bool isCurrent)
+    public float GetProbability(Vector3 gazePosition)
     {
         if (IsEmpty)
         {
@@ -197,11 +197,6 @@ class KeyboardKeyState
         float distance = Mathf.Max(Vector3.Distance(gazePosition, keyPosition) - keyRadius, 0.0f);
         // Compute the probability based on a gaussian distribution centered at the key position
         float sigma = keyRadius;
-        if (isCurrent)
-        {
-            // For the current key, we want a higher probability
-            sigma *= 0.5f; // Reduce the spread for the current key
-        }
         float probability = Mathf.Exp(-distance * distance / (2 * sigma * sigma));
         return Mathf.Clamp(probability, 0.0f, 1.0f);
     }
@@ -211,6 +206,9 @@ class KeyboardStateMachine
 {
     private readonly List<KeyboardKeyState> keyStates = new();
     private KeyboardKeyState currentState = KeyboardKeyState.Empty;
+    private float lastTimeInState = -1.0f;
+    private const float timeToChangeState = 0.05f;
+    private const float probRatioThreshold = 1.1f;
 
 
     public KeyboardStateMachine(List<Key> keys, float keyRadius)
@@ -224,11 +222,17 @@ class KeyboardStateMachine
     public Key Update(Vector3 gazePosition, out bool changed)
     {
         float maxProbability = 0.2f; // Minimum probability threshold to consider a key
+        float curStateProbability = 0;
         KeyboardKeyState bestState = KeyboardKeyState.Empty;
+        float now = Time.time;
 
         foreach (KeyboardKeyState keyState in keyStates)
         {
-            float probability = keyState.GetProbability(gazePosition, keyState == currentState);
+            float probability = keyState.GetProbability(gazePosition);
+            if (keyState == currentState)
+            {
+                curStateProbability = probability;
+            }
             if (probability > maxProbability)
             {
                 maxProbability = probability;
@@ -237,7 +241,20 @@ class KeyboardStateMachine
         }
 
         changed = !currentState.Equals(bestState);
-        currentState = bestState;
+        if (!changed)
+        {
+            lastTimeInState = now;
+        }
+        else if (maxProbability > curStateProbability * probRatioThreshold && (lastTimeInState < 0 || now - lastTimeInState > timeToChangeState))
+        {
+            currentState = bestState;
+            lastTimeInState = now;
+        }
+        else
+        {
+            changed = false;
+        }
+
         if (!currentState.IsEmpty)
         {
             return currentState.keyObject;

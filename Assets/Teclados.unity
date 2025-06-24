@@ -1963,6 +1963,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2290329403577076283, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
+      propertyPath: DebugGaze
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2290329403577076283, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
       propertyPath: eyeTracker
       value: 
       objectReference: {fileID: 88024491}

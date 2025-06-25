@@ -12,6 +12,7 @@ public class KeyboardManager : MonoBehaviour
     public float distanceInFront = 2f; // Distance in front of the camera
     private ContextGazeInteraction contextGazeInteraction; 
     public GameObject keyboardContextPrefab;
+    public GameObject textOutputPrefab;
 
     
     public XRNode controllerNode = XRNode.RightHand;
@@ -22,8 +23,9 @@ public class KeyboardManager : MonoBehaviour
     public List<KeyboardContext> keyboardContexts;
 
     private GameObject gazeDebugObject;
-    private KeyboardState state = KeyboardState.Initial;
-    
+    private KeyboardState curState = KeyboardState.Initial;
+    private KeyboardContext curContext = null;
+    private TextOutput textOutput;
 
     void Start()
     {
@@ -37,20 +39,19 @@ public class KeyboardManager : MonoBehaviour
             contextGazeInteraction = FindObjectOfType<ContextGazeInteraction>();
         }
 
-        keyboardContexts = new List<KeyboardContext>
-        {
-            Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
-            Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
-            Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
-            Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
-            Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>(),
-        };
+        textOutput = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
+        textOutput.transform.SetParent(transform);
+        textOutput.text = "";
+
+        keyboardContexts = new List<KeyboardContext>();
         KeyboardState[] states = { KeyboardState.InactiveNext, KeyboardState.Next, KeyboardState.Current, KeyboardState.Previous, KeyboardState.InactivePrevious };
-        for (int i = 0; i < keyboardContexts.Count; i++)
+        for (int i = 0; i < states.Length; i++)
         {
-            keyboardContexts[i].transform.SetParent(transform);
-            keyboardContexts[i].State = states[i];
-            keyboardContexts[i].Depth = keyboardContexts[i].TargetDepth;
+            KeyboardContext context = Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>();
+            keyboardContexts.Add(context);
+            context.transform.SetParent(transform);
+            context.State = states[i];
+            context.Depth = context.TargetDepth;
         }
 
         // Instantiate a red sphere for gaze debugging
@@ -88,36 +89,48 @@ public class KeyboardManager : MonoBehaviour
                 gazeDebugObject.SetActive(false);
             }
 
-            if (state == KeyboardState.Initial)
+            if (curState == KeyboardState.Initial)
             {
                 if (context.State == KeyboardState.Current)
                 {
-                    state = KeyboardState.Current;
+                    curState = KeyboardState.Current;
+                    curContext = context;
                 }
             }
-            else if (state != context.State)
+            else if (curState != context.State)
             {
-                KeyboardState previousState = state;
-                state = context.State;
+                KeyboardContext previousContext = curContext;
+                curContext = context;
+                KeyboardState previousState = curState;
+                curState = context.State;
+
                 int stateDiff = 0;
-                if (previousState == KeyboardState.Current && state == KeyboardState.Next)
+                if (previousState == KeyboardState.Current && curState == KeyboardState.Next)
                 {
                     stateDiff = 1;
+                    textOutput.text += previousContext.LastSelectedKey == null ? "" : previousContext.LastSelectedKey.label;
                 }
-                else if (previousState == KeyboardState.Current && state == KeyboardState.Previous)
+                else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
                 {
                     stateDiff = -1;
+                    if (textOutput.text.Length > 0)
+                    {
+                        textOutput.text = textOutput.text[..^1];
+                    }
                 }
-                foreach (var ctx in keyboardContexts)
+                if (stateDiff != 0)
                 {
-                    ctx.State = (KeyboardState)((int)(ctx.State + stateDiff + 5) % 5);
-                    ctx.CurrentGaze = Vector3.zero;
+                    foreach (var ctx in keyboardContexts)
+                    {
+                        ctx.State = (KeyboardState)(((int)ctx.State + stateDiff + 5) % 5);
+                        ctx.CurrentGaze = Vector3.zero;
+                    }
                 }
             }
 
-            if (state == KeyboardState.Current)
+            if (curContext != null && curContext.State == KeyboardState.Current)
             {
-                context.CurrentGaze = gazeInContext;
+                curContext.CurrentGaze = gazeInContext;
             }
         }
     }

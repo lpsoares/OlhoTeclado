@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7116092875461039112
+--- !u!1 &2253025256013945923
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6968604085710702952}
-  - component: {fileID: 2290329403577076283}
+  - component: {fileID: 5099415843698108153}
+  - component: {fileID: 995208599061089364}
   m_Layer: 0
-  m_Name: Keyboard Manager
+  m_Name: TextOutput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6968604085710702952
+--- !u!4 &5099415843698108153
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7116092875461039112}
+  m_GameObject: {fileID: 2253025256013945923}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.412, y: 1.19, z: 1.611}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2290329403577076283
+--- !u!114 &995208599061089364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7116092875461039112}
+  m_GameObject: {fileID: 2253025256013945923}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90cd8a17f1329e948910c671ed986ca3, type: 3}
+  m_Script: {fileID: 11500000, guid: e08b0dbfc27816843b53d9f800854bbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  distanceInFront: 1
-  keyboardContextPrefab: {fileID: 0}
-  textOutputPrefab: {fileID: 0}
-  controllerNode: 5
-  xrButton: 6
-  debugGaze: 1
-  keyboardContexts: []
+  text: Hello, World!

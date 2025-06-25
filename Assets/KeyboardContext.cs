@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class KeyboardContext : MonoBehaviour
 {
-    private const float INACTIVE_NEXT_DEPTH = -2.0f;
-    private const float NEXT_DEPTH = -0.5f;
+    private const float INACTIVE_NEXT_DEPTH = 3.0f;
+    private const float NEXT_DEPTH = 1.0f;
     private const float CURR_DEPTH = 0.0f;
-    private const float PREV_DEPTH = 1.0f;
-    private const float INACTIVE_PREV_DEPTH = 10.0f;
-    private const float DEPTH_MOV_TIME_SEC = 0.1f;
-    private static readonly float[] DEPTHS = { INACTIVE_NEXT_DEPTH, NEXT_DEPTH, CURR_DEPTH, PREV_DEPTH, INACTIVE_PREV_DEPTH };
+    private const float PREV_DEPTH = -0.5f;
+    private const float INACTIVE_PREV_DEPTH = -10.0f;
+    private const float DEPTH_MOV_TIME_SEC = 0.1f; // Time to move between depths in seconds
+    public static readonly float[] DEPTHS = { INACTIVE_NEXT_DEPTH, NEXT_DEPTH, CURR_DEPTH, PREV_DEPTH, INACTIVE_PREV_DEPTH };
 
     public GameObject keyPrefab; // Prefab for the keys
     public float keySize = 1.0f / 15.5f;
@@ -23,7 +23,7 @@ public class KeyboardContext : MonoBehaviour
     }
     public float Alpha
     {
-        get => Mathf.Clamp(Depth > 0 ? 1.0f - Depth * 0.9f : 1.0f + Depth * 1.9f, 0.0f, 1.0f);
+        get => Mathf.Clamp(Depth > 0 ? 1.0f - Depth * 0.5f : 1.0f + Depth * 1.9f, 0.0f, 1.0f);
     }
     public Plane Plane
     {
@@ -46,6 +46,7 @@ public class KeyboardContext : MonoBehaviour
         }
     }
     public Vector3 CurrentGaze { get; set; }
+    public Key LastSelectedKey { get; private set; } = null;
 
     private float depthSpeed = 1.0f;
     private KeyboardState state = KeyboardState.Initial;
@@ -59,6 +60,10 @@ public class KeyboardContext : MonoBehaviour
             if (state.IsActive())
             {
                 gameObject.SetActive(true);
+            }
+            if (prevState != (int)state && state == KeyboardState.Current)
+            {
+                LastSelectedKey = null;
             }
 
             if (prevState < DEPTHS.Length)
@@ -75,6 +80,7 @@ public class KeyboardContext : MonoBehaviour
         new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
         new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
         new List<string> { "Z", "X", "C", "V", "B", "N", "M", "." },
+        new List<string> { " "}
     };
     private KeyboardStateMachine keyboardStateMachine;
 
@@ -82,11 +88,13 @@ public class KeyboardContext : MonoBehaviour
     {
         transform.position = new Vector3(0, 0, Depth);
 
-        float x0 = -(9.0f * keySpacing + 9.0f * keySize) / 2.0f;
-        float y0 = -0.5f + 3 * keySpacing + 2.5f * keySize;
-        float rowDx = (keySize + keySpacing) / 2.0f;
+        float keyboardOffsetY = -0.4f;
+        float keyboardY0 = keyboardOffsetY + 3 * keySpacing + 2.5f * keySize;
         for (int row = 0; row < keyLayout.Count; row++)
         {
+            float x0 = -(keyLayout[row].Count - 1) * (keySpacing + keySize) / 2.0f; // Center the row (x0 is the center of the leftmost key)
+            float y0 = keyboardY0 - row * (keySpacing + keySize);
+
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
                 GameObject keyObject = Instantiate(keyPrefab);
@@ -97,8 +105,8 @@ public class KeyboardContext : MonoBehaviour
                 keyObject.name = "Key_" + label;
 
                 keyObject.transform.SetParent(transform);
-                key.X = x0 + col * (keySpacing + keySize) + row * rowDx;
-                key.Y = y0 - row * (keySpacing + keySize);
+                key.X = x0 + col * (keySpacing + keySize);
+                key.Y = y0;
                 key.KeySize = keySize;
 
                 keys.Add(key);
@@ -133,6 +141,7 @@ public class KeyboardContext : MonoBehaviour
             Key selectedKey = keyboardStateMachine.Update(CurrentGaze, out bool changed);
             if (changed)
             {
+                LastSelectedKey = selectedKey;
                 foreach (Key key in keys)
                 {
                     key.IsCurrent = key == selectedKey;
@@ -207,7 +216,7 @@ class KeyboardStateMachine
     private readonly List<KeyboardKeyState> keyStates = new();
     private KeyboardKeyState currentState = KeyboardKeyState.Empty;
     private float lastTimeInState = -1.0f;
-    private const float timeToChangeState = 0.05f;
+    private const float timeToChangeState = 0.1f;
     private const float probRatioThreshold = 1.1f;
 
 

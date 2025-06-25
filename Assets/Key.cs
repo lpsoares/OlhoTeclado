@@ -14,12 +14,11 @@ public class Key : MonoBehaviour
     void Start()
     {
         // Create a new GameObject for the text
-        GameObject textObj = new GameObject("KeyText");
+        GameObject textObj = new("KeyText");
         textObj.transform.SetParent(transform);
 
         // Position the text slightly above the cylinder surface
-        textObj.transform.localPosition = new Vector3(0, -0.5f, 0);
-        textObj.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+        textObj.transform.SetLocalPositionAndRotation(new Vector3(0, -0.5f, 0), Quaternion.Euler(-90f, 0f, 0f));
 
         // Add TextMesh component
         TextMesh textMesh = textObj.AddComponent<TextMesh>();

@@ -1967,6 +1967,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2290329403577076283, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
+      propertyPath: debugGaze
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2290329403577076283, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
       propertyPath: eyeTracker
       value: 
       objectReference: {fileID: 88024491}
@@ -1974,6 +1978,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2290329403577076283, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
+      propertyPath: textOutputPrefab
+      value: 
+      objectReference: {fileID: 2253025256013945923, guid: 879ff9c6300deee459c1782daee994a1, type: 3}
     - target: {fileID: 2290329403577076283, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
       propertyPath: keyboardContextPrefab
       value: 

@@ -99,6 +99,31 @@ export function getParticipantDemographics(participantId: string): Participant |
   return null;
 }
 
+export function getParticipantUsedSentences(participantId: string): number[] {
+  const participantDir = path.join(DATA_DIR, participantId);
+  const sentencesFile = path.join(participantDir, 'used-sentences.json');
+
+  if (fs.existsSync(sentencesFile)) {
+    const sentencesData = JSON.parse(fs.readFileSync(sentencesFile, 'utf-8'));
+    if (Array.isArray(sentencesData)) {
+      return sentencesData;
+    }
+  }
+  return [];
+}
+
+export function addParticipantUsedSentence(participantId: string, sentenceId: number): void {
+  const participantDir = path.join(DATA_DIR, participantId);
+  const sentencesFile = path.join(participantDir, 'used-sentences.json');
+
+  let usedSentences = getParticipantUsedSentences(participantId);
+  if (!usedSentences.includes(sentenceId)) {
+    usedSentences.push(sentenceId);
+  }
+
+  fs.writeFileSync(sentencesFile, JSON.stringify(usedSentences, null, 2));
+}
+
 function validateParticipant(participant: Participant): void {
   const validationResult = participantSchema.safeParse(participant);
   if (!validationResult.success) {

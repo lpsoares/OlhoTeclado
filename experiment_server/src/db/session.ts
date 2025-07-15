@@ -29,13 +29,13 @@ export function startSession(participantId: string): number {
   return sessionNumber;
 }
 
-export function getLatestSession(participantId: string): string | null {
+export function getLatestSession(participantId: string): number | null {
   const sessions = listSessions(participantId);
   if (!sessions?.length) {
     return null;
   }
   const latestSession = Math.max(...sessions);
-  return path.join(DATA_DIR, participantId, getSessionDirname(latestSession));
+  return latestSession;
 }
 
 export function getSessionDirname(sessionNumber: number): string {

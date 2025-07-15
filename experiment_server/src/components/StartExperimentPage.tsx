@@ -149,7 +149,7 @@ function useParticipantForm(participant?: Participant) {
     defaultValues: {
       id: participant?.id || "",
       name: participant?.name || "",
-      age: participant?.age || 15,
+      age: participant?.age || 18,
       sex: participant?.sex || "M",
     },
   });

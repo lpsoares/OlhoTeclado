@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -14,10 +15,6 @@ public class KeyboardManager : MonoBehaviour
     public GameObject keyboardContextPrefab;
     public GameObject textOutputPrefab;
 
-    
-    public XRNode controllerNode = XRNode.RightHand;
-    public InputHelpers.Button xrButton = InputHelpers.Button.PrimaryButton;
-
     public bool debugGaze = true; 
 
     public List<KeyboardContext> keyboardContexts;
@@ -26,6 +23,8 @@ public class KeyboardManager : MonoBehaviour
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
     private TextOutput textOutput;
+
+    InputAction resetKeyboardAction;
 
     void Start()
     {
@@ -59,24 +58,19 @@ public class KeyboardManager : MonoBehaviour
         gazeDebugObject.transform.localScale = Vector3.one * 0.02f; // Scale down the sphere
         gazeDebugObject.GetComponent<Renderer>().material.color = Color.red; // Set color to red
         gazeDebugObject.SetActive(false); // Initially hide the debug object
+
+        resetKeyboardAction = InputSystem.actions.FindAction("Reset Keyboard Position");
     }
 
     void Update()
     {
-        InputDevice device = InputDevices.GetDeviceAtXRNode(controllerNode);
-        bool buttonPressed = false;
-        if (device.isValid)
-        {
-            device.TryGetFeatureValue(CommonUsages.primaryButton, out buttonPressed);
-        }
-
-        if (buttonPressed)
+        if (resetKeyboardAction.IsPressed())
         {
             Vector3 inFront = mainCamera.transform.position + mainCamera.transform.forward * distanceInFront;
             transform.SetPositionAndRotation(inFront, Quaternion.LookRotation(mainCamera.transform.forward, mainCamera.transform.up));
         }
 
-        KeyboardContext context = contextGazeInteraction.GetCurrentContext(keyboardContexts, out Vector3 gazeInContext);
+        KeyboardContext context = contextGazeInteraction.GetCurrentContext(keyboardContexts, out Vector3 gazeInContext, out _);
         if (context != null)
         {
             if (debugGaze)

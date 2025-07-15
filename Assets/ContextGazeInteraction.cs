@@ -2,17 +2,29 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IGazeDataListener
+{
+    void OnGaze(Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection);
+}
+
 public class ContextGazeInteraction : MonoBehaviour
 {
+    private List<IGazeDataListener> gazeDataListeners = new();
     private EyeTracker eyeTracker;
     private void Start()
     {
         eyeTracker = GetComponent<EyeTracker>();
+        GetComponents(gazeDataListeners);
+        if (gazeDataListeners.Count == 0)
+        {
+            Debug.LogWarning("No gaze data listeners found. Please add IGazeDataListener components to the scene.");
+        }
     }
 
-    public KeyboardContext GetCurrentContext(List<KeyboardContext> keyboardContexts, out Vector3 gazeInContext)
+    public KeyboardContext GetCurrentContext(List<KeyboardContext> keyboardContexts, out Vector3 gaze3DInContext, out Vector2 gaze2DInContext)
     {
-        gazeInContext = Vector3.zero;
+        gaze3DInContext = Vector3.zero;
+        gaze2DInContext = Vector2.zero;
         if (keyboardContexts == null || keyboardContexts.Count == 0)
             return null;
 
@@ -28,7 +40,17 @@ public class ContextGazeInteraction : MonoBehaviour
         {
             return null;
         }
-        gazeInContext = gaze.CyclopsRay.GetPoint(gazeInPlaneEnter);
+        gaze3DInContext = gaze.CyclopsRay.GetPoint(gazeInPlaneEnter);
+        gaze2DInContext = bestContext.transform.InverseTransformPoint(gaze3DInContext);
+
+        NotifyGazeDataListeners(
+            gaze2DInContext,
+            gaze.Position,
+            eyeTracker.LeftEye.position,
+            eyeTracker.RightEye.position,
+            eyeTracker.LeftEye.forward,
+            eyeTracker.RightEye.forward
+        );
 
         return bestContext;
     }
@@ -61,5 +83,13 @@ public class ContextGazeInteraction : MonoBehaviour
         }
 
         return bestContext;
+    }
+
+    private void NotifyGazeDataListeners(Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection)
+    {
+        foreach (var listener in gazeDataListeners)
+        {
+            listener.OnGaze(gaze2D, gaze3D, leftEyePosition, rightEyePosition, leftEyeDirection, rightEyeDirection);
+        }
     }
 }

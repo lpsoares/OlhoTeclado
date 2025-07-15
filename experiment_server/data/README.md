@@ -32,7 +32,7 @@ Key presses are recorded with the `KEY_PRESS` type. The `data` field contains th
 
 ### Key Position Changes
 
-Key position changes are recorded with the `KEY_POS` type. The `data` field contains the following information:
+Key position changes are recorded with the `KEY_POS` type. The `data` field contains one or more occurrences of the following information:
 
 - The key that was moved, represented by a single character (e.g., `Q`, `W`, `E`, etc.);
 - The width of the key in 3D space;
@@ -70,4 +70,10 @@ Gaze data is recorded with the `GAZE` type. The `data` field contains the follow
 - The z 3D coordinate of the left eye in the 3D space;
 - The x 3D coordinate of the right eye in the 3D space;
 - The y 3D coordinate of the right eye in the 3D space;
-- The z 3D coordinate of the right eye in the 3D space.
+- The z 3D coordinate of the right eye in the 3D space;
+- The x 3D coordinate of the direction of the left eye;
+- The y 3D coordinate of the direction of the left eye;
+- The z 3D coordinate of the direction of the left eye;
+- The x 3D coordinate of the direction of the right eye;
+- The y 3D coordinate of the direction of the right eye;
+- The z 3D coordinate of the direction of the right eye.

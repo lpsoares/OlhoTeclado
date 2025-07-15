@@ -3,9 +3,9 @@ import { startSession } from '@/db/session';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request,
-  { params }: { params: { participantId: string } }
+  { params }: { params: Promise<{ participantId: string }> }
 ) {
-  const { participantId } = params;
+  const { participantId } = await params;
   const started = startExperiment(participantId);
 
   if (!started) {

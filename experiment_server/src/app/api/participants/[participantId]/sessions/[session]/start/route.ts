@@ -2,13 +2,15 @@ import { startTrial } from '@/db/trial';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request,
-  { params }: { params: { participantId: string, session: string } }
+  { params }: { params: Promise<{ participantId: string, session: string }> }
 ) {
-  const { participantId, session: sessionsStr } = params;
+  const { participantId, session: sessionsStr } = await params;
   const session = parseInt(sessionsStr, 10);
+  const { timestamp } = await request.json();
+  
   try {
-    const trial = startTrial(participantId, session);
-    return NextResponse.json(trial, { status: 201 });
+    const trialData = startTrial(participantId, session, timestamp);
+    return NextResponse.json(trialData, { status: 201 });
   }
   catch (error) {
     console.error('Error starting trial:', error);

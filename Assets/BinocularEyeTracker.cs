@@ -17,6 +17,9 @@ public class BinocularEyeTracker : EyeTracker
         }
     }
 
+    public override Transform LeftEye => leftEye;
+    public override Transform RightEye => rightEye;
+
     /// <summary>
     /// Estimates the current gaze point based on the eye positions and gaze depth.
     /// </summary>

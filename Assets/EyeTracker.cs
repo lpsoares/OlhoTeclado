@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class EyeTracker : MonoBehaviour
 {
+    abstract public Transform LeftEye { get; }
+    abstract public Transform RightEye { get; }
     abstract public GazePoint CurrentGazePoint();
 }
 

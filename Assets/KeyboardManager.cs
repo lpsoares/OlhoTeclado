@@ -1,21 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
 
-// Optionally, for XR Interaction Toolkit, use UnityEngine.XR.Interaction.Toolkit;
+public interface ITextChangeListener
+{
+    void OnTextChanged(string newText);
+}
+
+public interface IContextChangeListener
+{
+    void OnContextChanged(KeyboardContext newContext);
+}
+
 
 public class KeyboardManager : MonoBehaviour
 {
     public Camera mainCamera; // Assign in Inspector or find in Start
     public float distanceInFront = 2f; // Distance in front of the camera
-    private ContextGazeInteraction contextGazeInteraction; 
+    private ContextGazeInteraction contextGazeInteraction;
     public GameObject keyboardContextPrefab;
     public GameObject textOutputPrefab;
 
-    public bool debugGaze = true; 
+    public bool debugGaze = true;
 
     public List<KeyboardContext> keyboardContexts;
 
@@ -23,6 +29,8 @@ public class KeyboardManager : MonoBehaviour
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
     private TextOutput textOutput;
+    private readonly List<ITextChangeListener> textChangeListeners = new();
+    private readonly List<IContextChangeListener> contextChangeListeners = new();
 
     InputAction resetKeyboardAction;
 
@@ -36,6 +44,17 @@ public class KeyboardManager : MonoBehaviour
         if (contextGazeInteraction == null)
         {
             contextGazeInteraction = FindObjectOfType<ContextGazeInteraction>();
+        }
+
+        GetComponents(textChangeListeners);
+        if (textChangeListeners.Count == 0)
+        {
+            Debug.LogWarning("No text change listeners found. Please add ITextChangeListener components to the scene.");
+        }
+        GetComponents(contextChangeListeners);
+        if (contextChangeListeners.Count == 0)
+        {
+            Debug.LogWarning("No context change listeners found. Please add IContextChangeListener components to the scene.");
         }
 
         textOutput = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
@@ -89,12 +108,14 @@ public class KeyboardManager : MonoBehaviour
                 {
                     curState = KeyboardState.Current;
                     curContext = context;
+                    NotifyContextChangeListeners(curContext);
                 }
             }
             else if (curState != context.State)
             {
                 KeyboardContext previousContext = curContext;
                 curContext = context;
+                NotifyContextChangeListeners(context);
                 KeyboardState previousState = curState;
                 curState = context.State;
 
@@ -114,6 +135,7 @@ public class KeyboardManager : MonoBehaviour
                 }
                 if (stateDiff != 0)
                 {
+                    NotifyTextChangeListeners(textOutput.text);
                     foreach (var ctx in keyboardContexts)
                     {
                         ctx.State = (KeyboardState)(((int)ctx.State + stateDiff + 5) % 5);
@@ -126,6 +148,22 @@ public class KeyboardManager : MonoBehaviour
             {
                 curContext.CurrentGaze = gazeInContext;
             }
+        }
+    }
+
+    private void NotifyTextChangeListeners(string newText)
+    {
+        foreach (var listener in textChangeListeners)
+        {
+            listener.OnTextChanged(newText);
+        }
+    }
+
+    private void NotifyContextChangeListeners(KeyboardContext newContext)
+    {
+        foreach (var listener in contextChangeListeners)
+        {
+            listener.OnContextChanged(newContext);
         }
     }
 }

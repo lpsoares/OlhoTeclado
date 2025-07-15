@@ -1,10 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ExperimentManager : MonoBehaviour, IGazeDataListener
+public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextChangeListener, IGazeDataListener
 {
     private enum TrialState
     {
@@ -26,7 +25,8 @@ public class ExperimentManager : MonoBehaviour, IGazeDataListener
 
     InputAction startTrialAction;
     InputAction stopTrialAction;
-
+    private string currentText;
+    private string curContextName = "None";
 
     void Start()
     {
@@ -44,10 +44,10 @@ public class ExperimentManager : MonoBehaviour, IGazeDataListener
         if (participant != null && sessionId > 0)
         {
             if (startTrialAction.triggered && trialState == TrialState.NotStarted)
-                {
-                    trialState = TrialState.Starting;
-                    StartCoroutine(StartTrialCoroutine());
-                }
+            {
+                trialState = TrialState.Starting;
+                StartCoroutine(StartTrialCoroutine());
+            }
 
             if (stopTrialAction.triggered && trialState == TrialState.Ongoing && GetTimestamp() - trialStartTime > 500f)
             {
@@ -56,6 +56,31 @@ public class ExperimentManager : MonoBehaviour, IGazeDataListener
                 trialState = TrialState.NotStarted; // Reset trial state
             }
         }
+    }
+
+    public void OnContextChanged(KeyboardContext newContext)
+    {
+        string newContextName = newContext != null ? newContext.State.ToString() : "None";
+        if (trialState == TrialState.Ongoing)
+        {
+            string eventData = EventBuilder.BuildContextChangeEvent(GetTimestamp(), curContextName, newContextName);
+            events.Add(eventData);
+            Debug.Log($"Context changed from {curContextName} to {newContextName}");
+        }
+        curContextName = newContextName;
+    }
+
+    public void OnTextChanged(string newText)
+    {
+        if (trialState != TrialState.Ongoing || currentText == newText)
+        {
+            return;
+        }
+
+        string eventData = EventBuilder.BuildTextChangeEvent(GetTimestamp(), newText);
+        events.Add(eventData);
+        Debug.Log($"Text changed: {newText}");
+        currentText = newText; // Update the current text to avoid duplicate events
     }
 
     public void OnGaze(Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection)

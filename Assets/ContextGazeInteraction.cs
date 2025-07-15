@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ public interface IGazeDataListener
 
 public class ContextGazeInteraction : MonoBehaviour
 {
-    private List<IGazeDataListener> gazeDataListeners = new();
+    private readonly List<IGazeDataListener> gazeDataListeners = new();
     private EyeTracker eyeTracker;
     private void Start()
     {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -107,6 +106,16 @@ public class EventBuilder
     public static string BuildTrialEndEvent(float timestamp, string sentence)
     {
         return BuildEvent(timestamp, TrialEnd, sentence);
+    }
+
+    public static string BuildContextChangeEvent(float timestamp, string prevContext, string newContext)
+    {
+        return BuildEvent(timestamp, ContextChange, $"{prevContext};{newContext}");
+    }
+
+    public static string BuildTextChangeEvent(float timestamp, string text)
+    {
+        return BuildEvent(timestamp, TextChange, text);
     }
 
     public static string BuildGazeEvent(float timestamp, Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection)

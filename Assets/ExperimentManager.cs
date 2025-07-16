@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextChangeListener, IGazeDataListener
+public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextChangeListener, IGazeDataListener, IContextPositionsListener
 {
     private enum TrialState
     {
@@ -67,6 +67,16 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                 trialState = TrialState.NotStarted; // Reset trial state
             }
         }
+    }
+
+    public void OnContextPositionsChanged(ContextPositionData[] contextPositionData)
+    {
+        if (trialState != TrialState.Ongoing)
+        {
+            return;
+        }
+
+        events.Add(EventBuilder.BuildContextPositionsEvent(GetTimestamp(), contextPositionData));
     }
 
     public void OnContextChanged(KeyboardContext newContext)
@@ -147,6 +157,9 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                 trialStartTime = GetTimestamp();
                 trialState = TrialState.Ongoing;
                 keyboardManager.SetReferenceText(TargetSentence);
+                keyboardManager.ResetOutputText();
+                events.Add(EventBuilder.BuildContextPositionsEvent(trialStartTime, keyboardManager.GetContextPositions()));
+                events.Add(EventBuilder.BuildKeyPositionEvent(trialStartTime, GetKeyPositions()));
                 Debug.Log($"Trial {trial} started at {timestamp} with sentence: {TargetSentence}");
             }
             else
@@ -158,6 +171,24 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                 Debug.LogWarning("Failed to start trial or no valid trial data received.");
             }
         });
+    }
+
+    private KeyPositionData[] GetKeyPositions()
+    {
+        List<KeyPositionData> keyPositions = new List<KeyPositionData>();
+        foreach (var context in keyboardManager.keyboardContexts)
+        {
+            if (context == null) continue;
+
+            foreach (var key in context.Keys)
+            {
+                if (key == null || key.transform == null)
+                    continue;
+
+                keyPositions.Add(new KeyPositionData(key.name, key.label, context.State.ToString(), key.Width, key.Height, new Vector2(key.X, key.Y)));
+            }
+        }
+        return keyPositions.ToArray();
     }
 
     private IEnumerator ContinuouslySendEventsCoroutine()

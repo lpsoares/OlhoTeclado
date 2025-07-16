@@ -30,18 +30,35 @@ Key presses are recorded with the `KEY_PRESS` type. The `data` field contains th
 
 - The key that was pressed, represented by a single character (e.g., `Q`, `W`, `E`, etc.).
 
-### Key Position Changes
+### Key Positions
 
-Key position changes are recorded with the `KEY_POS` type. The `data` field contains one or more occurrences of the following information:
+Key positions are recorded with the `KEY_POS` type. The `data` field contains one or more occurrences of the following information:
 
-- The key that was moved, represented by a single character (e.g., `Q`, `W`, `E`, etc.);
-- The width of the key in 3D space;
-- The height of the key in 3D space;
-- The x 2D coordinate on the keyboard plane where the key was moved;
-- The y 2D coordinate on the keyboard plane where the key was moved;
-- The x 3D coordinate of the key in the 3D space;
-- The y 3D coordinate of the key in the 3D space;
-- The z 3D coordinate of the key in the 3D space.
+- The name of the key (unique);
+- The key label;
+- The context that contains the key;
+- The width of the key;
+- The height of the key;
+- The x 2D coordinate of the key center on the context plane;
+- The y 2D coordinate of the key center on the context plane.
+
+### Context Positions
+
+The positions of the context planes are recorded with the `CTX_POS` type. The `data` field contains one or more of the following information:
+
+- The context name (e.g., `CURRENT`, `NEXT`, etc.);
+- The x 3D coordinate of the context plane origin;
+- The y 3D coordinate of the context plane origin;
+- The z 3D coordinate of the context plane origin;
+- The x coordinate of the up 3D vector;
+- The y coordinate of the up 3D vector;
+- The z coordinate of the up 3D vector;
+- The x coordinate of the right 3D vector;
+- The y coordinate of the right 3D vector;
+- The z coordinate of the right 3D vector;
+- The x coordinate of the forward 3D vector;
+- The y coordinate of the forward 3D vector;
+- The z coordinate of the forward 3D vector.
 
 ### Context Changes
 

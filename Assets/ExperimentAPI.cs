@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -30,6 +32,39 @@ public class TrialData
 public class VoidResponse
 {
     public bool success;
+}
+
+public class KeyPositionData
+{
+    public string keyName;
+    public string keyLabel;
+    public string context;
+    public float width;
+    public float height;
+    public Vector2 key2DPosition;
+
+    public KeyPositionData(string keyName, string keyLabel, string context, float width, float height, Vector2 key2DPosition)
+    {
+        this.keyName = keyName;
+        this.keyLabel = keyLabel;
+        this.context = context;
+        this.width = width;
+        this.height = height;
+        this.key2DPosition = key2DPosition;
+    }
+
+    internal object ToCSV(string delimiter = ",")
+    {
+        return $"{keyName}{delimiter}{keyLabel}{delimiter}{context}{delimiter}{width}{delimiter}{height}{delimiter}{key2DPosition.x}{delimiter}{key2DPosition.y}";
+    }
+}
+
+public static class CsvExtensions
+{
+    public static string ToCSV(this ContextPositionData data, string delimiter = ",")
+    {
+        return $"{data.contextName}{delimiter}{data.origin.x}{delimiter}{data.origin.y}{delimiter}{data.origin.z}{delimiter}{data.upVector.x}{delimiter}{data.upVector.y}{delimiter}{data.upVector.z}{delimiter}{data.rightVector.x}{delimiter}{data.rightVector.y}{delimiter}{data.rightVector.z}{delimiter}{data.forwardVector.x}{delimiter}{data.forwardVector.y}{delimiter}{data.forwardVector.z}";
+    }
 }
 
 public class ExperimentAPI
@@ -98,7 +133,8 @@ public class EventBuilder
     const string TrialStart = "TRIAL_START";
     const string TrialEnd = "TRIAL_END";
     const string KeyPress = "KEY_PRESS";
-    const string KeyPositionChange = "KEY_POS";
+    const string KeyPosition = "KEY_POS";
+    const string ContextPosition = "CTX_POS";
     const string ContextChange = "CONTEXT_CHANGE";
     const string TextChange = "TEXT_CHANGE";
     const string GazeData = "GAZE";
@@ -106,6 +142,18 @@ public class EventBuilder
     public static string BuildTrialEndEvent(float timestamp, string sentence)
     {
         return BuildEvent(timestamp, TrialEnd, sentence);
+    }
+
+    public static string BuildKeyPositionEvent(float timestamp, KeyPositionData[] keyPositions)
+    {
+        string data = string.Join(";", Array.ConvertAll(keyPositions, kp => kp.ToCSV(";")));
+        return BuildEvent(timestamp, KeyPosition, data);
+    }
+
+    public static string BuildContextPositionsEvent(float timestamp, ContextPositionData[] contextPositions)
+    {
+        string data = string.Join(";", Array.ConvertAll(contextPositions, cp => cp.ToCSV(";")));
+        return BuildEvent(timestamp, ContextPosition, data);
     }
 
     public static string BuildContextChangeEvent(float timestamp, string prevContext, string newContext)
@@ -120,7 +168,7 @@ public class EventBuilder
 
     public static string BuildGazeEvent(float timestamp, Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection)
     {
-        string data = $"{gaze2D.x};{gaze2D.y},{gaze3D.x},{gaze3D.y},{gaze3D.z},{leftEyePosition.x},{leftEyePosition.y},{leftEyePosition.z},{rightEyePosition.x},{rightEyePosition.y},{rightEyePosition.z},{leftEyeDirection.x},{leftEyeDirection.y},{leftEyeDirection.z},{rightEyeDirection.x},{rightEyeDirection.y},{rightEyeDirection.z}";
+        string data = $"{gaze2D.x};{gaze2D.y};{gaze3D.x};{gaze3D.y};{gaze3D.z};{leftEyePosition.x};{leftEyePosition.y};{leftEyePosition.z};{rightEyePosition.x};{rightEyePosition.y};{rightEyePosition.z};{leftEyeDirection.x};{leftEyeDirection.y};{leftEyeDirection.z};{rightEyeDirection.x};{rightEyeDirection.y};{rightEyeDirection.z}";
         return BuildEvent(timestamp, GazeData, data);
     }
 

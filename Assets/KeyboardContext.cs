@@ -73,7 +73,7 @@ public class KeyboardContext : MonoBehaviour
         }
     }
 
-    private readonly List<Key> keys = new();
+    public readonly List<Key> Keys = new();
     private readonly List<List<string>> keyLayout = new()
     {
         new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
@@ -111,11 +111,11 @@ public class KeyboardContext : MonoBehaviour
                 key.Height = keySize;
                 key.Depth = keySize / 10;
 
-                keys.Add(key);
+                Keys.Add(key);
             }
         }
 
-        keyboardStateMachine = new KeyboardStateMachine(keys);
+        keyboardStateMachine = new KeyboardStateMachine(Keys);
     }
 
     void Update()
@@ -132,7 +132,7 @@ public class KeyboardContext : MonoBehaviour
                 }
             }
         }
-        foreach (Key key in keys)
+        foreach (Key key in Keys)
         {
             key.alpha = Alpha;
         }
@@ -144,7 +144,7 @@ public class KeyboardContext : MonoBehaviour
             if (changed)
             {
                 LastSelectedKey = selectedKey;
-                foreach (Key key in keys)
+                foreach (Key key in Keys)
                 {
                     key.IsCurrent = key == selectedKey;
                 }
@@ -153,7 +153,7 @@ public class KeyboardContext : MonoBehaviour
         else
         {
             keyboardStateMachine.Reset(); // Reset the state machine when not in current state
-            foreach (Key key in keys)
+            foreach (Key key in Keys)
             {
                 key.IsCurrent = false; // Reset all keys to not current
             }

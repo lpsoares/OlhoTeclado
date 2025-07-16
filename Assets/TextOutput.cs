@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 // This class draws the text in the scene.
@@ -15,7 +12,6 @@ public class TextOutput : MonoBehaviour
         GameObject textObj = new("Output Text");
         textObj.transform.SetParent(transform);
         textObj.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
-        transform.localPosition = new Vector3(0, 0.05f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
 
         // Add TextMesh component
         textMesh = textObj.AddComponent<TextMesh>();

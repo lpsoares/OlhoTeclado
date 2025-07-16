@@ -74,7 +74,7 @@ public class ExperimentAPI
         }
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
-            Debug.LogError($"Error in request: {request.error}");
+            Debug.Log($"Error in request: {request.error}");
             yield return null;
         }
         else

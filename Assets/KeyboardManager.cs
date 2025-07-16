@@ -28,6 +28,7 @@ public class KeyboardManager : MonoBehaviour
     private GameObject gazeDebugObject;
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
+    private TextOutput textReference;
     private TextOutput textOutput;
     private readonly List<ITextChangeListener> textChangeListeners = new();
     private readonly List<IContextChangeListener> contextChangeListeners = new();
@@ -57,8 +58,14 @@ public class KeyboardManager : MonoBehaviour
             Debug.LogWarning("No context change listeners found. Please add IContextChangeListener components to the scene.");
         }
 
+        textReference = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
+        textReference.transform.SetParent(transform);
+        textReference.transform.localPosition = new Vector3(0, 0.1f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textReference.text = "";
+
         textOutput = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textOutput.transform.SetParent(transform);
+        textOutput.transform.localPosition = new Vector3(0, 0.05f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textOutput.text = "";
 
         keyboardContexts = new List<KeyboardContext>();
@@ -123,7 +130,7 @@ public class KeyboardManager : MonoBehaviour
                 if (previousState == KeyboardState.Current && curState == KeyboardState.Next)
                 {
                     stateDiff = 1;
-                    textOutput.text += previousContext.LastSelectedKey == null ? "" : previousContext.LastSelectedKey.label;
+                    textOutput.text += previousContext.LastSelectedKey == null ? "" : previousContext.LastSelectedKey.label.ToLower();
                 }
                 else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
                 {
@@ -148,6 +155,27 @@ public class KeyboardManager : MonoBehaviour
             {
                 curContext.CurrentGaze = gazeInContext;
             }
+        }
+    }
+
+    public void SetReferenceText(string text)
+    {
+        if (textReference != null)
+        {
+            textReference.text = text;
+        }
+    }
+
+    public string GetOutputText()
+    {
+        return textOutput != null ? textOutput.text : string.Empty;
+    }
+
+    public void ResetOutputText()
+    {
+        if (textOutput != null)
+        {
+            textOutput.text = "";
         }
     }
 

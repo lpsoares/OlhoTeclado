@@ -27,11 +27,19 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
     InputAction stopTrialAction;
     private string currentText;
     private string curContextName = "None";
+    private KeyboardManager keyboardManager;
 
     void Start()
     {
         startTrialAction = InputSystem.actions.FindAction("Start Trial");
         stopTrialAction = InputSystem.actions.FindAction("Stop Trial");
+
+        keyboardManager = FindObjectOfType<KeyboardManager>();
+        if (keyboardManager == null)
+        {
+            Debug.LogError("KeyboardManager not found in the scene. Please ensure it is present.");
+            return;
+        }
 
         experimentAPI = new ExperimentAPI(BaseUrl);
 
@@ -51,8 +59,11 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
 
             if (stopTrialAction.triggered && trialState == TrialState.Ongoing && GetTimestamp() - trialStartTime > 500f)
             {
-                events.Add(EventBuilder.BuildTrialEndEvent(GetTimestamp(), TargetSentence));
-                Debug.Log($"Trial {trial} completed. Waiting for next trial.");
+                string outputText = keyboardManager.GetOutputText();
+                events.Add(EventBuilder.BuildTrialEndEvent(GetTimestamp(), outputText));
+                Debug.Log($"Trial {trial} completed with output: \"{outputText}\". Waiting for next trial.");
+                keyboardManager.SetReferenceText("");
+                keyboardManager.ResetOutputText();
                 trialState = TrialState.NotStarted; // Reset trial state
             }
         }
@@ -132,9 +143,10 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
             if (trialData != null && trialData.trial > 0)
             {
                 trial = trialData.trial;
-                TargetSentence = trialData.sentence;
+                TargetSentence = trialData.sentence.ToLower();
                 trialStartTime = GetTimestamp();
                 trialState = TrialState.Ongoing;
+                keyboardManager.SetReferenceText(TargetSentence);
                 Debug.Log($"Trial {trial} started at {timestamp} with sentence: {TargetSentence}");
             }
             else
@@ -142,6 +154,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                 trial = 0;
                 trialStartTime = 0f;
                 trialState = TrialState.NotStarted;
+                keyboardManager.SetReferenceText("");
                 Debug.LogWarning("Failed to start trial or no valid trial data received.");
             }
         });

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
 
 public class KeyboardContext : MonoBehaviour
@@ -11,7 +13,6 @@ public class KeyboardContext : MonoBehaviour
     private const float DEPTH_MOV_TIME_SEC = 0.1f; // Time to move between depths in seconds
     public static readonly float[] DEPTHS = { INACTIVE_NEXT_DEPTH, NEXT_DEPTH, CURR_DEPTH, PREV_DEPTH, INACTIVE_PREV_DEPTH };
 
-    public GameObject keyPrefab; // Prefab for the keys
     public float keySize = 1.0f / 15.5f;
     public float keySpacing = 0.5f / 15.5f;
     public float Depth { get; set; }
@@ -95,9 +96,10 @@ public class KeyboardContext : MonoBehaviour
 
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
-                GameObject keyObject = Instantiate(keyPrefab);
-                Key key = keyObject.GetComponent<Key>();
                 string label = keyLayout[row][col];
+                GameObject keyObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                keyObject.AddComponent<Key>();
+                Key key = keyObject.GetComponent<Key>();
                 key.label = label;
                 key.alpha = Alpha;
                 keyObject.name = "Key_" + label;
@@ -105,13 +107,15 @@ public class KeyboardContext : MonoBehaviour
                 keyObject.transform.SetParent(transform);
                 key.X = x0 + col * (keySpacing + keySize);
                 key.Y = y0;
-                key.KeySize = keySize;
+                key.Width = keySize * (1 + 0.25f * (label == " " ? 8 : 0));
+                key.Height = keySize;
+                key.Depth = keySize / 10;
 
                 keys.Add(key);
             }
         }
 
-        keyboardStateMachine = new KeyboardStateMachine(keys, keySize / 2.0f);
+        keyboardStateMachine = new KeyboardStateMachine(keys);
     }
 
     void Update()
@@ -184,14 +188,12 @@ class KeyboardKeyState
     }
 
     public readonly Key keyObject;
-    private readonly float keyRadius;
-    internal static readonly KeyboardKeyState Empty = new KeyboardKeyState(string.Empty, null, 0.0f);
+    internal static readonly KeyboardKeyState Empty = new KeyboardKeyState(string.Empty, null);
 
-    public KeyboardKeyState(string label, Key keyObject, float keyRadius)
+    public KeyboardKeyState(string label, Key keyObject)
     {
         Label = label;
         this.keyObject = keyObject;
-        this.keyRadius = keyRadius;
     }
 
     public float GetProbability(Vector3 gazePosition)
@@ -200,11 +202,16 @@ class KeyboardKeyState
         {
             return 0.0f;
         }
+        Vector3 up = keyObject.transform.up;
+        Vector3 right = keyObject.transform.right;
         Vector3 keyPosition = keyObject.transform.position;
-        float distance = Mathf.Max(Vector3.Distance(gazePosition, keyPosition) - keyRadius, 0.0f);
+        // Separate x and y components for distance calculation, where x and y point to the up and right of the key
+        float xDistance = Math.Max(Math.Abs(Vector3.Dot(gazePosition - keyPosition, right)) / right.magnitude - keyObject.Width / 2, 0.0f);
+        float yDistance = Math.Max(Math.Abs(Vector3.Dot(gazePosition - keyPosition, up)) / up.magnitude - keyObject.Height / 2, 0.0f);
+        float distanceSq = xDistance * xDistance + yDistance * yDistance;
         // Compute the probability based on a gaussian distribution centered at the key position
-        float sigma = keyRadius;
-        float probability = Mathf.Exp(-distance * distance / (2 * sigma * sigma));
+        float sigma = keyObject.Height / 2.0f;
+        float probability = Mathf.Exp(-distanceSq / (2 * sigma * sigma));
         return Mathf.Clamp(probability, 0.0f, 1.0f);
     }
 }
@@ -218,11 +225,11 @@ class KeyboardStateMachine
     private const float probRatioThreshold = 1.1f;
 
 
-    public KeyboardStateMachine(List<Key> keys, float keyRadius)
+    public KeyboardStateMachine(List<Key> keys)
     {
         foreach (Key key in keys)
         {
-            keyStates.Add(new KeyboardKeyState(key.label, key, keyRadius));
+            keyStates.Add(new KeyboardKeyState(key.label, key));
         }
     }
 

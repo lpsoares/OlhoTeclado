@@ -1,7 +1,10 @@
+import { Method, methodSchema } from "@/models/method";
 import { Participant, participantSchema } from "@/models/participant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import z from "zod";
 import { useParticipants, useStartExperiment } from "./APIClient";
+import SelectMethod from "./SelectMethod";
 import SelectRegisteredParticipant from "./SelectRegisteredParticipant";
 import { Button } from "./ui/button";
 import {
@@ -25,7 +28,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Separator } from "./ui/separator";
 
 export default function StartExperimentPage() {
-  const form = useParticipantForm();
+  const form = useExperimentStartForm();
   const { isValid } = form.formState;
 
   const { participants } = useParticipants();
@@ -34,9 +37,13 @@ export default function StartExperimentPage() {
   const handleChangeParticipant = (participant: Participant) => {
     form.reset(participant);
   };
-  const handleSubmit = async (data: Participant) => {
-    const participant = participantSchema.parse(data);
-    startExperiment(participant.id);
+  const handleSubmit = async (data: ParticipantWithMethod) => {
+    const participantWithMethod = participantWithMethodSchema.parse(data);
+    const { method, ...participant } = participantWithMethod;
+    startExperiment({
+      participant,
+      method: method! as Method,
+    });
   };
 
   return (
@@ -132,6 +139,24 @@ export default function StartExperimentPage() {
                 )}
               />
 
+              <Separator className="my-6" />
+
+              <FormField
+                control={form.control}
+                name="method"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Typing Method</FormLabel>
+                    <SelectMethod
+                      onChange={field.onChange}
+                      defaultValue={field.value}
+                      className="w-full"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button type="submit" className="w-full" disabled={!isValid}>
                 Start Experiment
               </Button>
@@ -143,9 +168,23 @@ export default function StartExperimentPage() {
   );
 }
 
-function useParticipantForm(participant?: Participant) {
-  return useForm<Participant>({
-    resolver: zodResolver(participantSchema),
+const participantWithMethodSchema = participantSchema
+  .extend({
+    method: methodSchema.optional(),
+  })
+  .refine(
+    (data) => {
+      return data.method !== undefined;
+    },
+    {
+      message: "Method is required",
+    }
+  );
+type ParticipantWithMethod = z.infer<typeof participantWithMethodSchema>;
+
+function useExperimentStartForm(participant?: Participant) {
+  return useForm<ParticipantWithMethod>({
+    resolver: zodResolver(participantWithMethodSchema),
     defaultValues: {
       id: participant?.id || "",
       name: participant?.name || "",

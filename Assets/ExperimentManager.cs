@@ -13,6 +13,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
     }
 
     Participant participant;
+    string method;
     int sessionId = 0;
     int trial = 0;
     TrialState trialState = TrialState.NotStarted;
@@ -49,7 +50,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
 
     void Update()
     {
-        if (participant != null && sessionId > 0)
+        if (participant != null && method && sessionId > 0)
         {
             if (startTrialAction.triggered && trialState == TrialState.NotStarted)
             {
@@ -133,6 +134,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                     {
                         Debug.Log($"Current Participant: {response.participant.name}, Session: {response.session}");
                         participant = response.participant;
+                        method = response.method;
                         sessionId = int.Parse(response.session);
                     }
                     else
@@ -148,7 +150,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
     private IEnumerator StartTrialCoroutine()
     {
         float timestamp = GetTimestamp();
-        yield return experimentAPI.StartTrial(participant, sessionId, timestamp, trialData =>
+        yield return experimentAPI.StartTrial(participant, sessionId, timestamp, method, trialData =>
         {
             if (trialData != null && trialData.trial > 0)
             {

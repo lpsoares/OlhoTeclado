@@ -18,12 +18,16 @@ export default function Home() {
 }
 
 function HomeClient() {
-  const { participant, session } = useCurrentParticipant();
-  const started = !!participant && !!session;
+  const { participant, session, method } = useCurrentParticipant();
+  const started = !!participant && !!method && !!session;
   return (
     <>
       {started && (
-        <ExperimentPage participant={participant} session={session} />
+        <ExperimentPage
+          participant={participant}
+          session={session}
+          method={method}
+        />
       )}
       {!started && <StartExperimentPage />}
     </>

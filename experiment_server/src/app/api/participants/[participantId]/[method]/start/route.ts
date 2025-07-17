@@ -1,12 +1,13 @@
 import { startExperiment } from '@/db/participant';
 import { startSession } from '@/db/session';
+import { Method } from '@/models/method';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request,
-  { params }: { params: Promise<{ participantId: string }> }
+  { params }: { params: Promise<{ participantId: string, method: string }> }
 ) {
-  const { participantId } = await params;
-  const started = startExperiment(participantId);
+  const { participantId, method } = await params;
+  const started = startExperiment(participantId, method as Method);
 
   if (!started) {
     return NextResponse.json(
@@ -15,7 +16,7 @@ export async function POST(request: Request,
     );
   }
 
-  startSession(participantId);
+  startSession(participantId, method as Method);
 
   return NextResponse.json(started);
 }

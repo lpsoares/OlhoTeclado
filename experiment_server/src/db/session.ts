@@ -1,9 +1,10 @@
+import { Method } from '@/models/method';
 import fs from 'fs';
 import path from "path";
 import { DATA_DIR } from "./database";
 
-export function listSessions(participantId: string): number[] | null {
-  const participantDir = path.join(DATA_DIR, participantId);
+export function listSessions(participantId: string, method: Method): number[] | null {
+  const participantDir = path.join(DATA_DIR, participantId, method);
   if (!fs.existsSync(participantDir)) {
     return null;
   }
@@ -13,13 +14,13 @@ export function listSessions(participantId: string): number[] | null {
     .sort();
 }
 
-export function startSession(participantId: string): number {
-  const participantDir = path.join(DATA_DIR, participantId);
+export function startSession(participantId: string, method: Method): number {
+  const participantDir = path.join(DATA_DIR, participantId, method);
   if (!fs.existsSync(participantDir)) {
-    throw new Error(`Participant directory does not exist for participant ${participantId}`);
+    throw new Error(`Participant directory does not exist for participant ${participantId} and method ${method}`);
   }
 
-  const sessionNumber = Math.max(0, ...(listSessions(participantId) ?? [])) + 1;
+  const sessionNumber = Math.max(0, ...(listSessions(participantId, method) ?? [])) + 1;
   const sessionDir = path.join(participantDir, getSessionDirname(sessionNumber));
 
   if (!fs.existsSync(sessionDir)) {
@@ -29,8 +30,8 @@ export function startSession(participantId: string): number {
   return sessionNumber;
 }
 
-export function getLatestSession(participantId: string): number | null {
-  const sessions = listSessions(participantId);
+export function getLatestSession(participantId: string, method: Method): number | null {
+  const sessions = listSessions(participantId, method);
   if (!sessions?.length) {
     return null;
   }

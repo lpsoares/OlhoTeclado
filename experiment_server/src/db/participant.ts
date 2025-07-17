@@ -1,8 +1,10 @@
+import { Method, methods } from '@/models/method';
 import { Participant, participantSchema } from '@/models/participant';
 import fs from 'fs';
 import path from 'path';
 import { DATA_DIR } from './database';
 
+const USED_SENTENCES_FILENAME = 'used-sentences.json';
 const DEMOGRAPHICS_FILENAME = 'demographics.json';
 const CURRENT_PARTICIPANT_FILE = path.join(DATA_DIR, 'current-participant.json');
 
@@ -34,40 +36,40 @@ export function createOrUpdateParticipant(participant: Participant): Participant
   if (!fs.existsSync(participantDir)) {
     fs.mkdirSync(participantDir, { recursive: true });
   }
+  for (const method of methods) {
+    const methodDir = path.join(participantDir, method);
+    if (!fs.existsSync(methodDir)) {
+      fs.mkdirSync(methodDir, { recursive: true });
+    }
+  }
 
   fs.writeFileSync(participantDemographics, JSON.stringify(participant, null, 2));
   return participant;
 }
 
-export function getCurrentParticipant(): Participant | null {
+export function getCurrentParticipant(): { participant: Participant, method: Method } | null {
   if (!fs.existsSync(CURRENT_PARTICIPANT_FILE)) {
     return null;
   }
-  const currentParticipantId = fs.readFileSync(CURRENT_PARTICIPANT_FILE, 'utf-8');
+  const { participantId: currentParticipantId, method } = JSON.parse(fs.readFileSync(CURRENT_PARTICIPANT_FILE, 'utf-8'));
   const participant = getParticipantDemographics(currentParticipantId);
   if (participant === null) {
     console.error("Current participant's demographics not found.");
     return null;
   }
 
-  return participant;
+  return { participant, method };
 }
 
-export function startExperiment(participantId: string): boolean {
-  const currentParticipant = getCurrentParticipant();
-  if (currentParticipant !== null) {
+export function startExperiment(participantId: string, method: Method): boolean {
+  const currentData = getCurrentParticipant();
+  if (currentData !== null) {
     console.error("Experiment already started.");
     return false;
   }
 
-  const participantDemographics = getParticipantDemographics(participantId);
-  if (participantDemographics === null) {
-    console.error("Participant demographics not found.");
-    return false;
-  }
-
-  fs.writeFileSync(CURRENT_PARTICIPANT_FILE, participantId);
-  console.log(`Participant ${participantId} is now set as current.`);
+  fs.writeFileSync(CURRENT_PARTICIPANT_FILE, JSON.stringify({ participantId, method }));
+  console.log(`Participant ${participantId} and method ${method} are now set as current.`);
   return true;
 }
 
@@ -101,7 +103,7 @@ export function getParticipantDemographics(participantId: string): Participant |
 
 export function getParticipantUsedSentences(participantId: string): number[] {
   const participantDir = path.join(DATA_DIR, participantId);
-  const sentencesFile = path.join(participantDir, 'used-sentences.json');
+  const sentencesFile = path.join(participantDir, USED_SENTENCES_FILENAME);
 
   if (fs.existsSync(sentencesFile)) {
     const sentencesData = JSON.parse(fs.readFileSync(sentencesFile, 'utf-8'));
@@ -114,7 +116,7 @@ export function getParticipantUsedSentences(participantId: string): number[] {
 
 export function addParticipantUsedSentence(participantId: string, sentenceId: number): void {
   const participantDir = path.join(DATA_DIR, participantId);
-  const sentencesFile = path.join(participantDir, 'used-sentences.json');
+  const sentencesFile = path.join(participantDir, USED_SENTENCES_FILENAME);
 
   let usedSentences = getParticipantUsedSentences(participantId);
   if (!usedSentences.includes(sentenceId)) {

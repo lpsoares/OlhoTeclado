@@ -18,6 +18,7 @@ public class Participant
 public class CurrentParticipantData
 {
     public Participant participant;
+    public string method;
     public string session;
 }
 
@@ -84,9 +85,9 @@ public class ExperimentAPI
         yield return RequestAndWait(request, onComplete);
     }
 
-    public IEnumerator StartTrial(Participant participant, int session, float timestamp, Action<TrialData> onComplete = null)
+    public IEnumerator StartTrial(Participant participant, int session, float timestamp, string method, Action<TrialData> onComplete = null)
     {
-        string uri = $"{baseUrl}/participants/{participant.id}/sessions/{session}/start";
+        string uri = $"{baseUrl}/participants/{participant.id}/sessions/{session}/{method}/start";
         string jsonData = $"{{\"timestamp\":\"{timestamp}\"}}";
         UnityWebRequest request = UnityWebRequest.Post(uri, jsonData, "application/json");
         yield return RequestAndWait(request, onComplete);

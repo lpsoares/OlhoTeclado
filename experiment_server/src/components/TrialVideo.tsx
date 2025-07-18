@@ -5,8 +5,8 @@ import {
   TrialEvent,
   Vector2,
 } from "@/db/event";
-import { Player } from "@remotion/player";
-import { useEffect, useState } from "react";
+import { Player, PlayerRef } from "@remotion/player";
+import { useEffect, useRef, useState } from "react";
 import { useCurrentFrame } from "remotion";
 
 type TrialVideoProps = {
@@ -20,15 +20,19 @@ export function TrialVideo({
 }: TrialVideoProps) {
   const [trialEvents, setTrialEvents] = useState<TrialEvent[]>(baseEvents);
   const [durationInFrames, setDurationInFrames] = useState<number | null>(null);
+  const playerRef = useRef<PlayerRef>(null);
+
   useEffect(() => {
-    const trialEvents = baseEvents.sort((a, b) => a.timestamp - b.timestamp);
-    setTrialEvents(trialEvents);
-    if (trialEvents.length > 0) {
-      const firstTimestamp = trialEvents[0].timestamp;
-      const lastTimestamp = trialEvents[trialEvents.length - 1].timestamp;
+    setTrialEvents(baseEvents);
+    if (baseEvents.length > 0) {
+      const firstTimestamp = baseEvents[0].timestamp;
+      const lastTimestamp = baseEvents[baseEvents.length - 1].timestamp;
       setDurationInFrames(
         Math.ceil((lastTimestamp - firstTimestamp) / (1000 / fps))
       );
+    }
+    if (playerRef.current) {
+      playerRef.current.seekTo(0);
     }
   }, [baseEvents]);
 
@@ -37,8 +41,9 @@ export function TrialVideo({
   }
 
   return (
-    <div className="w-full h-96 border border-gray-300">
+    <div className="w-full h-96 border border-gray-300 rounded-sm overflow-hidden">
       <Player
+        ref={playerRef}
         component={TrialComposition}
         inputProps={{ trialEvents, fps }}
         durationInFrames={durationInFrames}
@@ -46,6 +51,7 @@ export function TrialVideo({
         compositionWidth={500}
         compositionHeight={500}
         style={{ width: "100%", height: "100%" }}
+        renderMuteButton={() => null} // Hide mute button
         controls
         showPlaybackRateControl
         autoPlay

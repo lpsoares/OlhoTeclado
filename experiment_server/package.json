@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "overrides": {
+    "react-is": "^19.0.0-rc-69d4b800-20241021"
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@radix-ui/react-label": "^2.1.7",
@@ -27,6 +30,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.59.0",
     "react-resizable-panels": "^3.0.3",
+    "recharts": "2.15.4",
     "remotion": "4.0.324",
     "tailwind-merge": "^3.3.1",
     "zod": "^3.25.67"

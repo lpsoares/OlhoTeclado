@@ -2,7 +2,8 @@ import { Method } from "@/models/method";
 import { Participant } from "@/models/participant";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
-import { useListSessions } from "./APIClient";
+import { useListFullTrials, useListSessions, useListTrials } from "./APIClient";
+import SessionView from "./SessionView";
 import { TrialView } from "./TrialView";
 import { Label } from "./ui/label";
 import {
@@ -38,6 +39,9 @@ export default function ExperimentPage({
   const [method, setMethod] = useState<Method | null>(currentSession.method);
   const [session, setSession] = useState<number | null>(currentSession.session);
   const { sessions } = useListSessions(participant?.id || null, method || null);
+  const { trials } = useListTrials(participant?.id, method, session || 0);
+  const { fullTrials: allTrials, isLoading: isLoadingTrials } =
+    useListFullTrials(participant?.id, method, session, trials);
 
   useEffect(() => {
     if (watchCurrentSession && currentSession.participant) {
@@ -48,7 +52,7 @@ export default function ExperimentPage({
   }, [watchCurrentSession, currentSession]);
 
   return (
-    <section className="flex-grow p-4">
+    <section className="flex flex-col flex-grow p-4">
       {participants && (
         <div className="space-y-4 mb-4">
           <div className="flex items-center space-x-2">
@@ -101,17 +105,26 @@ export default function ExperimentPage({
           | Session <span className="font-bold">{session}</span>
         </h4>
       )}
-      <ResizablePanelGroup direction="horizontal" className="max-h-1/2 my-4">
-        <ResizablePanel>
-          <TrialView
-            participant={participant}
-            method={method}
-            session={session}
-          />
-        </ResizablePanel>
-        <ResizableHandle className="mx-4" />
-        <ResizablePanel>Two</ResizablePanel>
-      </ResizablePanelGroup>
+      <div className="flex-grow">
+        <ResizablePanelGroup direction="horizontal" className="my-4">
+          <ResizablePanel>
+            {isLoadingTrials ? (
+              <div className="text-gray-500">Loading trials...</div>
+            ) : (
+              <TrialView
+                participant={participant}
+                method={method}
+                session={session}
+                allTrials={allTrials}
+              />
+            )}
+          </ResizablePanel>
+          <ResizableHandle className="mx-4" />
+          <ResizablePanel>
+            <SessionView allTrials={allTrials} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
     </section>
   );
 }

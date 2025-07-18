@@ -1,7 +1,8 @@
+import { TrialEvent } from "@/db/event";
 import { Method } from "@/models/method";
 import { Participant } from "@/models/participant";
-import { useState } from "react";
-import { useListTrials, useTrial } from "./APIClient";
+import { useEffect, useState } from "react";
+import { computeTrialStats, TrialStats } from "./stats";
 import { TrialVideo } from "./TrialVideo";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 
@@ -9,17 +10,25 @@ type TrialViewProps = {
   participant: Participant | null;
   method: Method | null;
   session: number | null;
+  allTrials: TrialEvent[][] | null;
 };
 
-export function TrialView({ participant, method, session }: TrialViewProps) {
+export function TrialView({
+  participant,
+  method,
+  session,
+  allTrials,
+}: TrialViewProps) {
   const [trialNumber, setTrialNumber] = useState<number | null>(null);
-  const { trials } = useListTrials(participant?.id, method, session || 0);
-  const { trialEvents, isLoading: isLoadingTrial } = useTrial(
-    participant?.id,
-    method,
-    session,
-    trialNumber
-  );
+  const [trialEvents, setTrialEvents] = useState<TrialEvent[] | null>(null);
+
+  useEffect(() => {
+    if (allTrials && trialNumber !== null) {
+      setTrialEvents(allTrials[trialNumber - 1] || null);
+    } else {
+      setTrialEvents(null);
+    }
+  }, [allTrials, trialNumber]);
 
   if (!participant || !method || session === null) {
     return (
@@ -29,20 +38,28 @@ export function TrialView({ participant, method, session }: TrialViewProps) {
     );
   }
 
+  if (!allTrials || allTrials.length === 0) {
+    return (
+      <div className="text-red-500">
+        No trials available for this session yet.
+      </div>
+    );
+  }
+
   return (
     <div>
       <SelectTrial
-        trials={trials}
+        trials={allTrials?.map((_, i) => i + 1) || null}
         selectedTrial={trialNumber}
         onSelect={(selectedTrial) => setTrialNumber(selectedTrial)}
       />
       {trialNumber !== null && (
         <div className="mt-4">
-          <h3 className="text-lg font-semibold">Trial {trialNumber}</h3>
-          {isLoadingTrial ? (
-            <div>Loading...</div>
-          ) : trialEvents ? (
-            <TrialVideo trialEvents={trialEvents} />
+          {trialEvents ? (
+            <>
+              <TrialVideo trialEvents={trialEvents} />
+              <TrialStatsView trialEvents={trialEvents} />
+            </>
           ) : (
             <div className="text-red-500">No trial data available.</div>
           )}
@@ -84,5 +101,48 @@ function SelectTrial({ trials, selectedTrial, onSelect }: SelectTrialProps) {
         ))}
       </SelectContent>
     </Select>
+  );
+}
+
+type TrialStatsViewProps = {
+  trialEvents: TrialEvent[];
+};
+export function TrialStatsView({ trialEvents }: TrialStatsViewProps) {
+  const [stats, setStats] = useState<TrialStats | null>(null);
+
+  useEffect(() => {
+    if (trialEvents && trialEvents.length > 0) {
+      const stats = computeTrialStats(trialEvents);
+      setStats(stats);
+    }
+  }, [trialEvents]);
+
+  if (!trialEvents || trialEvents.length === 0 || !stats) {
+    return <div className="text-red-500">No trial events available.</div>;
+  }
+
+  return (
+    <div className="my-4 text-sm">
+      <ul>
+        <li>
+          <span className="text-gray-400">Target Text:</span> {stats.targetText}
+        </li>
+        <li>
+          <span className="text-gray-400">Final Text:</span> {stats.finalText}
+        </li>
+        <li>
+          <span className="text-gray-400">Minimum String Distance:</span>{" "}
+          {stats.minStringDistance} characters
+        </li>
+        <li>
+          <span className="text-gray-400">Duration:</span>{" "}
+          {stats.duration.toFixed(2)} seconds
+        </li>
+        <li>
+          <span className="text-gray-400">Typing Speed:</span>{" "}
+          {stats.typingSpeed.toFixed(2)} wpm
+        </li>
+      </ul>
+    </div>
   );
 }

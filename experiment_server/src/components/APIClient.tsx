@@ -158,6 +158,41 @@ export function useListTrials(
   };
 }
 
+export function useListFullTrials(
+  participantId: string | undefined | null,
+  method: Method | undefined | null,
+  session: number | undefined | null,
+  trials: number[] | undefined | null
+) {
+  const query = useQuery({
+    queryKey: ["participants", participantId, method, session],
+    queryFn: () => {
+      if (
+        !participantId ||
+        !method ||
+        session === null ||
+        !trials ||
+        trials.length === 0
+      ) {
+        return Promise.resolve([]);
+      }
+      return Promise.all(
+        trials.map((trial) =>
+          doGet(
+            `/participants/${participantId}/${method}/sessions/${session}/${trial}`,
+            "Failed to fetch trial data"
+          ).then(parseTrialData)
+        )
+      );
+    },
+    refetchOnWindowFocus: false,
+  });
+  return {
+    ...query,
+    fullTrials: query.data as TrialEvent[][] | null,
+  };
+}
+
 export function useTrial(
   participantId: string | undefined | null,
   method: Method | undefined | null,

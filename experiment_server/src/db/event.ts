@@ -203,12 +203,12 @@ export function parseTrialEvent(rawDataLine: string): TrialEvent | null {
   }
 }
 
-export function parseTrialData(rawData: string): any {
+export function parseTrialData(rawData: string): TrialEvent[] {
   const lines = rawData.split('\n').filter((line, idx) => line.trim() !== '' && idx > 0); // Skip header line
   const trialData: TrialEvent[] = [];
   for (const line of lines) {
     const event = parseTrialEvent(line);
     if (event) trialData.push(event);
   }
-  return trialData;
+  return trialData.sort((a, b) => a.timestamp - b.timestamp);
 }

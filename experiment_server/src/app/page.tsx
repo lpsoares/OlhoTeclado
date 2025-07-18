@@ -2,7 +2,8 @@
 
 import {
   APIClientProvider,
-  useCurrentParticipant,
+  useCurrentSession,
+  useParticipants,
 } from "@/components/APIClient";
 import ExperimentPage from "@/components/ExperimentPage";
 import StartExperimentPage from "@/components/StartExperimentPage";
@@ -18,18 +19,18 @@ export default function Home() {
 }
 
 function HomeClient() {
-  const { participant, session, method } = useCurrentParticipant();
-  const started = !!participant && !!method && !!session;
+  const { participants } = useParticipants();
+  const currentSession = useCurrentSession();
   return (
-    <>
-      {started && (
-        <ExperimentPage
-          participant={participant}
-          session={session}
-          method={method}
-        />
-      )}
-      {!started && <StartExperimentPage />}
-    </>
+    <div className="flex flex-wrap m-4 gap-4">
+      <StartExperimentPage
+        participants={participants}
+        currentSession={currentSession}
+      />
+      <ExperimentPage
+        participants={participants}
+        currentSession={currentSession}
+      />
+    </div>
   );
 }

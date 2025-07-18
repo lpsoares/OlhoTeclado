@@ -1,3 +1,4 @@
+import { parseTrialData, TrialEvent } from "@/db/event";
 import { Method } from "@/models/method";
 import { Participant } from "@/models/participant";
 import {
@@ -24,7 +25,6 @@ export function useParticipants() {
     queryFn: async () =>
       await doGet(`/participants`, "Failed to fetch participants"),
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
   return {
     ...query,
@@ -42,7 +42,6 @@ export function useParticipant(participantId: string) {
       );
     },
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
   return {
     ...query,
@@ -50,7 +49,7 @@ export function useParticipant(participantId: string) {
   };
 }
 
-export function useCurrentParticipant() {
+export function useCurrentSession() {
   const query = useQuery({
     queryKey: ["participants", "current"],
     queryFn: async () => {
@@ -60,7 +59,6 @@ export function useCurrentParticipant() {
       );
     },
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
   return {
     ...query,
@@ -113,21 +111,79 @@ export function useStopExperiment() {
   };
 }
 
-export function useListSessions(participantId: string, method: Method) {
+export function useListSessions(
+  participantId: string | null,
+  method: Method | null
+) {
   const query = useQuery({
     queryKey: ["participants", participantId, method, "sessions"],
     queryFn: () => {
+      if (!participantId || !method) {
+        return Promise.resolve([]);
+      }
       return doGet(
         `/participants/${participantId}/${method}/sessions`,
         "Failed to fetch sessions"
       );
     },
     refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
   return {
     ...query,
     sessions: query.data as number[] | null,
+  };
+}
+
+export function useListTrials(
+  participantId: string | undefined | null,
+  method: Method | undefined | null,
+  session: number | undefined | null
+) {
+  const query = useQuery({
+    queryKey: ["participants", participantId, method, session, "trials"],
+    queryFn: () => {
+      if (!participantId || !method || session === null) {
+        return Promise.resolve([]);
+      }
+      return doGet(
+        `/participants/${participantId}/${method}/sessions/${session}`,
+        "Failed to fetch trials"
+      );
+    },
+    refetchOnWindowFocus: false,
+  });
+  return {
+    ...query,
+    trials: query.data as number[] | null,
+  };
+}
+
+export function useTrial(
+  participantId: string | undefined | null,
+  method: Method | undefined | null,
+  session: number | undefined | null,
+  trial: number | undefined | null
+) {
+  const query = useQuery({
+    queryKey: ["participants", participantId, method, session, trial],
+    queryFn: async () => {
+      if (!participantId || !method || !session || !trial) {
+        return null;
+      }
+      const rawTrialData = await doGet(
+        `/participants/${participantId}/${method}/sessions/${session}/${trial}`,
+        "Failed to fetch trial data"
+      );
+      if (!rawTrialData) {
+        return null;
+      }
+      return parseTrialData(rawTrialData);
+    },
+    refetchOnWindowFocus: false,
+  });
+  return {
+    ...query,
+    trialEvents: query.data as TrialEvent[], // Adjust type as needed
   };
 }
 

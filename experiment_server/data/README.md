@@ -28,7 +28,8 @@ The end of the trial is recorded with the `TRIAL_END` type. The `data` field con
 
 Key presses are recorded with the `KEY_PRESS` type. The `data` field contains the following information:
 
-- The key that was pressed, represented by a single character (e.g., `Q`, `W`, `E`, etc.).
+- The key label of the pressed key;
+- The key value of the pressed key.
 
 ### Key Positions
 

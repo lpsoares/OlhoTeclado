@@ -1,12 +1,13 @@
 import { listTrials } from '@/db/trial';
+import { Method } from '@/models/method';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request,
-  { params }: { params: Promise<{ participantId: string, session: string }> }
+  { params }: { params: Promise<{ participantId: string, method: string, session: string }> }
 ) {
-  const { participantId, session: sessionsStr } = await params;
+  const { participantId, method, session: sessionsStr } = await params;
   const session = parseInt(sessionsStr, 10);
-  const trials = listTrials(participantId, session);
+  const trials = listTrials(participantId, method as Method, session);
   if (!trials) {
     return NextResponse.json(
       { error: 'No trials found for this participant' },

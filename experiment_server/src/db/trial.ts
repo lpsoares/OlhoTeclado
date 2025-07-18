@@ -1,13 +1,14 @@
+import { Method } from '@/models/method';
 import fs from 'fs';
 import path from "path";
 import { DATA_DIR } from "./database";
-import { getSessionDirname } from './session';
 import { addParticipantUsedSentence, getParticipantUsedSentences } from './participant';
+import { getSessionDirname } from './session';
 
 const TRIAL_FILE_HEADER = "timestamp,type,data\n";
 
-export function listTrials(participantId: string, session: number): number[] {
-  const sessionDir = path.join(DATA_DIR, participantId, getSessionDirname(session));
+export function listTrials(participantId: string, method: Method, session: number): number[] {
+  const sessionDir = path.join(DATA_DIR, participantId, method, getSessionDirname(session));
   if (!fs.existsSync(sessionDir)) {
     return [];
   }
@@ -17,13 +18,13 @@ export function listTrials(participantId: string, session: number): number[] {
     .sort();
 }
 
-export function startTrial(participantId: string, session: number, timestamp: string): { trial: number; sentence: string } {
-  const sessionDir = path.join(DATA_DIR, participantId, getSessionDirname(session));
+export function startTrial(participantId: string, method: Method, session: number, timestamp: string): { trial: number; sentence: string } {
+  const sessionDir = path.join(DATA_DIR, participantId, method, getSessionDirname(session));
   if (!fs.existsSync(sessionDir)) {
     throw new Error(`Session directory does not exist for participant ${participantId} and session ${session}`);
   }
 
-  const trialNumber = Math.max(0, ...listTrials(participantId, session)) + 1;
+  const trialNumber = Math.max(0, ...listTrials(participantId, method, session)) + 1;
   const trialFile = path.join(sessionDir, getTrialFilename(trialNumber));
 
   if (!fs.existsSync(trialFile)) {
@@ -34,18 +35,26 @@ export function startTrial(participantId: string, session: number, timestamp: st
   if (!sentence) {
     throw new Error(`No more unused sentences available for participant ${participantId}`);
   }
-  addTrialData(participantId, session, trialNumber, timestamp, 'TRIAL_START', sentence);
+  addTrialData(participantId, method, session, trialNumber, timestamp, 'TRIAL_START', sentence);
 
-  return {trial: trialNumber, sentence};
+  return { trial: trialNumber, sentence };
 }
 
-export function addTrialData(participantId: string, session: number, trial: number, timestamp: string, type: string, data: string): void {
-  const trialFile = path.join(DATA_DIR, participantId, getSessionDirname(session), getTrialFilename(trial));
+export function addTrialData(participantId: string, method: Method, session: number, trial: number, timestamp: string, type: string, data: string): void {
+  const trialFile = path.join(DATA_DIR, participantId, method, getSessionDirname(session), getTrialFilename(trial));
   if (!fs.existsSync(trialFile)) {
     throw new Error(`Trial file does not exist for participant ${participantId}, session ${session}, trial ${trial}`);
   }
   const line = `${timestamp},${type},${data}\n`;
   fs.appendFileSync(trialFile, line, 'utf8');
+}
+
+export function getTrialData(participantId: string, method: Method, session: number, trial: number): string {
+  const trialFile = path.join(DATA_DIR, participantId, method, getSessionDirname(session), getTrialFilename(trial));
+  if (!fs.existsSync(trialFile)) {
+    throw new Error(`Trial file does not exist for participant ${participantId}, session ${session}, trial ${trial}`);
+  }
+  return fs.readFileSync(trialFile, 'utf8');
 }
 
 function getTrialFilename(trialNumber: number): string {

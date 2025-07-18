@@ -13,11 +13,13 @@ type SelectRegisteredParticipantProps = {
   participants: Participant[];
   onChange: (participant: Participant) => void;
   className?: string;
+  disabled?: boolean;
 };
 export default function SelectRegisteredParticipant({
   participants,
   onChange,
   className,
+  disabled,
 }: SelectRegisteredParticipantProps) {
   const handleValueChange = (value: string) => {
     const selectedParticipant = participants.find(
@@ -28,7 +30,7 @@ export default function SelectRegisteredParticipant({
 
   return (
     <Select onValueChange={handleValueChange}>
-      <SelectTrigger className={className}>
+      <SelectTrigger className={className} disabled={disabled}>
         <SelectValue placeholder="Select a registered participant" />
       </SelectTrigger>
       <SelectContent>

@@ -1,9 +1,10 @@
 import { Method, methodSchema } from "@/models/method";
 import { Participant, participantSchema } from "@/models/participant";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { useParticipants, useStartExperiment } from "./APIClient";
+import { useStartExperiment, useStopExperiment } from "./APIClient";
 import SelectMethod from "./SelectMethod";
 import SelectRegisteredParticipant from "./SelectRegisteredParticipant";
 import { Button } from "./ui/button";
@@ -27,12 +28,33 @@ import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Separator } from "./ui/separator";
 
-export default function StartExperimentPage() {
-  const form = useExperimentStartForm();
+type StartExperimentPageProps = {
+  participants: Participant[] | null;
+  currentSession: {
+    participant: Participant | null;
+    session: number | null;
+    method: Method | null;
+  };
+};
+export default function StartExperimentPage({
+  participants,
+  currentSession,
+}: StartExperimentPageProps) {
+  const form = useExperimentStartForm(currentSession.participant);
   const { isValid } = form.formState;
+  const { stopExperiment } = useStopExperiment();
 
-  const { participants } = useParticipants();
   const { startExperiment } = useStartExperiment();
+  const experimentRunning =
+    currentSession.participant !== null &&
+    currentSession.session !== null &&
+    currentSession.method !== null;
+
+  useEffect(() => {
+    if (currentSession.participant) {
+      form.reset(currentSession.participant);
+    }
+  }, [currentSession.participant, form]);
 
   const handleChangeParticipant = (participant: Participant) => {
     form.reset(participant);
@@ -46,9 +68,13 @@ export default function StartExperimentPage() {
     });
   };
 
+  const handleStopExperiment = () => {
+    stopExperiment();
+  };
+
   return (
-    <div className="flex size-full items-center justify-center">
-      <Card className="w-[400px]">
+    <div className="flex min-h-full items-center justify-center">
+      <Card className="w-[400px] min-h-full">
         <CardHeader>
           <CardTitle>Participant Information</CardTitle>
           <CardDescription>
@@ -62,6 +88,7 @@ export default function StartExperimentPage() {
                 participants={participants}
                 onChange={handleChangeParticipant}
                 className="w-full"
+                disabled={experimentRunning}
               />
               <Separator className="my-6" />
             </>
@@ -75,6 +102,7 @@ export default function StartExperimentPage() {
               <FormField
                 control={form.control}
                 name="id"
+                disabled={experimentRunning}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>ID</FormLabel>
@@ -89,6 +117,7 @@ export default function StartExperimentPage() {
               <FormField
                 control={form.control}
                 name="name"
+                disabled={experimentRunning}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
@@ -103,6 +132,7 @@ export default function StartExperimentPage() {
               <FormField
                 control={form.control}
                 name="age"
+                disabled={experimentRunning}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Age</FormLabel>
@@ -117,6 +147,7 @@ export default function StartExperimentPage() {
               <FormField
                 control={form.control}
                 name="sex"
+                disabled={experimentRunning}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Sex</FormLabel>
@@ -124,6 +155,7 @@ export default function StartExperimentPage() {
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       className="flex gap-6"
+                      disabled={experimentRunning}
                     >
                       <div className="flex items-center gap-3">
                         <RadioGroupItem value="M" id="sex-M" />
@@ -144,12 +176,14 @@ export default function StartExperimentPage() {
               <FormField
                 control={form.control}
                 name="method"
+                disabled={experimentRunning}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Typing Method</FormLabel>
                     <SelectMethod
                       onChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={experimentRunning}
                       className="w-full"
                     />
                     <FormMessage />
@@ -157,11 +191,23 @@ export default function StartExperimentPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={!isValid}>
-                Start Experiment
-              </Button>
+              {!experimentRunning && (
+                <Button type="submit" className="w-full" disabled={!isValid}>
+                  Start Experiment
+                </Button>
+              )}
             </form>
           </Form>
+          {experimentRunning && (
+            <Button
+              type="submit"
+              className="w-full mt-4"
+              variant="destructive"
+              onClick={handleStopExperiment}
+            >
+              Stop Experiment
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>
@@ -182,7 +228,7 @@ const participantWithMethodSchema = participantSchema
   );
 type ParticipantWithMethod = z.infer<typeof participantWithMethodSchema>;
 
-function useExperimentStartForm(participant?: Participant) {
+function useExperimentStartForm(participant?: Participant | null) {
   return useForm<ParticipantWithMethod>({
     resolver: zodResolver(participantWithMethodSchema),
     defaultValues: {

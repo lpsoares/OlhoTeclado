@@ -13,15 +13,17 @@ type SelectMethodProps = {
   onChange: (method: string) => void;
   defaultValue?: Method;
   className?: string;
+  disabled?: boolean;
 };
 export default function SelectMethod({
   onChange,
   defaultValue,
   className,
+  disabled,
 }: SelectMethodProps) {
   return (
     <Select onValueChange={onChange} defaultValue={defaultValue}>
-      <SelectTrigger className={className}>
+      <SelectTrigger className={className} disabled={disabled}>
         <SelectValue placeholder="Select the typing method" />
       </SelectTrigger>
       <SelectContent>

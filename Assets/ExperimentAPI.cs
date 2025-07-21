@@ -85,17 +85,17 @@ public class ExperimentAPI
         yield return RequestAndWait(request, onComplete);
     }
 
-    public IEnumerator StartTrial(Participant participant, int session, float timestamp, string method, Action<TrialData> onComplete = null)
+    public IEnumerator StartTrial(Participant participant, string method, int session, float timestamp, Action<TrialData> onComplete = null)
     {
-        string uri = $"{baseUrl}/participants/{participant.id}/sessions/{session}/{method}/start";
+        string uri = $"{baseUrl}/participants/{participant.id}/{method}/sessions/{session}/start";
         string jsonData = $"{{\"timestamp\":\"{timestamp}\"}}";
         UnityWebRequest request = UnityWebRequest.Post(uri, jsonData, "application/json");
         yield return RequestAndWait(request, onComplete);
     }
 
-    public IEnumerator SendEvents(Participant participant, int session, int trial, string[] events, Action<VoidResponse> onComplete = null)
+    public IEnumerator SendEvents(Participant participant, string method, int session, int trial, string[] events, Action<VoidResponse> onComplete = null)
     {
-        string uri = $"{baseUrl}/participants/{participant.id}/sessions/{session}/{trial}";
+        string uri = $"{baseUrl}/participants/{participant.id}/{method}/sessions/{session}/{trial}";
         string eventData = string.Join("\n", events);
         UnityWebRequest request = UnityWebRequest.Post(uri, eventData, "text/plain");
         yield return RequestAndWait(request, onComplete);

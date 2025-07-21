@@ -50,7 +50,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
 
     void Update()
     {
-        if (participant != null && method && sessionId > 0)
+        if (participant != null && method != null && sessionId > 0)
         {
             if (startTrialAction.triggered && trialState == TrialState.NotStarted)
             {
@@ -150,7 +150,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
     private IEnumerator StartTrialCoroutine()
     {
         float timestamp = GetTimestamp();
-        yield return experimentAPI.StartTrial(participant, sessionId, timestamp, method, trialData =>
+        yield return experimentAPI.StartTrial(participant, method, sessionId, timestamp, trialData =>
         {
             if (trialData != null && trialData.trial > 0)
             {
@@ -204,7 +204,7 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                 string[] eventArray = events.ToArray();
                 events.Clear();
 
-                yield return experimentAPI.SendEvents(participant, sessionId, trial, eventArray, (_) =>
+                yield return experimentAPI.SendEvents(participant, method, sessionId, trial, eventArray, (_) =>
                 {
                     sending = false;
                 });

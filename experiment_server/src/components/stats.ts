@@ -7,6 +7,8 @@ export type TrialStats = {
   targetText: string; // Target text for the trial
   finalText: string; // Final text after typing
   minStringDistance: number; // Minimum string distance between target and final text
+  editsTarget: Edit[]; // Edits made to the target text
+  editsFinal: Edit[]; // Edits made to the final text
 };
 const emptyTrialStats: TrialStats = {
   duration: 0,
@@ -15,6 +17,8 @@ const emptyTrialStats: TrialStats = {
   targetText: "",
   finalText: "",
   minStringDistance: 0,
+  editsTarget: [],
+  editsFinal: [],
 };
 export function computeTrialStats(
   trialEvents: TrialEvent[]
@@ -51,31 +55,61 @@ export function computeTrialStats(
   const typingDuration = typingStart ? (end - typingStart) / 1000 : 0; // Typing duration in seconds
   const totalWords = firstText && finalText ? (finalText.length - firstText.length) / 5 : 0;
   const typingSpeed = (totalWords / (typingDuration || 1)) * 60; // Words per minute
-  const minStringDistance = targetText && finalText ? levenshteinDistance(targetText.toLocaleLowerCase(), finalText.toLocaleLowerCase()) : 0;
+  const {distance: minStringDistance, editsA: editsTarget, editsB: editsFinal} = targetText && finalText ? levenshteinDistance(targetText.toLowerCase(), finalText.toLowerCase()) : {distance: 0, editsA: [], editsB: []};
 
-  return { duration, typingDuration, typingSpeed, targetText, finalText, minStringDistance };
+  return { duration, typingDuration, typingSpeed, targetText, finalText, minStringDistance, editsTarget, editsFinal };
 }
 
-function levenshteinDistance(a: string, b: string): number {
-  let prevRow = Array.from({ length: b.length + 1 }, (_, j) => j);
-  let curRow = Array(b.length + 1).fill(0);
-
+function levenshteinDistance(a: string, b: string): { distance: number, editsA: Edit[], editsB: Edit[] } {
+  const distances = Array.from({ length: a.length + 1 }, (_, i) => Array.from({length: b.length + 1}, (_, j) => i === 0 ? j : 0));
+  
   for (let i = 1; i <= a.length; i++) {
     for (let j = 1; j <= b.length; j++) {
       if (a[i - 1] === b[j - 1]) {
-        curRow[j] = prevRow[j - 1];
+        distances[i][j] = distances[i - 1][j - 1];
       } else {
-        curRow[j] = Math.min(
-          prevRow[j - 1] + 1, // substitution
-          Math.min(
-            curRow[j - 1] + 1, // insertion
-            prevRow[j] + 1, // deletion
-          )
-        );
+        const substitution = distances[i - 1][j - 1] + 1;
+        const insertion = distances[i][j - 1] + 1;
+        const deletion = distances[i - 1][j] + 1;
+        distances[i][j] = Math.min(substitution, insertion, deletion);
       }
     }
-    [prevRow, curRow] = [curRow, prevRow];
   }
 
-  return prevRow[b.length];
+  return {...rebuildEdits(distances), distance: distances[a.length][b.length]};
 }
+
+export type Edit = "insertion" | "deletion" | "substitution" | "no_change";
+
+function rebuildEdits(distances: number[][]): { editsA: Edit[], editsB: Edit[] } {
+  const editsA: Edit[] = Array.from({ length: distances.length - 1 }, () => "no_change");
+  const editsB: Edit[] = Array.from({ length: distances[0].length - 1 }, () => "no_change");
+  let i = distances.length - 1;
+  let j = distances[0].length - 1;
+
+  while (i > 0 && j > 0) {
+    if (distances[i][j] === distances[i - 1][j - 1]) {
+      i--;
+      j--;
+    } else if (distances[i][j] === distances[i - 1][j] + 1) {
+      editsA[i - 1] = "deletion";
+      i--;
+    } else {
+      editsB[j - 1] = "insertion";
+      j--;
+    }
+  }
+
+  // Add any remaining edits from either string
+  while (i > 0) {
+    editsA[i - 1] = "deletion";
+    i--;
+  }
+  while (j > 0) {
+    editsB[j - 1] = "insertion";
+    j--;
+  }
+
+  return { editsA, editsB };
+}
+

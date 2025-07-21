@@ -151,6 +151,7 @@ export function useListTrials(
       );
     },
     refetchOnWindowFocus: false,
+    refetchInterval: 10000, // Refetch every 10 seconds
   });
   return {
     ...query,

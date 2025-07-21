@@ -1,60 +1,35 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public interface ITextChangeListener
-{
-    void OnTextChanged(string newText);
-}
-
-public interface IContextChangeListener
-{
-    void OnContextChanged(KeyboardContext newContext);
-}
-
-public interface IContextPositionsListener
-{
-    void OnContextPositionsChanged(ContextPositionData[] contextPositionData);
-}
-
-public class ContextPositionData
-{
-    public string contextName;
-    public Vector3 origin;
-    public Vector3 upVector;
-    public Vector3 rightVector;
-    public Vector3 forwardVector;
-
-    public ContextPositionData(string contextName, Vector3 origin, Vector3 upVector, Vector3 rightVector, Vector3 forwardVector)
-    {
-        this.contextName = contextName;
-        this.origin = origin;
-        this.upVector = upVector;
-        this.rightVector = rightVector;
-        this.forwardVector = forwardVector;
-    }
-}
-
-public class KeyboardManager : MonoBehaviour
+[Serializable]
+public class KeyboardManager : MonoBehaviour, ITextChangeListener
 {
     public Camera mainCamera; // Assign in Inspector or find in Start
     public float distanceInFront = 2f; // Distance in front of the camera
-    private ContextGazeInteraction contextGazeInteraction;
+    
     public GameObject keyboardContextPrefab;
+    
     public GameObject textOutputPrefab;
 
+    
+    public KeyboardType keyboardType;
+    
     public bool debugGaze = true;
 
-    public List<KeyboardContext> keyboardContexts;
-
     private GameObject gazeDebugObject;
-    private KeyboardState curState = KeyboardState.Initial;
-    private KeyboardContext curContext = null;
+    private ContextGazeInteraction contextGazeInteraction;
     private TextOutput textReference;
     private TextOutput textOutput;
     private readonly List<ITextChangeListener> textChangeListeners = new();
     private readonly List<IContextChangeListener> contextChangeListeners = new();
     private readonly List<IContextPositionsListener> contextPositionListeners = new();
+
+    public AbstractKeyboard Keyboard
+    {
+        get; private set;
+    }
 
     InputAction resetKeyboardAction;
 
@@ -63,11 +38,6 @@ public class KeyboardManager : MonoBehaviour
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
-        }
-
-        if (contextGazeInteraction == null)
-        {
-            contextGazeInteraction = FindObjectOfType<ContextGazeInteraction>();
         }
 
         GetComponents(textChangeListeners);
@@ -86,6 +56,11 @@ public class KeyboardManager : MonoBehaviour
             Debug.LogWarning("No context position listeners found. Please add IContextPositionListener components to the scene.");
         }
 
+        EyeTracker eyeTracker = GetComponent<EyeTracker>();
+        List<IGazeDataListener> gazeDataListeners = new();
+        GetComponents(gazeDataListeners);
+        contextGazeInteraction = new ContextGazeInteraction(eyeTracker, gazeDataListeners);
+
         textReference = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textReference.transform.SetParent(transform);
         textReference.transform.localPosition = new Vector3(0, 0.1f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
@@ -95,17 +70,6 @@ public class KeyboardManager : MonoBehaviour
         textOutput.transform.SetParent(transform);
         textOutput.transform.localPosition = new Vector3(0, 0.05f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textOutput.text = "";
-
-        keyboardContexts = new List<KeyboardContext>();
-        KeyboardState[] states = { KeyboardState.InactiveNext, KeyboardState.Next, KeyboardState.Current, KeyboardState.Previous, KeyboardState.InactivePrevious };
-        for (int i = 0; i < states.Length; i++)
-        {
-            KeyboardContext context = Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>();
-            keyboardContexts.Add(context);
-            context.transform.SetParent(transform);
-            context.State = states[i];
-            context.Depth = context.TargetDepth;
-        }
 
         // Instantiate a red sphere for gaze debugging
         gazeDebugObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -118,85 +82,80 @@ public class KeyboardManager : MonoBehaviour
 
     void Update()
     {
-        if (resetKeyboardAction.IsPressed())
+        if (Keyboard?.Type != keyboardType)
         {
-            Vector3 inFront = mainCamera.transform.position + mainCamera.transform.forward * distanceInFront;
-            transform.SetPositionAndRotation(inFront, Quaternion.LookRotation(mainCamera.transform.forward, mainCamera.transform.up));
-            NotifyContextPositionsListeners();
+            SetKeyboardType(keyboardType);
         }
 
-        KeyboardContext context = contextGazeInteraction.GetCurrentContext(keyboardContexts, out Vector3 gazeInContext, out _);
-        if (context != null)
+        if (Keyboard != null)
         {
-            if (debugGaze)
+            if (resetKeyboardAction.IsPressed())
             {
-                gazeDebugObject.transform.position = gazeInContext;
-                gazeDebugObject.SetActive(true);
-            }
-            else
-            {
-                gazeDebugObject.SetActive(false);
+                Vector3 inFront = mainCamera.transform.position + mainCamera.transform.forward * distanceInFront;
+                transform.SetPositionAndRotation(inFront, Quaternion.LookRotation(mainCamera.transform.forward, mainCamera.transform.up));
+                Keyboard.NotifyContextPositionsListeners();
             }
 
-            if (curState == KeyboardState.Initial)
+            KeyboardContext context = Keyboard.Update(out Vector3 gazeInContext, out _);
+            if (context != null)
             {
-                if (context.State == KeyboardState.Current)
+                if (debugGaze)
                 {
-                    curState = KeyboardState.Current;
-                    curContext = context;
-                    NotifyContextChangeListeners(curContext);
+                    gazeDebugObject.transform.position = gazeInContext;
+                    gazeDebugObject.SetActive(true);
                 }
-            }
-            else if (curState != context.State)
-            {
-                KeyboardContext previousContext = curContext;
-                curContext = context;
-                NotifyContextChangeListeners(context);
-                KeyboardState previousState = curState;
-                curState = context.State;
-
-                int stateDiff = 0;
-                if (previousState == KeyboardState.Current && curState == KeyboardState.Next)
+                else
                 {
-                    stateDiff = 1;
-                    textOutput.text += previousContext.LastSelectedKey == null ? "" : previousContext.LastSelectedKey.label.ToLower();
+                    gazeDebugObject.SetActive(false);
                 }
-                else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
-                {
-                    stateDiff = -1;
-                    if (textOutput.text.Length > 0)
-                    {
-                        textOutput.text = textOutput.text[..^1];
-                    }
-                }
-                if (stateDiff != 0)
-                {
-                    NotifyTextChangeListeners(textOutput.text);
-                    foreach (var ctx in keyboardContexts)
-                    {
-                        ctx.State = (KeyboardState)(((int)ctx.State + stateDiff + 5) % 5);
-                        ctx.CurrentGaze = Vector3.zero;
-                    }
-                }
-            }
-
-            if (curContext != null && curContext.State == KeyboardState.Current)
-            {
-                curContext.CurrentGaze = gazeInContext;
             }
         }
     }
 
-    public ContextPositionData[] GetContextPositions()
+    public void SetKeyboardType(KeyboardType type)
     {
-        List<ContextPositionData> contextPositions = new List<ContextPositionData>();
-        foreach (var ctx in keyboardContexts)
+        if (keyboardType == type)
         {
-            var transform = ctx.transform;
-            contextPositions.Add(new ContextPositionData(ctx.State.ToString(), transform.position, transform.up, transform.right, transform.forward));
+            return; // No change needed
         }
-        ContextPositionData[] contextPositionData = contextPositions.ToArray();
-        return contextPositionData;
+        keyboardType = type;
+
+        CleanUpContexts();
+
+        switch (type)
+        {
+            case KeyboardType.Red:
+                Keyboard = new RedKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners);
+                break;
+            case KeyboardType.Blue:
+                Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners);
+                break;
+            case KeyboardType.Green:
+                Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners);
+                break;
+            default:
+                Debug.LogError($"Unknown keyboard type: {type}. Using RedKeyboard as default.");
+                break;
+        }
+    }
+
+    KeyboardContext InstantiateContext()
+    {
+        KeyboardContext context = Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>();
+        context.transform.SetParent(transform);
+        return context;
+    }
+
+    private void CleanUpContexts()
+    {
+        if (Keyboard != null)
+        {
+            foreach (var context in Keyboard.keyboardContexts)
+            {
+                context.CleanUp();
+            }
+            Keyboard.keyboardContexts.Clear();
+        }
     }
 
     public void SetReferenceText(string text)
@@ -207,41 +166,8 @@ public class KeyboardManager : MonoBehaviour
         }
     }
 
-    public string GetOutputText()
+    public void OnTextChanged(string newText)
     {
-        return textOutput != null ? textOutput.text : string.Empty;
-    }
-
-    public void ResetOutputText()
-    {
-        if (textOutput != null)
-        {
-            textOutput.text = "";
-        }
-    }
-
-    private void NotifyTextChangeListeners(string newText)
-    {
-        foreach (var listener in textChangeListeners)
-        {
-            listener.OnTextChanged(newText);
-        }
-    }
-
-    private void NotifyContextChangeListeners(KeyboardContext newContext)
-    {
-        foreach (var listener in contextChangeListeners)
-        {
-            listener.OnContextChanged(newContext);
-        }
-    }
-
-    private void NotifyContextPositionsListeners()
-    {
-        ContextPositionData[] contextPositionData = GetContextPositions();
-        foreach (var listener in contextPositionListeners)
-        {
-            listener.OnContextPositionsChanged(contextPositionData);
-        }
+        textOutput.text = newText;
     }
 }

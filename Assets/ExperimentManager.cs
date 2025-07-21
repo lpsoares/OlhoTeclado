@@ -60,12 +60,12 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
 
             if (stopTrialAction.triggered && trialState == TrialState.Ongoing && GetTimestamp() - trialStartTime > 500f)
             {
-                string outputText = keyboardManager.GetOutputText();
+                string outputText = keyboardManager.Keyboard.Text;
                 events.Add(EventBuilder.BuildTrialEndEvent(GetTimestamp(), outputText));
                 Debug.Log($"Trial {trial} completed with output: \"{outputText}\". Waiting for next trial.");
-                keyboardManager.SetReferenceText("");
-                keyboardManager.ResetOutputText();
                 trialState = TrialState.NotStarted; // Reset trial state
+                keyboardManager.SetReferenceText("");
+                keyboardManager.Keyboard.ResetText();
             }
         }
     }
@@ -136,6 +136,23 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                         participant = response.participant;
                         method = response.method;
                         sessionId = int.Parse(response.session);
+
+                        switch (method)
+                        {
+                            case "red":
+                                keyboardManager.SetKeyboardType(KeyboardType.Red);
+                                break;
+                            case "blue":
+                                keyboardManager.SetKeyboardType(KeyboardType.Blue);
+                                break;
+                            case "green":
+                                keyboardManager.SetKeyboardType(KeyboardType.Green);
+                                break;
+                            default:
+                                Debug.LogError($"Unknown method: {method}. Defaulting to Red Keyboard.");
+                                keyboardManager.SetKeyboardType(KeyboardType.Red);
+                                break;
+                        }
                     }
                     else
                     {
@@ -159,8 +176,8 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                 trialStartTime = GetTimestamp();
                 trialState = TrialState.Ongoing;
                 keyboardManager.SetReferenceText(TargetSentence);
-                keyboardManager.ResetOutputText();
-                events.Add(EventBuilder.BuildContextPositionsEvent(trialStartTime, keyboardManager.GetContextPositions()));
+                keyboardManager.Keyboard.ResetText();
+                events.Add(EventBuilder.BuildContextPositionsEvent(trialStartTime, keyboardManager.Keyboard.GetContextPositions()));
                 events.Add(EventBuilder.BuildKeyPositionEvent(trialStartTime, GetKeyPositions()));
                 Debug.Log($"Trial {trial} started at {timestamp} with sentence: {TargetSentence}");
             }
@@ -177,8 +194,8 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
 
     private KeyPositionData[] GetKeyPositions()
     {
-        List<KeyPositionData> keyPositions = new List<KeyPositionData>();
-        foreach (var context in keyboardManager.keyboardContexts)
+        List<KeyPositionData> keyPositions = new();
+        foreach (var context in keyboardManager.Keyboard.keyboardContexts)
         {
             if (context == null) continue;
 

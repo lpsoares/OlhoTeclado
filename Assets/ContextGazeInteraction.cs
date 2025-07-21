@@ -6,20 +6,21 @@ public interface IGazeDataListener
     void OnGaze(Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection);
 }
 
-public class ContextGazeInteraction : MonoBehaviour
+public class ContextGazeInteraction
 {
-    private readonly List<IGazeDataListener> gazeDataListeners = new();
-    private EyeTracker eyeTracker;
-    private void Start()
+    private readonly List<IGazeDataListener> gazeDataListeners;
+    private readonly EyeTracker eyeTracker;
+
+    public ContextGazeInteraction(EyeTracker eyeTracker, List<IGazeDataListener> gazeDataListeners)
     {
-        eyeTracker = GetComponent<EyeTracker>();
-        GetComponents(gazeDataListeners);
+        this.eyeTracker = eyeTracker;
+        this.gazeDataListeners = gazeDataListeners;
         if (gazeDataListeners.Count == 0)
         {
             Debug.LogWarning("No gaze data listeners found. Please add IGazeDataListener components to the scene.");
         }
     }
-
+    
     public KeyboardContext GetCurrentContext(List<KeyboardContext> keyboardContexts, out Vector3 gaze3DInContext, out Vector2 gaze2DInContext)
     {
         gaze3DInContext = Vector3.zero;

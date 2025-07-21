@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 using UnityEngine;
+using Unity.VisualScripting;
+
 
 public class KeyboardContext : MonoBehaviour
 {
+    public Color backgroundColor = new(0f, 0f, 0f, 0f);
+    public Color keyColor = new(0.15f, 0.15f, 0.15f, 1.0f);
+    private Color prevColor;
     private const float INACTIVE_NEXT_DEPTH = 3.0f;
     private const float NEXT_DEPTH = 1.0f;
     private const float CURR_DEPTH = 0.0f;
@@ -74,7 +78,7 @@ public class KeyboardContext : MonoBehaviour
     }
 
     public readonly List<Key> Keys = new();
-    private readonly List<List<string>> keyLayout = new()
+    private List<List<string>> keyLayout = new()
     {
         new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
         new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
@@ -82,44 +86,27 @@ public class KeyboardContext : MonoBehaviour
         new List<string> { " "}
     };
     private KeyboardStateMachine keyboardStateMachine;
+    private GameObject backgroundRect;
+    private Material backgroundMaterial;
 
     void Start()
     {
         transform.position = new Vector3(0, 0, Depth);
 
-        float keyboardOffsetY = -0.4f;
-        float keyboardY0 = keyboardOffsetY + 3 * keySpacing + 2.5f * keySize;
-        for (int row = 0; row < keyLayout.Count; row++)
-        {
-            float x0 = -(keyLayout[row].Count - 1) * (keySpacing + keySize) / 2.0f; // Center the row (x0 is the center of the leftmost key)
-            float y0 = keyboardY0 - row * (keySpacing + keySize);
-
-            for (int col = 0; col < keyLayout[row].Count; col++)
-            {
-                string label = keyLayout[row][col];
-                GameObject keyObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                keyObject.AddComponent<Key>();
-                Key key = keyObject.GetComponent<Key>();
-                key.label = label;
-                key.alpha = Alpha;
-                keyObject.name = "Key_" + label;
-
-                keyObject.transform.SetParent(transform);
-                key.X = x0 + col * (keySpacing + keySize);
-                key.Y = y0;
-                key.Width = keySize * (1 + 0.25f * (label == " " ? 8 : 0));
-                key.Height = keySize;
-                key.Depth = keySize / 10;
-
-                Keys.Add(key);
-            }
-        }
-
-        keyboardStateMachine = new KeyboardStateMachine(Keys);
+        InitKeyLayout(keyLayout);
     }
 
     void Update()
     {
+        if (prevColor != keyColor)
+        {
+            prevColor = keyColor;
+            foreach (Key key in Keys)
+            {
+                key.backgroundColor = keyColor;
+            }
+        }
+
         if (Depth != TargetDepth)
         {
             Depth += depthSpeed * Time.deltaTime;
@@ -132,6 +119,7 @@ public class KeyboardContext : MonoBehaviour
                 }
             }
         }
+        backgroundMaterial.color = backgroundColor.WithAlpha(Alpha * 0.5f);
         foreach (Key key in Keys)
         {
             key.alpha = Alpha;
@@ -157,6 +145,71 @@ public class KeyboardContext : MonoBehaviour
             {
                 key.IsCurrent = false; // Reset all keys to not current
             }
+        }
+    }
+
+    public void InitKeyLayout(List<List<string>> newLayout, List<string> nonKeys = null)
+    {
+        keyLayout = newLayout;
+        CleanUp();
+        
+        float keyboardOffsetY = -0.4f;
+        float keyboardY0 = keyboardOffsetY + 3 * keySpacing + 2.5f * keySize;
+
+        // Create background rectangle
+        float padding = 2 * keySpacing;
+        float width = keyLayout[0].Count * (keySize + keySpacing) - keySpacing + padding * 2;
+        float height = keyLayout.Count * (keySize + keySpacing) - keySpacing + padding * 2;
+        backgroundRect = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        backgroundRect.transform.SetParent(transform);
+        backgroundMaterial = backgroundRect.GetComponent<Renderer>().material;
+        backgroundMaterial.SetTransparent();
+
+        // Position the background rectangle slightly behind the keys and centered at the keyboard
+        backgroundRect.transform.localPosition = new Vector3(0, keyboardY0 - keyLayout.Count / 2 * keySpacing - keyLayout.Count / 2f * keySize, 1.5f * keySize);
+        backgroundRect.transform.localScale = new Vector3(width, height, keySize / 10);
+
+        for (int row = 0; row < keyLayout.Count; row++)
+        {
+            float x0 = -(keyLayout[row].Count - 1) * (keySpacing + keySize) / 2.0f; // Center the row (x0 is the center of the leftmost key)
+            float y0 = keyboardY0 - row * (keySpacing + keySize);
+
+            for (int col = 0; col < keyLayout[row].Count; col++)
+            {
+                string label = keyLayout[row][col];
+                GameObject keyObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                keyObject.AddComponent<Key>();
+                Key key = keyObject.GetComponent<Key>();
+                key.label = label;
+                key.alpha = Alpha;
+                key.IsKey = nonKeys?.IndexOf(label) < 0;
+                keyObject.name = "Key_" + label;
+
+                keyObject.transform.SetParent(transform);
+                key.X = x0 + col * (keySpacing + keySize);
+                key.Y = y0;
+                key.Width = keySize * (1 + 0.25f * (label == " " ? 8 : 0));
+                key.Height = keySize;
+                key.Depth = keySize / 10;
+
+                Keys.Add(key);
+            }
+        }
+
+        keyboardStateMachine = new KeyboardStateMachine(Keys);
+    }
+
+    internal void CleanUp()
+    {
+        foreach (Key key in Keys)
+        {
+            GameObject.Destroy(key.gameObject);
+        }
+        Keys.Clear();
+        if (backgroundRect != null)
+        {
+            GameObject.Destroy(backgroundRect);
+            backgroundRect = null;
         }
     }
 }

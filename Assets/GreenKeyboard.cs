@@ -7,6 +7,7 @@ public class GreenKeyboard : AbstractKeyboard
     private readonly ContextGazeInteraction contextGazeInteraction;
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
+    private List<WordCandidates> wordSequence = new();
 
     public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
         : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners)
@@ -49,35 +50,7 @@ public class GreenKeyboard : AbstractKeyboard
             }
             else if (curState != context.State)
             {
-                KeyboardContext previousContext = curContext;
-                curContext = context;
-                NotifyContextChangeListeners(context);
-                KeyboardState previousState = curState;
-                curState = context.State;
-
-                int stateDiff = 0;
-                if (previousState == KeyboardState.Current && curState == KeyboardState.Next)
-                {
-                    stateDiff = 1;
-                    Text += previousContext.LastSelectedKey == null ? "" : previousContext.LastSelectedKey.label.ToLower();
-                }
-                else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
-                {
-                    stateDiff = -1;
-                    if (Text.Length > 0)
-                    {
-                        Text = Text[..^1];
-                    }
-                }
-                if (stateDiff != 0)
-                {
-                    NotifyTextChangeListeners(Text);
-                    foreach (var ctx in keyboardContexts)
-                    {
-                        ctx.State = (KeyboardState)(((int)ctx.State + stateDiff + 5) % 5);
-                        ctx.CurrentGaze = Vector3.zero;
-                    }
-                }
+                SwitchContext(context);
             }
 
             if (curContext != null && curContext.State == KeyboardState.Current)
@@ -87,5 +60,67 @@ public class GreenKeyboard : AbstractKeyboard
         }
 
         return context;
+    }
+
+    private void SwitchContext(KeyboardContext newContext)
+    {
+        KeyboardContext previousContext = curContext;
+        curContext = newContext;
+
+        NotifyContextChangeListeners(newContext);
+
+        KeyboardState previousState = curState;
+        curState = newContext.State;
+
+        int stateDiff = 0;
+        if (previousState == KeyboardState.Current && curState == KeyboardState.Next)
+        {
+            stateDiff = 1;
+            // TODO: Update candidates in the next context and add to word sequence
+            wordSequence.Add(new WordCandidates(previousContext.LastSelectedKey?.label.ToLower() ?? string.Empty, new List<string>()));
+            UpdateTextFromSequence();
+        }
+        else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
+        {
+            stateDiff = -1;
+            if (wordSequence.Count > 0)
+            {
+                // TODO: Update candidates in the current context
+                wordSequence = wordSequence.GetRange(0, wordSequence.Count - 1);
+                UpdateTextFromSequence();
+            }
+        }
+        if (stateDiff != 0)
+        {
+            NotifyTextChangeListeners(Text);
+            foreach (var ctx in keyboardContexts)
+            {
+                ctx.State = (KeyboardState)(((int)ctx.State + stateDiff + 5) % 5);
+                ctx.CurrentGaze = Vector3.zero;
+            }
+        }
+    }
+
+    private void UpdateTextFromSequence()
+    {
+        string text = string.Empty;
+        foreach (var word in wordSequence)
+        {
+            // If the word has no candidates, it is a single character that came from a key press (e.g. punctuation)
+            text += (word.Candidates.Count > 0 ? " " : "") + word.CurrentWord;
+        }
+        Text = text.Trim();
+    }
+}
+
+internal class WordCandidates
+{
+    public List<string> Candidates { get; } = new();
+    public string CurrentWord { get; set; } = string.Empty;
+
+    public WordCandidates(string word, List<string> candidates)
+    {
+        CurrentWord = word;
+        Candidates.AddRange(candidates);
     }
 }

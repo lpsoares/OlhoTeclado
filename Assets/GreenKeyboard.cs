@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class GreenKeyboard : AbstractKeyboard
 {
+    private readonly DecoderAPI decoderAPI;
     private readonly ContextGazeInteraction contextGazeInteraction;
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
     private List<WordCandidates> wordSequence = new();
 
-    public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
+    public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
         : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners)
     {
         this.contextGazeInteraction = contextGazeInteraction;
+        this.decoderAPI = decoderAPI;
+
         KeyboardState[] states = { KeyboardState.InactiveNext, KeyboardState.Next, KeyboardState.Current, KeyboardState.Previous, KeyboardState.InactivePrevious };
         for (int i = 0; i < states.Length; i++)
         {
@@ -21,13 +24,23 @@ public class GreenKeyboard : AbstractKeyboard
             {
                 new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
                 new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
-                new List<string> { "Z", "X", "C", "V", "B", "N", "M", "." },
-            }, new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
+                new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'", "." },
+            }, new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "'" });
             keyboardContexts.Add(context);
             context.backgroundColor = new Color(0.01f, 0.55f, 0.01f);
             context.keyColor = new Color(0.01f, 0.25f, 0.01f);
             context.State = states[i];
             context.Depth = context.TargetDepth;
+
+            if (context.State == KeyboardState.Current)
+            {
+                Dictionary<string, List<float>> keyPositions = new();
+                foreach (var key in context.Keys)
+                {
+                    keyPositions[key.label.ToLower()] = new List<float> { key.X, key.Y, key.Width, key.Height };
+                }
+                decoderAPI.Keys = keyPositions;
+            }
         }
 
         NotifyContextPositionsListeners();
@@ -56,6 +69,14 @@ public class GreenKeyboard : AbstractKeyboard
             if (curContext != null && curContext.State == KeyboardState.Current)
             {
                 curContext.CurrentGaze = gazeInContext;
+                if (curContext.GazeInKeys)
+                {
+                    decoderAPI.AddGesturePoint(Time.time * 1000, gaze2DInContext.x, gaze2DInContext.y);
+                }
+                else
+                {
+                    decoderAPI.ResetPoints();
+                }
             }
         }
 
@@ -76,9 +97,27 @@ public class GreenKeyboard : AbstractKeyboard
         if (previousState == KeyboardState.Current && curState == KeyboardState.Next)
         {
             stateDiff = 1;
-            // TODO: Update candidates in the next context and add to word sequence
-            wordSequence.Add(new WordCandidates(previousContext.LastSelectedKey?.label.ToLower() ?? string.Empty, new List<string>()));
-            UpdateTextFromSequence();
+
+            if (previousContext.LastSelectedKey?.IsKey == true)
+            {
+                wordSequence.Add(new WordCandidates(previousContext.LastSelectedKey.label.ToLower(), new List<string>()));
+                UpdateTextFromSequence();
+            }
+            else
+            {
+                // TODO: Update candidates in the next context
+                decoderAPI.DecodeGesture((decodedWords) =>
+                {
+                    // TODO: Stop next context switch until this decoding is done
+                    if (decodedWords.Count > 0)
+                    {
+                        var candidates = new List<string>(decodedWords);
+                        wordSequence.Add(new WordCandidates(candidates[0], candidates));
+                        Debug.Log($"Decoded words: {string.Join(", ", decodedWords)}");
+                        UpdateTextFromSequence();
+                    }
+                });
+            }
         }
         else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
         {
@@ -89,10 +128,13 @@ public class GreenKeyboard : AbstractKeyboard
                 wordSequence = wordSequence.GetRange(0, wordSequence.Count - 1);
                 UpdateTextFromSequence();
             }
+        } else if (curState == KeyboardState.Current)
+        {
+            decoderAPI.SetContext("");
+            decoderAPI.ResetPoints();
         }
         if (stateDiff != 0)
         {
-            NotifyTextChangeListeners(Text);
             foreach (var ctx in keyboardContexts)
             {
                 ctx.State = (KeyboardState)(((int)ctx.State + stateDiff + 5) % 5);
@@ -103,6 +145,7 @@ public class GreenKeyboard : AbstractKeyboard
 
     private void UpdateTextFromSequence()
     {
+        string previousText = Text;
         string text = string.Empty;
         foreach (var word in wordSequence)
         {
@@ -110,6 +153,11 @@ public class GreenKeyboard : AbstractKeyboard
             text += (word.Candidates.Count > 0 ? " " : "") + word.CurrentWord;
         }
         Text = text.Trim();
+        if (Text != previousText)
+        {
+            decoderAPI.SetContext(Text);
+            NotifyTextChangeListeners(Text);
+        }
     }
 }
 

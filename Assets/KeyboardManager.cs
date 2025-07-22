@@ -131,7 +131,9 @@ public class KeyboardManager : MonoBehaviour, ITextChangeListener
                 Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners);
                 break;
             case KeyboardType.Green:
-                Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners);
+                var decoderAPI = new DecoderAPI();
+                StartCoroutine(decoderAPI.StartRequestLoop());
+                Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners);
                 break;
             default:
                 Debug.LogError($"Unknown keyboard type: {type}. Using RedKeyboard as default.");

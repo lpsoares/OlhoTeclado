@@ -1,3 +1,4 @@
+import traceback
 from IntegratedDecoder import IntegratedDecoder
 from models.schemas import DecoderStatus
 
@@ -22,3 +23,4 @@ def initialize_decoder(decoder_id: str, layout: dict):
     except Exception as e:
         app_state.decoder_status[decoder_id] = DecoderStatus.ERROR
         print(f"error initializing decoder:{decoder_id}: {e}")
+        print(traceback.format_exc())

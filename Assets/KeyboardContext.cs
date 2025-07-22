@@ -8,6 +8,7 @@ public class KeyboardContext : MonoBehaviour
 {
     public Color backgroundColor = new(0f, 0f, 0f, 0f);
     public Color keyColor = new(0.15f, 0.15f, 0.15f, 1.0f);
+    public bool GazeInKeys { get; private set; } = true;
     private Color prevColor;
     private const float INACTIVE_NEXT_DEPTH = 3.0f;
     private const float NEXT_DEPTH = 1.0f;
@@ -117,12 +118,15 @@ public class KeyboardContext : MonoBehaviour
                 }
             }
         }
-        backgroundMaterial.color = backgroundColor.WithAlpha(Alpha * 0.5f);
+
         foreach (Key key in Keys)
         {
             key.alpha = Alpha;
         }
         transform.localPosition = new Vector3(0, 0, Depth);
+
+        UpdateGazeInKeys();
+        backgroundMaterial.color = backgroundColor.WithAlpha(Alpha * (GazeInKeys ? 0.5f : 0.4f));
 
         if (State == KeyboardState.Current && CurrentGaze != Vector3.zero)
         {
@@ -143,6 +147,30 @@ public class KeyboardContext : MonoBehaviour
             {
                 key.IsCurrent = false; // Reset all keys to not current
             }
+        }
+    }
+
+    private void UpdateGazeInKeys()
+    {
+        // Check if current gaze is within backgroundRect plus a margin
+        if (backgroundRect != null && backgroundRect.activeSelf)
+        {
+            Vector3 gazePosition = CurrentGaze;
+            if (gazePosition != Vector3.zero)
+            {
+                float margin = 0.1f; // Margin to consider for gaze within keys
+                Vector3 localGazePosition = transform.InverseTransformPoint(gazePosition);
+                GazeInKeys = Mathf.Abs(localGazePosition.x - backgroundRect.transform.localPosition.x) <= margin + backgroundRect.transform.localScale.x / 2 &&
+                             Mathf.Abs(localGazePosition.y - backgroundRect.transform.localPosition.y) <= margin + backgroundRect.transform.localScale.y / 2;
+            }
+            else
+            {
+                GazeInKeys = false; // If no gaze position, set to false
+            }
+        }
+        else
+        {
+            GazeInKeys = false; // If backgroundRect is not set, set to false
         }
     }
 

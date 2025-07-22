@@ -86,6 +86,8 @@ class KeyboardLayout:
         :param keyboard_config: A dictionary containing the keyboard layout.
         """
         for key_id, (x, y, width, height) in keyboard_config.items():
+            if not key_id.endswith('Key'):
+                key_id = key_id.lower() + 'Key'
             button = KeyboardButton(key_id, x, y, width, height)
             self.buttons[key_id] = button
             

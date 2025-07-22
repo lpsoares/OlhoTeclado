@@ -92,8 +92,6 @@ public class KeyboardContext : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(0, 0, Depth);
-
-        InitKeyLayout(keyLayout);
     }
 
     void Update()
@@ -163,10 +161,10 @@ public class KeyboardContext : MonoBehaviour
         backgroundRect = GameObject.CreatePrimitive(PrimitiveType.Cube);
         backgroundRect.transform.SetParent(transform);
         backgroundMaterial = backgroundRect.GetComponent<Renderer>().material;
-        backgroundMaterial.SetTransparent();
+        backgroundMaterial.SetTransparent((int)UnityEngine.Rendering.RenderQueue.AlphaTest);
 
         // Position the background rectangle slightly behind the keys and centered at the keyboard
-        backgroundRect.transform.localPosition = new Vector3(0, keyboardY0 - keyLayout.Count / 2 * keySpacing - keyLayout.Count / 2f * keySize, 1.5f * keySize);
+        backgroundRect.transform.localPosition = new Vector3(0, keyboardY0 - keyLayout.Count / 2 * keySpacing - keyLayout.Count / 2f * keySize, keySize / 5);
         backgroundRect.transform.localScale = new Vector3(width, height, keySize / 10);
 
         for (int row = 0; row < keyLayout.Count; row++)
@@ -296,6 +294,7 @@ class KeyboardStateMachine
         foreach (KeyboardKeyState keyState in keyStates)
         {
             float probability = keyState.GetProbability(gazePosition);
+            keyState.keyObject.Probability = probability;
             if (keyState == currentState)
             {
                 curStateProbability = probability;

@@ -24,7 +24,7 @@ public class GreenKeyboard : AbstractKeyboard
             }, new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" });
             keyboardContexts.Add(context);
             context.backgroundColor = new Color(0.01f, 0.55f, 0.01f);
-            context.keyColor = new Color(0.01f, 0.35f, 0.01f);
+            context.keyColor = new Color(0.01f, 0.25f, 0.01f);
             context.State = states[i];
             context.Depth = context.TargetDepth;
         }

@@ -17,6 +17,7 @@ public class Key : MonoBehaviour
     public float Depth { get; set; } = 1.0f / 155f;
     public bool IsCurrent { get; set; }
     public bool IsKey = true; // Indicates if this is a key or part of a larger gesture keyboard
+    public float Probability = 0.0f; // Probability of the key being pressed (used for non keys only)
 
     void Start()
     {
@@ -39,7 +40,7 @@ public class Key : MonoBehaviour
         keyMaterial = GetComponent<Renderer>().material;
         keyMaterial.SetTransparent();
 
-        keyMaterial.color = backgroundColor.WithAlpha(Math.Min(backgroundColor.a, alpha));
+        keyMaterial.color = IsKey ? backgroundColor.WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
         IsCurrent = false;
     }
 
@@ -48,14 +49,14 @@ public class Key : MonoBehaviour
         keyMaterial.color = IsKey ? backgroundColor.WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
         textMesh.color = Color.white.WithAlpha(alpha);
 
-        if (IsCurrent)
+        float z = IsCurrent ? -0.02f : 0.0f;
+        float scaleFactor = 1.0f;
+        if (!IsKey)
         {
-            transform.localPosition = new Vector3(X, Y, -0.02f);
+            z = -0.02f * Probability; // Adjust z position based on probability for non-key elements
+            scaleFactor = 1.0f + Probability * 0.5f; // Scale up based on probability
         }
-        else
-        {
-            transform.localPosition = new Vector3(X, Y, 0.0f);
-        }
-        transform.localScale = new Vector3(Width, Height, Depth);
+        transform.localPosition = new Vector3(X, Y, z);
+        transform.localScale = new Vector3(Width * scaleFactor, Height * scaleFactor, Depth);
     }
 }

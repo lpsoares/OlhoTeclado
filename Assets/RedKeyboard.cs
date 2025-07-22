@@ -16,6 +16,13 @@ public class RedKeyboard : AbstractKeyboard
         for (int i = 0; i < states.Length; i++)
         {
             var context = instantiateContext();
+            context.InitKeyLayout(new()
+            {
+                new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
+                new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
+                new List<string> { "Z", "X", "C", "V", "B", "N", "M", "." },
+                new List<string> { " " },
+            });
             keyboardContexts.Add(context);
             context.keyColor = new Color(0.55f, 0.01f, 0.01f);
             context.State = states[i];

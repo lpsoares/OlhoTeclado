@@ -24,6 +24,11 @@ public abstract class AbstractKeyboard
         get;
         protected set;
     }
+    public string RichText
+    {
+        get;
+        protected set;
+    }
 
     public AbstractKeyboard(KeyboardType type, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
     {
@@ -50,9 +55,10 @@ public abstract class AbstractKeyboard
         return contextPositionData;
     }
 
-    public void ResetText()
+    public virtual void ResetText()
     {
         Text = string.Empty;
+        RichText = string.Empty;
         NotifyTextChangeListeners(Text);
     }
 

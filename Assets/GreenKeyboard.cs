@@ -104,7 +104,6 @@ public class GreenKeyboard : AbstractKeyboard
             {
                 if (lastKey.IsCandidateKey)
                 {
-                    // TODO: Highlight current word in text
                     wordSequence[^1].CurrentWord = lastKey.label.ToLower();
                     curContext.Candidates = wordSequence[^1].Candidates;
                 }
@@ -169,19 +168,42 @@ public class GreenKeyboard : AbstractKeyboard
 
     private void UpdateTextFromSequence()
     {
+        bool markLast = curContext.Candidates.Count > 0;
+
         string previousText = Text;
         string text = string.Empty;
-        foreach (var word in wordSequence)
+        string richText = string.Empty;
+        for (int i = 0; i < wordSequence.Count; i++)
         {
+            var word = wordSequence[i];
+            var isLast = i == wordSequence.Count - 1;
+            var currentWord = word.CurrentWord;
+            var markedWord = currentWord;
+            if (isLast && markLast)
+            {
+                // If the last word has candidates, we mark it with a special character
+                markedWord = $"<mark=#ffff00aa>{currentWord}</mark>";
+            }
             // If the word has no candidates, it is a single character that came from a key press (e.g. punctuation)
-            text += (word.Candidates.Count > 0 ? " " : "") + word.CurrentWord;
+            string preText = word.Candidates.Count > 0 ? " " : "";
+            text += preText + currentWord;
+            richText += preText + markedWord;
         }
         Text = text.Trim();
+        RichText = richText.Trim();
         if (Text != previousText)
         {
             decoderAPI.SetContext(Text);
             NotifyTextChangeListeners(Text);
         }
+    }
+
+    public override void ResetText()
+    {
+        base.ResetText();
+        wordSequence.Clear();
+        ResetAllContextCandidates();
+        decoderAPI.SetContext(Text);
     }
 }
 

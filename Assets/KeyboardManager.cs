@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [Serializable]
-public class KeyboardManager : MonoBehaviour, ITextChangeListener
+public class KeyboardManager : MonoBehaviour
 {
     public Camera mainCamera; // Assign in Inspector or find in Start
     public float distanceInFront = 2f; // Distance in front of the camera
@@ -111,6 +111,8 @@ public class KeyboardManager : MonoBehaviour, ITextChangeListener
                     gazeDebugObject.SetActive(false);
                 }
             }
+
+            textOutput.text = Keyboard.RichText;
         }
     }
 
@@ -168,10 +170,5 @@ public class KeyboardManager : MonoBehaviour, ITextChangeListener
         {
             textReference.text = text;
         }
-    }
-
-    public void OnTextChanged(string newText)
-    {
-        textOutput.text = newText;
     }
 }

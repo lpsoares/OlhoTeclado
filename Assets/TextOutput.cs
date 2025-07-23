@@ -1,10 +1,11 @@
+using TMPro;
 using UnityEngine;
 
 // This class draws the text in the scene.
 public class TextOutput : MonoBehaviour
 {
     public string text = "Hello, World!";
-    private TextMesh textMesh;
+    private TextMeshPro textMeshPro;
 
     void Start()
     {
@@ -14,21 +15,19 @@ public class TextOutput : MonoBehaviour
         textObj.transform.SetLocalPositionAndRotation(new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
 
         // Add TextMesh component
-        textMesh = textObj.AddComponent<TextMesh>();
-        textMesh.text = text;
-        textMesh.fontSize = 100;
-        textMesh.characterSize = 0.002f;
-        textMesh.anchor = TextAnchor.MiddleCenter;
-        textMesh.alignment = TextAlignment.Center;
-        textMesh.color = Color.white;
+        textMeshPro = textObj.AddComponent<TextMeshPro>();
+        textMeshPro.text = text;
+        textMeshPro.fontSize = 0.3f;
+        textMeshPro.alignment = TextAlignmentOptions.Center;
+        textMeshPro.color = Color.white;
     }
 
     void Update()
     {
         // Update the text in the TextMesh
-        if (textMesh != null)
+        if (textMeshPro != null)
         {
-            textMesh.text = text;
+            textMeshPro.text = text;
         }
     }
 }

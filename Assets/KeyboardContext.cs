@@ -79,6 +79,7 @@ public class KeyboardContext : MonoBehaviour
     }
 
     public readonly List<Key> Keys = new();
+    public readonly List<Key> CandidateKeys = new();
     private List<List<string>> keyLayout;
     private KeyboardStateMachine keyboardStateMachine;
     private GameObject backgroundRect;
@@ -91,6 +92,12 @@ public class KeyboardContext : MonoBehaviour
 
     void Update()
     {
+        // Only show candidate keys if in current context
+        foreach (Key key in CandidateKeys)
+        {
+            key.gameObject.SetActive(State == KeyboardState.Current);
+        }
+
         if (prevColor != keyColor)
         {
             prevColor = keyColor;
@@ -210,6 +217,7 @@ public class KeyboardContext : MonoBehaviour
             float x0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);
             Key key = InstantiateKey($"Candidate_{i + 1}", $"candidate {i + 1}", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true);
             Keys.Add(key);
+            CandidateKeys.Add(key);
         }
 
         keyboardStateMachine = new KeyboardStateMachine(Keys);

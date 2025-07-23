@@ -11,6 +11,7 @@ public class DecoderAPI
     private string decoderId = string.Empty;
     public Dictionary<string, List<float>> Keys;
     private bool isReady = false;
+    private bool shouldReset = false;
 
     public DecoderAPI(string baseUrl = "http://localhost:8000")
     {
@@ -134,6 +135,16 @@ public class DecoderAPI
 
     public void AddGesturePoint(float timestamp, float x, float y)
     {
+        if (shouldReset)
+        {
+            requestQueue.Enqueue(new DecoderRequest
+            {
+                endpoint = "/points/reset",
+                method = "POST",
+            });
+            shouldReset = false;
+        }
+
         // If last request is not an AddGesturePointsRequest, create a new one
         if (requestQueue.Count == 0 || requestQueue.PeekEnd() is not AddGesturePointsRequest)
         {
@@ -159,11 +170,7 @@ public class DecoderAPI
 
     public void ResetPoints()
     {
-        requestQueue.Enqueue(new DecoderRequest
-        {
-            endpoint = "/points/reset",
-            method = "POST",
-        });
+        shouldReset = true;
     }
 }
 

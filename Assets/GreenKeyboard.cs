@@ -96,19 +96,30 @@ public class GreenKeyboard : AbstractKeyboard
         int stateDiff = 0;
         if (previousState == KeyboardState.Current && curState == KeyboardState.Next)
         {
+            ResetAllContextCandidates();
             stateDiff = 1;
 
-            if (previousContext.LastSelectedKey?.IsKey == true)
+            var lastKey = previousContext.LastSelectedKey;
+            if (lastKey != null && lastKey.IsKey == true)
             {
-                wordSequence.Add(new WordCandidates(previousContext.LastSelectedKey.label.ToLower(), new List<string>()));
+                if (lastKey.IsCandidateKey)
+                {
+                    // TODO: Highlight current word in text
+                    wordSequence[^1].CurrentWord = lastKey.label.ToLower();
+                    curContext.Candidates = wordSequence[^1].Candidates;
+                }
+                else
+                {
+                    wordSequence.Add(new WordCandidates(previousContext.LastSelectedKey.label.ToLower(), new List<string>()));
+                }
                 UpdateTextFromSequence();
             }
             else
             {
-                // TODO: Update candidates in the next context
                 decoderAPI.DecodeGesture((decodedWords) =>
                 {
                     // TODO: Stop next context switch until this decoding is done
+                    curContext.Candidates = decodedWords;
                     if (decodedWords.Count > 0)
                     {
                         var candidates = new List<string>(decodedWords);
@@ -121,14 +132,19 @@ public class GreenKeyboard : AbstractKeyboard
         }
         else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
         {
+            ResetAllContextCandidates();
             stateDiff = -1;
             if (wordSequence.Count > 0)
             {
-                // TODO: Update candidates in the current context
                 wordSequence = wordSequence.GetRange(0, wordSequence.Count - 1);
+                if (wordSequence.Count > 0)
+                {
+                    curContext.Candidates = wordSequence[^1].Candidates;
+                }
                 UpdateTextFromSequence();
             }
-        } else if (curState == KeyboardState.Current)
+        }
+        else if (curState == KeyboardState.Current)
         {
             decoderAPI.SetContext("");
             decoderAPI.ResetPoints();
@@ -140,6 +156,14 @@ public class GreenKeyboard : AbstractKeyboard
                 ctx.State = (KeyboardState)(((int)ctx.State + stateDiff + 5) % 5);
                 ctx.CurrentGaze = Vector3.zero;
             }
+        }
+    }
+
+    private void ResetAllContextCandidates()
+    {
+        foreach (var ctx in keyboardContexts)
+        {
+            ctx.Candidates = new List<string>();
         }
     }
 

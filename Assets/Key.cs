@@ -17,6 +17,7 @@ public class Key : MonoBehaviour
     public float Depth { get; set; } = 1.0f / 155f;
     public bool IsCurrent { get; set; }
     public bool IsKey = true; // Indicates if this is a key or part of a larger gesture keyboard
+    public bool IsCandidateKey = false; // Indicates if this key is a candidate key
     public float Probability = 0.0f; // Probability of the key being pressed (used for non keys only)
     private GameObject keyRectangle;
 
@@ -50,6 +51,7 @@ public class Key : MonoBehaviour
 
     void Update()
     {
+        textMesh.text = label;
         keyMaterial.color = IsKey ? backgroundColor.WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
         textMesh.color = Color.white.WithAlpha(alpha);
 

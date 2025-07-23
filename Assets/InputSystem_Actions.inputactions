@@ -1044,8 +1044,8 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "f84dd35a-99dd-443d-ba1a-1c9c320a6583",
-                    "path": "<XRController>{RightHand}/{TriggerButton}",
+                    "id": "0e1d7a22-1e28-4966-9092-62df47fae970",
+                    "path": "<XRController>{LeftHand}/{GripButton}",
                     "interactions": "",
                     "processors": "",
                     "groups": ";XR",
@@ -1055,8 +1055,8 @@
                 },
                 {
                     "name": "",
-                    "id": "cb910ebd-b0f6-4e16-a0ec-9b70b626e572",
-                    "path": "<XRController>{LeftHand}/{TriggerButton}",
+                    "id": "19b0fc85-d193-45ce-a93e-8be2a99b5cdf",
+                    "path": "<XRController>{RightHand}/{GripButton}",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -1121,22 +1121,22 @@
                 },
                 {
                     "name": "",
-                    "id": "0e1d7a22-1e28-4966-9092-62df47fae970",
-                    "path": "<XRController>{LeftHand}/{GripButton}",
+                    "id": "cb910ebd-b0f6-4e16-a0ec-9b70b626e572",
+                    "path": "<XRController>{LeftHand}/{TriggerButton}",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";XR",
+                    "groups": "",
                     "action": "Fixate gaze",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "19b0fc85-d193-45ce-a93e-8be2a99b5cdf",
-                    "path": "<XRController>{RightHand}/{GripButton}",
+                    "id": "f84dd35a-99dd-443d-ba1a-1c9c320a6583",
+                    "path": "<XRController>{RightHand}/{TriggerButton}",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";XR",
                     "action": "Fixate gaze",
                     "isComposite": false,
                     "isPartOfComposite": false

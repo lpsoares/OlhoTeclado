@@ -80,6 +80,7 @@ public class KeyboardContext : MonoBehaviour
 
     public readonly List<Key> Keys = new();
     public readonly List<Key> CandidateKeys = new();
+    public List<string> Candidates { get; set; } = new();
     private List<List<string>> keyLayout;
     private KeyboardStateMachine keyboardStateMachine;
     private GameObject backgroundRect;
@@ -93,8 +94,11 @@ public class KeyboardContext : MonoBehaviour
     void Update()
     {
         // Only show candidate keys if in current context
-        foreach (Key key in CandidateKeys)
+        for (int i = 0; i < CandidateKeys.Count; i++)
         {
+            Key key = CandidateKeys[i];
+            string label = i < Candidates.Count ? Candidates[i] : string.Empty;
+            key.label = label;
             key.gameObject.SetActive(State == KeyboardState.Current);
         }
 
@@ -204,7 +208,7 @@ public class KeyboardContext : MonoBehaviour
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
                 string label = keyLayout[row][col];
-                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys?.IndexOf(label) < 0);
+                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys?.IndexOf(label) < 0, false);
                 Keys.Add(key);
             }
         }
@@ -215,7 +219,7 @@ public class KeyboardContext : MonoBehaviour
         for (int i = 0; i < candidateButtonCount; i++)
         {
             float x0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);
-            Key key = InstantiateKey($"Candidate_{i + 1}", $"candidate {i + 1}", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true);
+            Key key = InstantiateKey($"Candidate_{i + 1}", "", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true, true);
             Keys.Add(key);
             CandidateKeys.Add(key);
         }
@@ -223,7 +227,7 @@ public class KeyboardContext : MonoBehaviour
         keyboardStateMachine = new KeyboardStateMachine(Keys);
     }
 
-    private Key InstantiateKey(string name, string label, float cx, float cy, float width, float height, float depth, bool isKey)
+    private Key InstantiateKey(string name, string label, float cx, float cy, float width, float height, float depth, bool isKey, bool isCandidateKey)
     {
         GameObject keyObject = new(name);
         keyObject.transform.SetParent(transform);
@@ -232,6 +236,7 @@ public class KeyboardContext : MonoBehaviour
         key.label = label;
         key.alpha = Alpha;
         key.IsKey = isKey;
+        key.IsCandidateKey = isCandidateKey;
 
         key.X = cx;
         key.Y = cy;
@@ -276,18 +281,16 @@ public static class KeyboardStateExtensions
 
 class KeyboardKeyState
 {
-    public string Label { get; set; }
     public bool IsEmpty
     {
-        get => string.IsNullOrEmpty(Label);
+        get => string.IsNullOrEmpty(keyObject != null ? keyObject.label : null);
     }
 
     public readonly Key keyObject;
-    internal static readonly KeyboardKeyState Empty = new KeyboardKeyState(string.Empty, null);
+    internal static readonly KeyboardKeyState Empty = new KeyboardKeyState(null);
 
-    public KeyboardKeyState(string label, Key keyObject)
+    public KeyboardKeyState(Key keyObject)
     {
-        Label = label;
         this.keyObject = keyObject;
     }
 
@@ -324,7 +327,7 @@ class KeyboardStateMachine
     {
         foreach (Key key in keys)
         {
-            keyStates.Add(new KeyboardKeyState(key.label, key));
+            keyStates.Add(new KeyboardKeyState(key));
         }
     }
 

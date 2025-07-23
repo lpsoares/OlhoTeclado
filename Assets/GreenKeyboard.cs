@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GreenKeyboard : AbstractKeyboard
@@ -9,6 +10,8 @@ public class GreenKeyboard : AbstractKeyboard
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
     private List<WordCandidates> wordSequence = new();
+    private Color backgroundColor = new(0.01f, 0.55f, 0.01f);
+    private Color keyColor = new(0.01f, 0.25f, 0.01f);
 
     public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
         : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners)
@@ -27,8 +30,8 @@ public class GreenKeyboard : AbstractKeyboard
                 new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'", "." },
             }, 5, new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "'" });
             keyboardContexts.Add(context);
-            context.backgroundColor = new Color(0.01f, 0.55f, 0.01f);
-            context.keyColor = new Color(0.01f, 0.25f, 0.01f);
+            context.backgroundColor = backgroundColor;
+            context.keyColor = keyColor;
             context.State = states[i];
             context.Depth = context.TargetDepth;
 
@@ -182,7 +185,7 @@ public class GreenKeyboard : AbstractKeyboard
             if (isLast && markLast)
             {
                 // If the last word has candidates, we mark it with a special character
-                markedWord = $"<mark=#ffff00aa>{currentWord}</mark>";
+                markedWord = $"<mark=#{keyColor.WithAlpha(0.3f).ToHexString()}>{currentWord}</mark>";
             }
             // If the word has no candidates, it is a single character that came from a key press (e.g. punctuation)
             string preText = word.Candidates.Count > 0 ? " " : "";

@@ -24,7 +24,6 @@ public class TextOutput : MonoBehaviour
 
     void Update()
     {
-        // Update the text in the TextMesh
         if (textMeshPro != null)
         {
             textMeshPro.text = text;

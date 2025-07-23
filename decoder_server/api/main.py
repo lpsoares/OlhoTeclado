@@ -33,8 +33,8 @@ def get_decoder_status():
     :param decoder_id: The unique identifier for the decoder.
     :return: A dictionary containing the status of the decoder.
     """
-    
-    status = app_state.decoder_status["0"]
+
+    status = app_state.decoder_status.get("0", DecoderStatus.INITIALIZING)
 
     return {
         "decoder_id": "0",

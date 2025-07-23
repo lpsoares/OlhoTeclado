@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class GreenKeyboard : AbstractKeyboard
     private List<WordCandidates> wordSequence = new();
     private Color backgroundColor = new(0.01f, 0.55f, 0.01f);
     private Color keyColor = new(0.01f, 0.25f, 0.01f);
+    private bool decodingGesture = false;
 
     public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
         : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners)
@@ -53,7 +55,7 @@ public class GreenKeyboard : AbstractKeyboard
     {
         KeyboardContext context = contextGazeInteraction.GetCurrentContext(keyboardContexts, out gazeInContext, out gaze2DInContext);
 
-        if (context != null)
+        if (context != null && !decodingGesture)
         {
             if (curState == KeyboardState.Initial)
             {
@@ -118,9 +120,11 @@ public class GreenKeyboard : AbstractKeyboard
             }
             else
             {
+                decodingGesture = true;
+                curContext.Candidates = Enumerable.Repeat("...", 10).ToList();
                 decoderAPI.DecodeGesture((decodedWords) =>
                 {
-                    // TODO: Stop next context switch until this decoding is done
+                    decodingGesture = false;
                     curContext.Candidates = decodedWords;
                     if (decodedWords.Count > 0)
                     {

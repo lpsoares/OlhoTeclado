@@ -137,6 +137,8 @@ public class EventBuilder
     const string KeyPosition = "KEY_POS";
     const string ContextPosition = "CTX_POS";
     const string ContextChange = "CONTEXT_CHANGE";
+    // TODO: IMPLEMENT THIS EVENT
+    const string CandidateList = "CANDIDATES";
     const string TextChange = "TEXT_CHANGE";
     const string GazeData = "GAZE";
 

@@ -74,6 +74,10 @@ Text changes are recorded with the `TEXT_CHANGE` type. The `data` field contains
 
 - The new text after the change.
 
+### Candidate List
+
+This event indicates that the candidate list has changed. It is recorded with the `CANDIDATES` type. The `data` field contains the candidates separated by semicolons (`;`).
+
 ### Gaze Data
 
 Gaze data is recorded with the `GAZE` type. The `data` field contains the following information:

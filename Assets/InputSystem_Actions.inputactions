@@ -1021,6 +1021,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Move gaze depth",
+                    "type": "Value",
+                    "id": "f83ba5c2-58e0-4ad0-ba19-d89bd2f5a45d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -1076,6 +1085,28 @@
                     "processors": "",
                     "groups": ";XR",
                     "action": "Stop Trial",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d546f08-5575-4941-a1b5-be6531fc9ca5",
+                    "path": "<XRController>{LeftHand}/thumbstick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";XR",
+                    "action": "Move gaze depth",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "32815afa-1aa9-4edf-b6a8-e8dccf3b71e5",
+                    "path": "<XRController>{RightHand}/thumbstick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move gaze depth",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

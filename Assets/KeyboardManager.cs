@@ -56,7 +56,9 @@ public class KeyboardManager : MonoBehaviour, ITextChangeListener
             Debug.LogWarning("No context position listeners found. Please add IContextPositionListener components to the scene.");
         }
 
-        EyeTracker eyeTracker = GetComponent<EyeTracker>();
+        List<EyeTracker> eyeTrackers = new();
+        GetComponents(eyeTrackers);
+        EyeTracker eyeTracker = eyeTrackers.Count > 0 ? eyeTrackers.Find(et => et.isActiveAndEnabled) : null;
         List<IGazeDataListener> gazeDataListeners = new();
         GetComponents(gazeDataListeners);
         contextGazeInteraction = new ContextGazeInteraction(eyeTracker, gazeDataListeners);

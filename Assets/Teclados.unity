@@ -134,7 +134,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 88024485}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c540188509623db4ba1070a5e979e7f4, type: 3}
   m_Name: 
@@ -155,6 +155,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetSentence: 
   BaseUrl: http://localhost:3000/api
+--- !u!114 &88024503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88024485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e3cd6d4ec2a0ba4781df50d533563aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controllerTransform: {fileID: 105875559}
 --- !u!1 &105875558
 GameObject:
   m_ObjectHideFlags: 0
@@ -2042,6 +2055,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7116092875461039112, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 88024500}
+    - targetCorrespondingSourceObject: {fileID: 7116092875461039112, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 88024503}
   m_SourcePrefab: {fileID: 100100000, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

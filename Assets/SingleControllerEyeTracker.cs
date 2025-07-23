@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,7 +11,9 @@ public class SingleControllerEyeTracker : EyeTracker
     private GameObject rightEye;
     private KeyboardState currentContextState = KeyboardState.Current;
     private InputAction moveGazeDepthAction;
+    private InputAction fixateGazeAction;
     private KeyboardManager keyboardManager;
+    private Vector3 lastFixationPosition;
 
     private void Start()
     {
@@ -31,10 +34,16 @@ public class SingleControllerEyeTracker : EyeTracker
         rightEye.transform.localPosition = new Vector3(0.05f, 0, 0);
 
         moveGazeDepthAction = InputSystem.actions.FindAction("Move gaze depth");
+        fixateGazeAction = InputSystem.actions.FindAction("Fixate gaze");
 
         if (moveGazeDepthAction == null)
         {
             Debug.LogError("Input action for gaze depth movement not found. Please ensure it is defined in the Input System.");
+            return;
+        }
+        if (fixateGazeAction == null)
+        {
+            Debug.LogError("Input action for gaze fixation not found. Please ensure it is defined in the Input System.");
             return;
         }
     }
@@ -82,18 +91,47 @@ public class SingleControllerEyeTracker : EyeTracker
             }
         }
 
-        Ray controllerRay = new(controllerTransform.position, controllerTransform.forward);
-        bool intersectedPlane = currentContext.Plane.Raycast(controllerRay, out float enter);
-        if (!intersectedPlane)
-        {
-            Debug.LogWarning("Controller gaze ray did not intersect with the keyboard plane.");
-            return GazePoint.Empty;
-        }
-
-        Vector3 gazePosition = controllerRay.GetPoint(enter);
+        Vector3 gazePosition = lastFixationPosition + RandomNoise(0.001f);
         Vector3 cyclopsEyePosition = (leftEye.transform.position + rightEye.transform.position) / 2.0f;
+
+        if (fixateGazeAction.IsPressed())
+        {
+            Ray controllerRay = new(controllerTransform.position, controllerTransform.forward);
+            bool intersectedPlane = currentContext.Plane.Raycast(controllerRay, out float enter);
+            if (!intersectedPlane)
+            {
+                Debug.LogWarning("Controller gaze ray did not intersect with the keyboard plane.");
+                return GazePoint.Empty;
+            }
+
+            gazePosition = controllerRay.GetPoint(enter);
+            lastFixationPosition = gazePosition;
+        }
+        else
+        {
+            // Project the gaze position onto the keyboard plane
+            Ray gazeDirection = new Ray(cyclopsEyePosition, gazePosition - cyclopsEyePosition);
+            bool intersectedPlane = currentContext.Plane.Raycast(gazeDirection, out float enter);
+            if (!intersectedPlane)
+            {
+                Debug.LogWarning("Gaze ray did not intersect with the keyboard plane.");
+                return GazePoint.Empty;
+            }
+
+            gazePosition = gazeDirection.GetPoint(enter);
+            lastFixationPosition = gazePosition;
+        }
+        
         float gazeDepth = (gazePosition - cyclopsEyePosition).magnitude;
         Ray cyclopsRay = new(cyclopsEyePosition, gazePosition - cyclopsEyePosition);
         return new GazePoint(gazePosition, cyclopsRay, gazeDepth, 0);
+    }
+
+    private Vector3 RandomNoise(float maxNoise)
+    {
+        float noiseX = UnityEngine.Random.Range(-maxNoise, maxNoise);
+        float noiseY = UnityEngine.Random.Range(-maxNoise, maxNoise);
+        float noiseZ = UnityEngine.Random.Range(-maxNoise, maxNoise);
+        return new Vector3(noiseX, noiseY, noiseZ);
     }
 }

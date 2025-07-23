@@ -13,7 +13,7 @@ import { computeTrialStats, TrialStats } from "./stats";
 import { ChartContainer } from "./ui/chart";
 
 type SessionViewProps = {
-  allTrials: TrialEvent[][] | null;
+  allTrials: (TrialEvent[]| null)[];
 };
 
 export default function SessionView({ allTrials }: SessionViewProps) {

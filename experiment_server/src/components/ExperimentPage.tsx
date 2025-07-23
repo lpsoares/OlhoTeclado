@@ -40,8 +40,9 @@ export default function ExperimentPage({
   const [session, setSession] = useState<number | null>(currentSession.session);
   const { sessions } = useListSessions(participant?.id || null, method || null);
   const { trials } = useListTrials(participant?.id, method, session || 0);
-  const { fullTrials: allTrials, isLoading: isLoadingTrials } =
-    useListFullTrials(participant?.id, method, session, trials);
+  const fullTrialQueries = useListFullTrials(participant?.id, method, session, trials);
+  const allTrials = fullTrialQueries.map((query) => query.fullTrial);
+  const isLoadingTrials = fullTrialQueries.every((query) => query.isLoading);
 
   useEffect(() => {
     if (watchCurrentSession && currentSession.participant) {

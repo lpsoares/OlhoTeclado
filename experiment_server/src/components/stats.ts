@@ -21,9 +21,9 @@ const emptyTrialStats: TrialStats = {
   editsFinal: [],
 };
 export function computeTrialStats(
-  trialEvents: TrialEvent[]
+  trialEvents: TrialEvent[] | null
 ): TrialStats {
-  if (trialEvents.length === 0) {
+  if (!trialEvents || trialEvents.length === 0) {
     return emptyTrialStats;
   }
 

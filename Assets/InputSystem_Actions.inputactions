@@ -1030,6 +1030,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Fixate gaze",
+                    "type": "Button",
+                    "id": "1252b653-8136-4908-b358-6e391af5a7ac",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1107,6 +1116,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Move gaze depth",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0e1d7a22-1e28-4966-9092-62df47fae970",
+                    "path": "<XRController>{LeftHand}/{GripButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";XR",
+                    "action": "Fixate gaze",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "19b0fc85-d193-45ce-a93e-8be2a99b5cdf",
+                    "path": "<XRController>{RightHand}/{GripButton}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fixate gaze",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

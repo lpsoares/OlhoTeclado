@@ -75,7 +75,7 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
     const start = trialEvents[0]?.timestamp || 0;
     const currentTime = start + (frame / fps) * 1000; // Convert frame to milliseconds
     let keyPositions: KeyPosition[] = [];
-    let gazePositions: Vector2[] = [];
+    let gazePositions: Vector2[] | null = [];
     let curText = "";
 
     for (const event of trialEvents) {
@@ -87,14 +87,17 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
       } else if (event.type === "KEY_POS") {
         keyPositions = getKeyPositions(event, "Current") || [];
       } else if (event.type === "GAZE") {
-        gazePositions.push(event.gaze2D);
+        gazePositions?.push(event.gaze2D);
       } else if (event.type === "TEXT_CHANGE") {
         gazePositions = []; // Reset gaze positions on text change
         curText = event.text;
+      } else if (event.type === "CONTEXT_CHANGE") {
+        if (event.newContext === "Current") gazePositions = [];
+        else gazePositions = null;
       }
     }
     setKeyPositions(keyPositions);
-    setGazePositions(gazePositions);
+    setGazePositions(gazePositions ?? []);
     setCurrentText(curText);
   }, [trialEvents, frame, fps]);
 

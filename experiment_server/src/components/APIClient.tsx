@@ -5,6 +5,7 @@ import {
   QueryClient,
   QueryClientProvider,
   useMutation,
+  useQueries,
   useQuery,
 } from "@tanstack/react-query";
 
@@ -165,33 +166,22 @@ export function useListFullTrials(
   session: number | undefined | null,
   trials: number[] | undefined | null
 ) {
-  const query = useQuery({
-    queryKey: ["participants", participantId, method, session],
-    queryFn: () => {
-      if (
-        !participantId ||
-        !method ||
-        session === null ||
-        !trials ||
-        trials.length === 0
-      ) {
-        return Promise.resolve([]);
-      }
-      return Promise.all(
-        trials.map((trial) =>
-          doGet(
-            `/participants/${participantId}/${method}/sessions/${session}/${trial}`,
-            "Failed to fetch trial data"
-          ).then(parseTrialData)
-        )
-      );
-    },
-    refetchOnWindowFocus: false,
+  const queries = useQueries({
+    queries: (trials || []).map((trial) => ({
+      queryKey: ["participants", participantId, method, session, trial],
+      queryFn: () =>
+        doGet(
+          `/participants/${participantId}/${method}/sessions/${session}/${trial}`,
+          "Failed to fetch trial data"
+        ).then(parseTrialData),
+      refetchOnWindowFocus: false,
+    })),
   });
-  return {
+
+  return queries.map(query => ({
     ...query,
-    fullTrials: query.data as TrialEvent[][] | null,
-  };
+    fullTrial: query.data as TrialEvent[] | null,
+  }));
 }
 
 export function useTrial(

@@ -10,7 +10,7 @@ type TrialViewProps = {
   participant: Participant | null;
   method: Method | null;
   session: number | null;
-  allTrials: TrialEvent[][] | null;
+  allTrials: (TrialEvent[] | null)[] | null;
 };
 
 export function TrialView({

@@ -1,7 +1,7 @@
 import { TrialEvent } from "@/db/event";
 import { Method } from "@/models/method";
 import { Participant } from "@/models/participant";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import { computeTrialStats, Edit, TrialStats } from "./stats";
 import { TrialVideo } from "./TrialVideo";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
@@ -11,6 +11,8 @@ type TrialViewProps = {
   method: Method | null;
   session: number | null;
   allTrials: (TrialEvent[] | null)[] | null;
+  trialNumber: number | null;
+  setTrialNumber: Dispatch<React.SetStateAction<number | null>>;
 };
 
 export function TrialView({
@@ -18,17 +20,14 @@ export function TrialView({
   method,
   session,
   allTrials,
+  trialNumber,
+  setTrialNumber,
 }: TrialViewProps) {
-  const [trialNumber, setTrialNumber] = useState<number | null>(null);
-  const [trialEvents, setTrialEvents] = useState<TrialEvent[] | null>(null);
+  let trialEvents: TrialEvent[] | null = null;
 
-  useEffect(() => {
-    if (allTrials && trialNumber !== null) {
-      setTrialEvents(allTrials[trialNumber - 1] || null);
-    } else {
-      setTrialEvents(null);
-    }
-  }, [allTrials, trialNumber]);
+  if (allTrials && trialNumber !== null) {
+    trialEvents = allTrials[trialNumber - 1] || null;
+  }
 
   if (!participant || !method || session === null) {
     return (
@@ -58,7 +57,7 @@ export function TrialView({
           {trialEvents ? (
             <>
               <TrialVideo trialEvents={trialEvents} />
-              <TrialStatsView trialEvents={trialEvents} />
+              <TrialStatsView trialEvents={trialEvents} trialId={trialNumber} />
             </>
           ) : (
             <div className="text-red-500">No trial data available.</div>
@@ -106,13 +105,14 @@ function SelectTrial({ trials, selectedTrial, onSelect }: SelectTrialProps) {
 
 type TrialStatsViewProps = {
   trialEvents: TrialEvent[];
+  trialId: number;
 };
-export function TrialStatsView({ trialEvents }: TrialStatsViewProps) {
+export function TrialStatsView({ trialEvents, trialId }: TrialStatsViewProps) {
   const [stats, setStats] = useState<TrialStats | null>(null);
 
   useEffect(() => {
     if (trialEvents && trialEvents.length > 0) {
-      const stats = computeTrialStats(trialEvents);
+      const stats = computeTrialStats(trialEvents, trialId);
       setStats(stats);
     }
   }, [trialEvents]);
@@ -125,10 +125,12 @@ export function TrialStatsView({ trialEvents }: TrialStatsViewProps) {
     <div className="my-4 text-sm">
       <ul>
         <li>
-          <span className="text-gray-400">Target Text:</span> <TextWithEdits text={stats.targetText} edits={stats.editsTarget} />
+          <span className="text-gray-400">Target Text:</span>{" "}
+          <TextWithEdits text={stats.targetText} edits={stats.editsTarget} />
         </li>
         <li>
-          <span className="text-gray-400">Final Text:</span> <TextWithEdits text={stats.finalText} edits={stats.editsFinal} />
+          <span className="text-gray-400">Final Text:</span>{" "}
+          <TextWithEdits text={stats.finalText} edits={stats.editsFinal} />
         </li>
         <li>
           <span className="text-gray-400">Minimum String Distance:</span>{" "}
@@ -156,21 +158,25 @@ function TextWithEdits({ text, edits }: TextWithEditsProps) {
     return <span className="text-gray-500">No text available</span>;
   }
 
-  return <span>{edits.map((edit, index) => {
-    if (edit === "substitution") {
-      return (
-        <span key={index} className="text-yellow-500">
-          {text.slice(index, index + 1)}
-        </span>
-      );
-    } else if (edit === "insertion" || edit === "deletion") {
-      return (
-        <span key={index} className="line-through text-red-500">
-          {text.slice(index, index + 1)}
-        </span>
-      );
-    } else {
-      return text.slice(index, index + 1);
-    }
-  })}</span>;
+  return (
+    <span>
+      {edits.map((edit, index) => {
+        if (edit === "substitution") {
+          return (
+            <span key={index} className="text-yellow-500">
+              {text.slice(index, index + 1)}
+            </span>
+          );
+        } else if (edit === "insertion" || edit === "deletion") {
+          return (
+            <span key={index} className="line-through text-red-500">
+              {text.slice(index, index + 1)}
+            </span>
+          );
+        } else {
+          return text.slice(index, index + 1);
+        }
+      })}
+    </span>
+  );
 }

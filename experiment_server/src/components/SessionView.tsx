@@ -1,5 +1,5 @@
 import { TrialEvent } from "@/db/event";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -15,9 +15,13 @@ import { ChartContainer } from "./ui/chart";
 
 type SessionViewProps = {
   allTrials: (TrialEvent[] | null)[];
+  setTrialNumber: Dispatch<React.SetStateAction<number | null>>;
 };
 
-export default function SessionView({ allTrials }: SessionViewProps) {
+export default function SessionView({
+  allTrials,
+  setTrialNumber,
+}: SessionViewProps) {
   const [trialStats, setTrialStats] = useState<TrialStats[]>([]);
 
   useEffect(() => {
@@ -28,6 +32,10 @@ export default function SessionView({ allTrials }: SessionViewProps) {
       setTrialStats(stats);
     }
   }, [allTrials]);
+
+  const handleClickPoint = (data: TrialStats) => {
+    setTrialNumber(data.trialId);
+  };
 
   return (
     <div>
@@ -61,7 +69,11 @@ export default function SessionView({ allTrials }: SessionViewProps) {
               cursor={{ strokeDasharray: "3 3" }}
               content={CustomTooltip}
             />
-            <Scatter data={trialStats} fill="#8884d8" />
+            <Scatter
+              data={trialStats}
+              fill="#8884d8"
+              onClick={handleClickPoint}
+            />
           </ScatterChart>
         </ChartContainer>
       </ResponsiveContainer>

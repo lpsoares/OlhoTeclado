@@ -38,9 +38,16 @@ export default function ExperimentPage({
   );
   const [method, setMethod] = useState<Method | null>(currentSession.method);
   const [session, setSession] = useState<number | null>(currentSession.session);
+  const [trialNumber, setTrialNumber] = useState<number | null>(null);
+
   const { sessions } = useListSessions(participant?.id || null, method || null);
   const { trials } = useListTrials(participant?.id, method, session || 0);
-  const fullTrialQueries = useListFullTrials(participant?.id, method, session, trials);
+  const fullTrialQueries = useListFullTrials(
+    participant?.id,
+    method,
+    session,
+    trials
+  );
   const allTrials = fullTrialQueries.map((query) => query.fullTrial);
   const isLoadingTrials = fullTrialQueries.every((query) => query.isLoading);
 
@@ -117,12 +124,17 @@ export default function ExperimentPage({
                 method={method}
                 session={session}
                 allTrials={allTrials}
+                trialNumber={trialNumber}
+                setTrialNumber={setTrialNumber}
               />
             )}
           </ResizablePanel>
           <ResizableHandle className="mx-4" />
           <ResizablePanel>
-            <SessionView allTrials={allTrials} />
+            <SessionView
+              allTrials={allTrials}
+              setTrialNumber={setTrialNumber}
+            />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

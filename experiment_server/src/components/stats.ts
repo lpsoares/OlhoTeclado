@@ -1,6 +1,7 @@
 import { TrialEvent } from "@/db/event";
 
 export type TrialStats = {
+  trialId: number; // Unique identifier for the trial
   duration: number; // Duration in seconds
   typingDuration: number; // Typing duration in seconds
   typingSpeed: number; // Typing speed in words per minute (wpm)
@@ -10,19 +11,22 @@ export type TrialStats = {
   editsTarget: Edit[]; // Edits made to the target text
   editsFinal: Edit[]; // Edits made to the final text
 };
-const emptyTrialStats: TrialStats = {
-  duration: 0,
-  typingDuration: 0,
-  typingSpeed: 0,
-  targetText: "",
-  finalText: "",
-  minStringDistance: 0,
-  editsTarget: [],
-  editsFinal: [],
-};
 export function computeTrialStats(
-  trialEvents: TrialEvent[] | null
+  trialEvents: TrialEvent[] | null,
+  trialId: number
 ): TrialStats {
+  const emptyTrialStats: TrialStats = {
+    trialId,
+    duration: 0,
+    typingDuration: 0,
+    typingSpeed: 0,
+    targetText: "",
+    finalText: "",
+    minStringDistance: 0,
+    editsTarget: [],
+    editsFinal: [],
+  };
+
   if (!trialEvents || trialEvents.length === 0) {
     return emptyTrialStats;
   }
@@ -55,14 +59,14 @@ export function computeTrialStats(
   const typingDuration = typingStart ? (end - typingStart) / 1000 : 0; // Typing duration in seconds
   const totalWords = firstText && finalText ? (finalText.length - firstText.length) / 5 : 0;
   const typingSpeed = (totalWords / (typingDuration || 1)) * 60; // Words per minute
-  const {distance: minStringDistance, editsA: editsTarget, editsB: editsFinal} = targetText && finalText ? levenshteinDistance(targetText.toLowerCase(), finalText.toLowerCase()) : {distance: 0, editsA: [], editsB: []};
+  const { distance: minStringDistance, editsA: editsTarget, editsB: editsFinal } = targetText && finalText ? levenshteinDistance(targetText.toLowerCase(), finalText.toLowerCase()) : { distance: 0, editsA: [], editsB: [] };
 
-  return { duration, typingDuration, typingSpeed, targetText, finalText, minStringDistance, editsTarget, editsFinal };
+  return { trialId, duration, typingDuration, typingSpeed, targetText, finalText, minStringDistance, editsTarget, editsFinal };
 }
 
 function levenshteinDistance(a: string, b: string): { distance: number, editsA: Edit[], editsB: Edit[] } {
-  const distances = Array.from({ length: a.length + 1 }, (_, i) => Array.from({length: b.length + 1}, (_, j) => i === 0 ? j : 0));
-  
+  const distances = Array.from({ length: a.length + 1 }, (_, i) => Array.from({ length: b.length + 1 }, (_, j) => i === 0 ? j : 0));
+
   for (let i = 1; i <= a.length; i++) {
     for (let j = 1; j <= b.length; j++) {
       if (a[i - 1] === b[j - 1]) {
@@ -76,7 +80,7 @@ function levenshteinDistance(a: string, b: string): { distance: number, editsA: 
     }
   }
 
-  return {...rebuildEdits(distances), distance: distances[a.length][b.length]};
+  return { ...rebuildEdits(distances), distance: distances[a.length][b.length] };
 }
 
 export type Edit = "insertion" | "deletion" | "substitution" | "no_change";

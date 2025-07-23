@@ -9,11 +9,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { computeTrialStats, TrialStats } from "./stats";
 import { ChartContainer } from "./ui/chart";
 
 type SessionViewProps = {
-  allTrials: (TrialEvent[]| null)[];
+  allTrials: (TrialEvent[] | null)[];
 };
 
 export default function SessionView({ allTrials }: SessionViewProps) {
@@ -21,8 +22,8 @@ export default function SessionView({ allTrials }: SessionViewProps) {
 
   useEffect(() => {
     if (allTrials) {
-      const stats = allTrials.map((trialEvents) =>
-        computeTrialStats(trialEvents)
+      const stats = allTrials.map((trialEvents, index) =>
+        computeTrialStats(trialEvents, index + 1)
       );
       setTrialStats(stats);
     }
@@ -58,10 +59,7 @@ export default function SessionView({ allTrials }: SessionViewProps) {
             />
             <Tooltip
               cursor={{ strokeDasharray: "3 3" }}
-              formatter={(value: number, name: string) => [
-                value.toFixed(name === "Min String Distance" ? 0 : 2),
-                name,
-              ]}
+              content={CustomTooltip}
             />
             <Scatter data={trialStats} fill="#8884d8" />
           </ScatterChart>
@@ -70,3 +68,44 @@ export default function SessionView({ allTrials }: SessionViewProps) {
     </div>
   );
 }
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean;
+  payload?: Payload<number, string>[];
+  label?: string;
+}) => {
+  const isVisible = active && payload && payload.length;
+  return (
+    <div
+      className="border p-2 bg-white shadow-lg rounded"
+      style={{ visibility: isVisible ? "visible" : "hidden" }}
+    >
+      {isVisible && (
+        <>
+          <p className="font-bold">Trial {payload[0].payload.trialId}</p>
+          <ul className="mt-2">
+            <li>
+              Target text: <pre>{payload[0].payload.targetText}</pre>
+            </li>
+            <li>
+              Final text: <pre>{payload[0].payload.finalText}</pre>
+            </li>
+            <li className="mt-2">
+              Duration: {payload[0].payload.duration.toFixed(2)} seconds
+            </li>
+            <li>
+              Min String Distance: {payload[0].payload.minStringDistance} chars
+            </li>
+            <li>
+              Typing Speed: {payload[0].payload.typingSpeed.toFixed(2)} wpm
+            </li>
+          </ul>
+        </>
+      )}
+    </div>
+  );
+};

@@ -79,13 +79,7 @@ public class KeyboardContext : MonoBehaviour
     }
 
     public readonly List<Key> Keys = new();
-    private List<List<string>> keyLayout = new()
-    {
-        new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
-        new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
-        new List<string> { "Z", "X", "C", "V", "B", "N", "M", "." },
-        new List<string> { " "}
-    };
+    private List<List<string>> keyLayout;
     private KeyboardStateMachine keyboardStateMachine;
     private GameObject backgroundRect;
     private Material backgroundMaterial;
@@ -174,11 +168,11 @@ public class KeyboardContext : MonoBehaviour
         }
     }
 
-    public void InitKeyLayout(List<List<string>> newLayout, List<string> nonKeys = null)
+    public void InitKeyLayout(List<List<string>> newLayout, int candidateButtonCount = 0, List<string> nonKeys = null)
     {
         keyLayout = newLayout;
         CleanUp();
-        
+
         float keyboardOffsetY = -0.4f;
         float keyboardY0 = keyboardOffsetY + 3 * keySpacing + 2.5f * keySize;
 
@@ -203,26 +197,40 @@ public class KeyboardContext : MonoBehaviour
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
                 string label = keyLayout[row][col];
-                GameObject keyObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                keyObject.AddComponent<Key>();
-                Key key = keyObject.GetComponent<Key>();
-                key.label = label;
-                key.alpha = Alpha;
-                key.IsKey = nonKeys?.IndexOf(label) < 0;
-                keyObject.name = "Key_" + label;
-
-                keyObject.transform.SetParent(transform);
-                key.X = x0 + col * (keySpacing + keySize);
-                key.Y = y0;
-                key.Width = keySize * (1 + 0.25f * (label == " " ? 8 : 0));
-                key.Height = keySize;
-                key.Depth = keySize / 10;
-
+                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys?.IndexOf(label) < 0);
                 Keys.Add(key);
             }
         }
 
+        float candidateButtonWidth = width / candidateButtonCount;
+        float candidateButtonsX0 = (candidateButtonWidth - width) / 2;
+        float candidateButtonsY0 = 0.2f;
+        for (int i = 0; i < candidateButtonCount; i++)
+        {
+            float x0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);
+            Key key = InstantiateKey($"Candidate_{i + 1}", $"candidate {i + 1}", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true);
+            Keys.Add(key);
+        }
+
         keyboardStateMachine = new KeyboardStateMachine(Keys);
+    }
+
+    private Key InstantiateKey(string name, string label, float cx, float cy, float width, float height, float depth, bool isKey)
+    {
+        GameObject keyObject = new(name);
+        keyObject.transform.SetParent(transform);
+        keyObject.AddComponent<Key>();
+        Key key = keyObject.GetComponent<Key>();
+        key.label = label;
+        key.alpha = Alpha;
+        key.IsKey = isKey;
+
+        key.X = cx;
+        key.Y = cy;
+        key.Width = width;
+        key.Height = height;
+        key.Depth = depth;
+        return key;
     }
 
     internal void CleanUp()

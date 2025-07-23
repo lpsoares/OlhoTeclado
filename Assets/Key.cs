@@ -18,15 +18,19 @@ public class Key : MonoBehaviour
     public bool IsCurrent { get; set; }
     public bool IsKey = true; // Indicates if this is a key or part of a larger gesture keyboard
     public float Probability = 0.0f; // Probability of the key being pressed (used for non keys only)
+    private GameObject keyRectangle;
 
     void Start()
     {
+        keyRectangle = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        keyRectangle.transform.SetParent(transform);
+        keyRectangle.transform.localPosition = new Vector3(0, 0, 0);
+        keyRectangle.transform.localScale = new Vector3(Width, Height, Depth);
+
         // Create a new GameObject for the text
         GameObject textObj = new("KeyText");
         textObj.transform.SetParent(transform);
-
-        // Position the text slightly above the cylinder surface
-        textObj.transform.localPosition = new Vector3(0, 0, -0.5f);
+        textObj.transform.localPosition = new Vector3(0, 0, -Depth / 2);
 
         // Add TextMesh component
         textMesh = textObj.AddComponent<TextMesh>();
@@ -37,7 +41,7 @@ public class Key : MonoBehaviour
         textMesh.alignment = TextAlignment.Center;
         textMesh.color = Color.white.WithAlpha(alpha);
 
-        keyMaterial = GetComponent<Renderer>().material;
+        keyMaterial = keyRectangle.GetComponent<Renderer>().material;
         keyMaterial.SetTransparent();
 
         keyMaterial.color = IsKey ? backgroundColor.WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
@@ -57,6 +61,35 @@ public class Key : MonoBehaviour
             scaleFactor = 1.0f + Probability * 0.5f; // Scale up based on probability
         }
         transform.localPosition = new Vector3(X, Y, z);
-        transform.localScale = new Vector3(Width * scaleFactor, Height * scaleFactor, Depth);
+        float rectWidth = Width * scaleFactor;
+        float rectHeight = Height * scaleFactor;
+        keyRectangle.transform.localScale = new Vector3(rectWidth, rectHeight, Depth);
+
+        FitTextToKey(rectWidth);
+    }
+
+    private void FitTextToKey(float rectWidth)
+    {
+        int totalChars = Math.Max(label.Length, 1);
+        float charWidth = GetCharWidth();
+        float textWidth = charWidth * totalChars;
+        float maxTextWidth = rectWidth * totalChars / (totalChars + 2);
+        
+        float scale = maxTextWidth / textWidth;
+        textMesh.transform.localScale = new Vector3(scale, scale, 1f);
+    }
+
+    private float GetCharWidth()
+    {
+        // https://discussions.unity.com/t/computing-exact-size-of-text-line-with-textmesh/672587/3
+        float width = 0f;
+        foreach (char symbol in "W")
+        {
+            if (textMesh.font.GetCharacterInfo(symbol, out CharacterInfo info, textMesh.fontSize, textMesh.fontStyle))
+            {
+                width += info.advance;
+            }
+        }
+        return width * textMesh.characterSize * 0.1f;
     }
 }

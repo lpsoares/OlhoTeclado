@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e3cd6d4ec2a0ba4781df50d533563aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerTransform: {fileID: 105875559}
+  controllerTransform: {fileID: 1262610604}
 --- !u!1 &105875558
 GameObject:
   m_ObjectHideFlags: 0
@@ -2054,10 +2054,10 @@ PrefabInstance:
       addedObject: {fileID: 88024491}
     - targetCorrespondingSourceObject: {fileID: 7116092875461039112, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 88024500}
+      addedObject: {fileID: 88024503}
     - targetCorrespondingSourceObject: {fileID: 7116092875461039112, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 88024503}
+      addedObject: {fileID: 88024500}
   m_SourcePrefab: {fileID: 100100000, guid: d6388f8eceb57b84c8293ae0828ad86d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

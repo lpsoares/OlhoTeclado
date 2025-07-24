@@ -15,7 +15,9 @@ public abstract class AbstractKeyboard
     protected readonly List<ITextChangeListener> textChangeListeners;
     protected readonly List<IContextChangeListener> contextChangeListeners;
     protected readonly List<IContextPositionsListener> contextPositionListeners;
-    public KeyboardType Type {
+    protected readonly List<ICandidateListListener> candidateListListeners;
+    public KeyboardType Type
+    {
         get; private set;
     }
     protected Func<KeyboardContext> instantiateContext;
@@ -30,13 +32,14 @@ public abstract class AbstractKeyboard
         protected set;
     }
 
-    public AbstractKeyboard(KeyboardType type, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
+    public AbstractKeyboard(KeyboardType type, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners)
     {
         Type = type;
         this.instantiateContext = instantiateContext;
         this.textChangeListeners = textChangeListeners;
         this.contextChangeListeners = contextChangeListeners;
         this.contextPositionListeners = contextPositionListeners;
+        this.candidateListListeners = candidateListListeners;
         keyboardContexts = new List<KeyboardContext>();
         Text = string.Empty;
     }
@@ -86,6 +89,14 @@ public abstract class AbstractKeyboard
             listener.OnContextPositionsChanged(contextPositionData);
         }
     }
+
+    public void NotifyCandidateListListeners(string[] candidates)
+    {
+        foreach (var listener in candidateListListeners)
+        {
+            listener.OnCandidateListChanged(candidates);
+        }
+    }
 }
 
 public interface ITextChangeListener
@@ -101,6 +112,11 @@ public interface IContextChangeListener
 public interface IContextPositionsListener
 {
     void OnContextPositionsChanged(ContextPositionData[] contextPositionData);
+}
+
+public interface ICandidateListListener
+{
+    void OnCandidateListChanged(string[] candidates);
 }
 
 public class ContextPositionData

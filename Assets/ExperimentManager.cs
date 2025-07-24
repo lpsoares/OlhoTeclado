@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextChangeListener, IGazeDataListener, IContextPositionsListener
+public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextChangeListener, IGazeDataListener, IContextPositionsListener, ICandidateListListener
 {
     private enum TrialState
     {
@@ -103,6 +103,12 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
         events.Add(eventData);
         Debug.Log($"Text changed: {newText}");
         currentText = newText; // Update the current text to avoid duplicate events
+    }
+
+    public void OnCandidateListChanged(string[] candidates)
+    {
+        string eventData = EventBuilder.BuildCandidateListEvent(GetTimestamp(), candidates);
+        events.Add(eventData);
     }
 
     public void OnGaze(Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection)

@@ -15,8 +15,8 @@ public class GreenKeyboard : AbstractKeyboard
     private Color keyColor = new(0.01f, 0.25f, 0.01f);
     private bool decodingGesture = false;
 
-    public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
-        : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners)
+    public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners)
+        : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners)
     {
         this.contextGazeInteraction = contextGazeInteraction;
         this.decoderAPI = decoderAPI;
@@ -135,6 +135,7 @@ public class GreenKeyboard : AbstractKeyboard
                     }
                 });
             }
+            NotifyCandidateListListeners(curContext.Candidates.ToArray());
         }
         else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
         {

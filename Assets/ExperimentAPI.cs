@@ -137,7 +137,6 @@ public class EventBuilder
     const string KeyPosition = "KEY_POS";
     const string ContextPosition = "CTX_POS";
     const string ContextChange = "CONTEXT_CHANGE";
-    // TODO: IMPLEMENT THIS EVENT
     const string CandidateList = "CANDIDATES";
     const string TextChange = "TEXT_CHANGE";
     const string GazeData = "GAZE";
@@ -157,6 +156,12 @@ public class EventBuilder
     {
         string data = string.Join(";", Array.ConvertAll(contextPositions, cp => cp.ToCSV(";")));
         return BuildEvent(timestamp, ContextPosition, data);
+    }
+
+    public static string BuildCandidateListEvent(float timestamp, string[] candidates)
+    {
+        string data = string.Join(";", candidates);
+        return BuildEvent(timestamp, CandidateList, data);
     }
 
     public static string BuildContextChangeEvent(float timestamp, string prevContext, string newContext)

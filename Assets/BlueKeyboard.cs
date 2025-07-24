@@ -8,8 +8,8 @@ public class BlueKeyboard : AbstractKeyboard
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
 
-    public BlueKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners)
-        : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners)
+    public BlueKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners)
+        : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners)
     {
         this.contextGazeInteraction = contextGazeInteraction;
         KeyboardState[] states = { KeyboardState.InactiveNext, KeyboardState.Next, KeyboardState.Current, KeyboardState.Previous, KeyboardState.InactivePrevious };

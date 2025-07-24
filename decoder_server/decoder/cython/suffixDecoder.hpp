@@ -15,7 +15,7 @@ namespace suffixDecoder
   class CDecoder
   {
   public:
-    std::vector<CWordScore> decode(trie::CTrie *trie, std::map<char, std::pair<double, double>> keyCenters, std::vector<std::pair<double, double>> gesture, std::string lastLetters);
+    std::vector<CWordScore> decode(trie::CTrie *trie, std::map<char, std::pair<double, double>> keyCenters, std::vector<std::pair<double, double>> gesture, std::string lastLetters, double keyDistThresh);
   };
 } // namespace suffixDecoder
 

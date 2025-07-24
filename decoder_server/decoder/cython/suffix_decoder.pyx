@@ -18,7 +18,7 @@ from keyboard import KeyboardLayout
 
 
 ASSETS = Path(__file__).parent.parent.parent / 'assets'
-DEFAULT_KEY_THRESHOLD = 60
+DEFAULT_KEY_THRESHOLD_PERCENT = 1.2  # of the key size
 
 
 cdef extern from "suffixDecoder.hpp" namespace "suffixDecoder":
@@ -28,7 +28,7 @@ cdef extern from "suffixDecoder.hpp" namespace "suffixDecoder":
 
     cdef cppclass CDecoder:
         CDecoder() except +
-        vector[CWordScore] decode(ctrie.CTrie *trie, map[char, pair[double, double]] keyCenters, vector[pair[double, double]] gesture, string lastLetters) except +
+        vector[CWordScore] decode(ctrie.CTrie *trie, map[char, pair[double, double]] keyCenters, vector[pair[double, double]] gesture, string lastLetters, double keyDistThresh) except +
 
 
 class WordScore:
@@ -50,7 +50,7 @@ cdef class SuffixGestureDecoder:
         if is_api and keyboard_config:
             self.keyboard = KeyboardLayout()
             self.keyboard.from_keyboard_config(keyboard_config)
-        else:  
+        else:
             self.keyboard = KeyboardLayout(ASSETS / 'keys.csv')
 
         with open(ASSETS / 'words.txt', 'r', encoding='utf-8') as f:
@@ -80,7 +80,7 @@ cdef class SuffixGestureDecoder:
         cdef ctrie.Trie trie = self.trie
         last_letters = self._get_last_letter_candidates(gesture, 200)
 
-        cscores = self._decoder.decode(trie._trie, self.key_centers, reversed_gesture, ''.join(last_letters).encode('utf-8'))
+        cscores = self._decoder.decode(trie._trie, self.key_centers, reversed_gesture, ''.join(last_letters).encode('utf-8'), DEFAULT_KEY_THRESHOLD_PERCENT)
 
         raw_scores = [(
             score.word.decode('utf-8')[::-1],
@@ -110,7 +110,7 @@ cdef class SuffixGestureDecoder:
         for i in range(len(gesture) - 1, -1, -1):
             if gesture[i][0] < last_tstamp - time_threshold:
                 break
-            candidates = self.keyboard.keys_close_to(gesture[i][1], gesture[i][2], DEFAULT_KEY_THRESHOLD)
+            candidates = self.keyboard.keys_close_to(gesture[i][1], gesture[i][2], DEFAULT_KEY_THRESHOLD_PERCENT * self.keyboard.key_size)
             keys.update([c.key for c in candidates])
         if 'punct' in keys:
             keys.remove('punct')

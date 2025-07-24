@@ -4,27 +4,19 @@
 {
     "distutils": {
         "depends": [
-            "decoder\\cython\\eyeswipeDecoder.hpp",
-            "decoder\\cython\\prefixTree.hpp"
+            "decoder/cython/eyeswipeDecoder.hpp",
+            "decoder/cython/prefixTree.hpp"
         ],
         "extra_compile_args": [
-            "-std=c++17",
-            "/std:c++17",
-            "/D_USE_MATH_DEFINES"
+            "-std=c++17"
         ],
         "include_dirs": [
-            "decoder/cython",
-            "decoder\\cython"
+            "decoder/cython"
         ],
         "language": "c++",
         "name": "decoder.cython.eyeswipe_decoder",
         "sources": [
             "decoder/cython/eyeswipe_decoder.pyx",
-            "decoder/cython\\eyeswipeDecoder.cpp",
-            "decoder/cython\\prefixTree.cpp",
-            "decoder/cython\\suffixDecoder.cpp",
-            "decoder/cython\\trie.cpp",
-            "decoder/cython\\utils.cpp",
             "decoder/cython/eyeswipeDecoder.cpp",
             "decoder/cython/prefixTree.cpp",
             "decoder/cython/utils.cpp"

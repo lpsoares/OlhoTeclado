@@ -1,33 +1,39 @@
+# API for communicating with the gesture decoder
 
-API for communicating with the gesture decoder
-
-OBS: If you're using a different OS than windows, you might need to re-do the build for the Cython objects. To do it, you'll need to have Cython installed, and then run:
-
-```
-python setup.py build_ext --inplace
-```
+This subproject uses [uv](https://docs.astral.sh/uv/). You will need to build the Cython objects.
 
 ## Installation
 
 First, install the dependencies:
 
 ```
-uv pip install .
+uv venv
+# Activate the virtual environment
+uv sync --extra build
+```
+
+## Building the Cython Objects
+
+```
+uv run setup.py build_ext --inplace
 ```
 
 ## Running the API
 
 To start the server:
+
 ```bash
 uv run main.py
 ```
 
 The API will be available at:
+
 - **Base URL**: http://localhost:8000
 
 ## API Workflow
 
 ### 1. Create Keyboard Layout
+
 Create a new keyboard configuration and initialize the decoder:
 
 ```bash
@@ -35,6 +41,7 @@ POST /keyboard
 ```
 
 **Body example:**
+
 ```json
 {
   "q": [0, 0, 50, 50],
@@ -46,6 +53,7 @@ POST /keyboard
 ```
 
 **Response:**
+
 ```json
 {
   "decoder_id": "0",
@@ -54,6 +62,7 @@ POST /keyboard
 ```
 
 ### 2. Check Decoder Status
+
 Monitor the decoder initialization progress:
 
 ```bash
@@ -61,6 +70,7 @@ GET /keyboard/status
 ```
 
 **Response:**
+
 ```json
 {
   "decoder_id": "0",
@@ -69,7 +79,8 @@ GET /keyboard/status
 }
 ```
 
-### 3. Set Context 
+### 3. Set Context
+
 Provide context. (it will also be used as a reset context, by using it with an empty string as the body)
 
 ```bash
@@ -77,6 +88,7 @@ POST /context
 ```
 
 **Body:**
+
 ```json
 {
   "context": "hello world this is"
@@ -84,6 +96,7 @@ POST /context
 ```
 
 ### 4. Add Gesture Points
+
 Add swipe gesture coordinates:
 
 ```bash
@@ -91,6 +104,7 @@ POST /points/post
 ```
 
 **Body:**
+
 ```json
 {
   "points": [
@@ -104,6 +118,7 @@ POST /points/post
 > **Note**: Each point is `[timestamp, x, y]`
 
 ### 5. Decode Gesture
+
 Get word predictions from the accumulated points:
 
 ```bash
@@ -111,6 +126,7 @@ POST /decode/
 ```
 
 **Response:**
+
 ```json
 {
   "decoded_words": ["hello", "hallo", "helo", "help", "hall"]
@@ -118,12 +134,12 @@ POST /decode/
 ```
 
 ### 6. Reset Points
+
 Clear accumulated points for next gesture:
 
 ```bash
 POST /points/reset
 ```
-
 
 NOTES:
 

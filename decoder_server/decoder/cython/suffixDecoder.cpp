@@ -17,7 +17,7 @@ namespace suffixDecoder
   double max(double a, double b, double c);
 
   // This function assumes that the input is normalized by the key size (i.e., the diameter of the key is 1).
-  std::vector<CWordScore> CDecoder::decode(trie::CTrie *trie, std::map<char, std::pair<double, double>> keyCenters, std::vector<std::pair<double, double>> gesture, std::string lastLetters)
+  std::vector<CWordScore> CDecoder::decode(trie::CTrie *trie, std::map<char, std::pair<double, double>> keyCenters, std::vector<std::pair<double, double>> gesture, std::string lastLetters, double keyDistThresh)
   {
     double **dtw = createMatrix(trie->getMaxWordLength() + 1, gesture.size() + 1);
     for (std::size_t i = 1; i <= gesture.size(); i++)
@@ -58,7 +58,8 @@ namespace suffixDecoder
           for (std::size_t i = 0; i <= gesture.size(); i++)
           {
             double newDistance = dtw[curWord.length()][i] / ((i + 1) * (i + 1));
-            if (newDistance < bestDistance)
+            // We only consider the word if the last (first - since it's reversed) gesture is close to the last letter of the word
+            if (newDistance < bestDistance && distance(gesture[i - 1], keyCenters[curWord.back()]) < keyDistThresh)
             {
               bestDistance = newDistance;
             }
@@ -100,5 +101,10 @@ namespace suffixDecoder
   double max(double a, double b, double c)
   {
     return max(max(a, b), c);
+  }
+
+  double distance(const std::pair<double, double> &a, const std::pair<double, double> &b)
+  {
+    return std::sqrt((a.first - b.first) * (a.first - b.first) + (a.second - b.second) * (a.second - b.second));
   }
 } // namespace suffixDecoder

@@ -1,5 +1,5 @@
-from os import PathLike
 import csv
+from os import PathLike
 
 
 class KeyboardButton:
@@ -60,19 +60,21 @@ class KeyboardButton:
 
 
 class KeyboardLayout:
-    def __init__(self):
+    def __init__(self, layout_file: PathLike | None = None):
         self.buttons = {}
+        if layout_file:
+            self.from_file(layout_file)
 
     @property
     def key_size(self) -> float:
-        return self.buttons['aKey'].key_size
+        return self.buttons["aKey"].key_size
 
     def from_file(self, layout_file: PathLike) -> None:
         """
         Loads a keyboard layout from a file.
         :param layout_file: The path to the file containing the keyboard layout.
         """
-        with open(layout_file, 'r', encoding='utf-8') as f:
+        with open(layout_file, "r", encoding="utf-8") as f:
             reader = csv.reader(f)
             for row in reader:
                 _tstamp, key_id, *numeric_data = row
@@ -80,17 +82,18 @@ class KeyboardLayout:
                 button = KeyboardButton(key_id, x, y, width, height)
                 self.buttons[key_id] = button
 
-    def from_keyboard_config(self, keyboard_config: dict[str, tuple[float, float, float, float]]) -> None:
+    def from_keyboard_config(
+        self, keyboard_config: dict[str, tuple[float, float, float, float]]
+    ) -> None:
         """
         Loads a keyboard layout from a dictionary.
         :param keyboard_config: A dictionary containing the keyboard layout.
         """
         for key_id, (x, y, width, height) in keyboard_config.items():
-            if not key_id.endswith('Key'):
-                key_id = key_id.lower() + 'Key'
+            if not key_id.endswith("Key"):
+                key_id = key_id.lower() + "Key"
             button = KeyboardButton(key_id, x, y, width, height)
             self.buttons[key_id] = button
-            
 
     def ideal_path_for(self, word: str) -> list[tuple[float, float]]:
         """
@@ -105,7 +108,9 @@ class KeyboardLayout:
                 path.append(button.center)
         return path
 
-    def keys_close_to(self, x: float, y: float, threshold: float) -> list[KeyboardButton]:
+    def keys_close_to(
+        self, x: float, y: float, threshold: float
+    ) -> list[KeyboardButton]:
         """
         Returns a list of buttons that are close to the given coordinates.
         :param x: The x coordinate.
@@ -126,4 +131,4 @@ class KeyboardLayout:
         :param key: The key to look up.
         :return: The button corresponding to the key.
         """
-        return self.buttons[key.lower() + 'Key']
+        return self.buttons[key.lower() + "Key"]

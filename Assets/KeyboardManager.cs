@@ -23,6 +23,7 @@ public class KeyboardManager : MonoBehaviour
     private TextOutput textReference;
     private TextOutput textOutput;
     private readonly List<ITextChangeListener> textChangeListeners = new();
+    private readonly List<IKeyPressListener> keyPressListeners = new();
     private readonly List<IContextChangeListener> contextChangeListeners = new();
     private readonly List<IContextPositionsListener> contextPositionListeners = new();
     private readonly List<ICandidateListListener> candidateListListeners = new();
@@ -45,6 +46,11 @@ public class KeyboardManager : MonoBehaviour
         if (textChangeListeners.Count == 0)
         {
             Debug.LogWarning("No text change listeners found. Please add ITextChangeListener components to the scene.");
+        }
+        GetComponents(keyPressListeners);
+        if (keyPressListeners.Count == 0)
+        {
+            Debug.LogWarning("No key press listeners found. Please add IKeyPressListener components to the scene.");
         }
         GetComponents(contextChangeListeners);
         if (contextChangeListeners.Count == 0)
@@ -135,15 +141,15 @@ public class KeyboardManager : MonoBehaviour
         switch (type)
         {
             case KeyboardType.Red:
-                Keyboard = new RedKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners);
+                Keyboard = new RedKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             case KeyboardType.Blue:
-                Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners);
+                Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             case KeyboardType.Green:
                 var decoderAPI = new DecoderAPI();
                 StartCoroutine(decoderAPI.StartRequestLoop());
-                Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners);
+                Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             default:
                 Debug.LogError($"Unknown keyboard type: {type}. Using RedKeyboard as default.");

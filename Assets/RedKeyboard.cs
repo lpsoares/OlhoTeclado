@@ -8,8 +8,8 @@ public class RedKeyboard : AbstractKeyboard
     private KeyboardState curState = KeyboardState.Initial;
     private KeyboardContext curContext = null;
 
-    public RedKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners)
-        : base(KeyboardType.Red, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners)
+    public RedKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners, List<IKeyPressListener> keyPressListeners)
+        : base(KeyboardType.Red, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners)
     {
         this.contextGazeInteraction = contextGazeInteraction;
         KeyboardState[] states = { KeyboardState.InactiveNext, KeyboardState.Next, KeyboardState.Current, KeyboardState.Previous, KeyboardState.InactivePrevious };

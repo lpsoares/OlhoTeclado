@@ -146,6 +146,11 @@ public class EventBuilder
         return BuildEvent(timestamp, TrialEnd, sentence);
     }
 
+    public static string BuildKeyPressEvent(float timestamp, string keyName, string keyLabel, string keyValue)
+    {
+        return BuildEvent(timestamp, KeyPress, $"{keyName};{keyLabel};{keyValue}");
+    }
+
     public static string BuildKeyPositionEvent(float timestamp, KeyPositionData[] keyPositions)
     {
         string data = string.Join(";", Array.ConvertAll(keyPositions, kp => kp.ToCSV(";")));

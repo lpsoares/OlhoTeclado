@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextChangeListener, IGazeDataListener, IContextPositionsListener, ICandidateListListener
+public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextChangeListener, IGazeDataListener, IContextPositionsListener, ICandidateListListener, IKeyPressListener
 {
     private enum TrialState
     {
@@ -70,6 +70,17 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
         }
     }
 
+    public void OnKeyPress(string keyName, string keyLabel, string keyValue)
+    {
+        if (trialState != TrialState.Ongoing)
+        {
+            return;
+        }
+
+        string eventData = EventBuilder.BuildKeyPressEvent(GetTimestamp(), keyName, keyLabel, keyValue);
+        events.Add(eventData);
+    }
+
     public void OnContextPositionsChanged(ContextPositionData[] contextPositionData)
     {
         if (trialState != TrialState.Ongoing)
@@ -107,6 +118,11 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
 
     public void OnCandidateListChanged(string[] candidates)
     {
+        if (trialState != TrialState.Ongoing)
+        {
+            return;
+        }
+        
         string eventData = EventBuilder.BuildCandidateListEvent(GetTimestamp(), candidates);
         events.Add(eventData);
     }

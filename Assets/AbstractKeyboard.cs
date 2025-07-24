@@ -16,6 +16,8 @@ public abstract class AbstractKeyboard
     protected readonly List<IContextChangeListener> contextChangeListeners;
     protected readonly List<IContextPositionsListener> contextPositionListeners;
     protected readonly List<ICandidateListListener> candidateListListeners;
+    protected readonly List<IKeyPressListener> keyPressListeners;
+
     public KeyboardType Type
     {
         get; private set;
@@ -32,7 +34,7 @@ public abstract class AbstractKeyboard
         protected set;
     }
 
-    public AbstractKeyboard(KeyboardType type, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners)
+    public AbstractKeyboard(KeyboardType type, Func<KeyboardContext> instantiateContext, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners, List<IKeyPressListener> keyPressListeners)
     {
         Type = type;
         this.instantiateContext = instantiateContext;
@@ -40,6 +42,7 @@ public abstract class AbstractKeyboard
         this.contextChangeListeners = contextChangeListeners;
         this.contextPositionListeners = contextPositionListeners;
         this.candidateListListeners = candidateListListeners;
+        this.keyPressListeners = keyPressListeners;
         keyboardContexts = new List<KeyboardContext>();
         Text = string.Empty;
     }
@@ -63,6 +66,14 @@ public abstract class AbstractKeyboard
         Text = string.Empty;
         RichText = string.Empty;
         NotifyTextChangeListeners(Text);
+    }
+
+    public void NotifyKeyPressListeners(string keyName, string keyLabel, string keyValue)
+    {
+        foreach (var listener in keyPressListeners)
+        {
+            listener.OnKeyPress(keyName, keyLabel, keyValue);
+        }
     }
 
     public void NotifyContextChangeListeners(KeyboardContext newContext)
@@ -97,6 +108,11 @@ public abstract class AbstractKeyboard
             listener.OnCandidateListChanged(candidates);
         }
     }
+}
+
+public interface IKeyPressListener
+{
+    void OnKeyPress(string keyName, string keyLabel, string keyValue);
 }
 
 public interface ITextChangeListener

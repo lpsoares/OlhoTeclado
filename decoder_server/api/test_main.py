@@ -59,6 +59,7 @@ def test_regular_flow():
         # Split in random chunks to simulate real-time input
         reset_points()
         i = 0
+        print(f"Adding points for word: '{word}'")
         while i < len(gaze_path):
             chunk_size = randint(1, 5)
             chunk = gaze_path[i : i + chunk_size]
@@ -66,7 +67,6 @@ def test_regular_flow():
             i += chunk_size
         stored_points = get_points()
         assert len(gaze_path) == len(stored_points)
-        print(f'Added {len(stored_points)} points for word "{word}"')
 
         candidates = decode_gesture(decoder_id)
         assert word in candidates, f"Expected '{word}' in candidates: {candidates}"
@@ -75,6 +75,7 @@ def test_regular_flow():
 
 
 def init_decoder(decoder_type, layout):
+    print(f"Initializing decoder of type: {decoder_type}")
     response = client.post(
         f"/decoder/{decoder_type}",
         json=layout,
@@ -90,12 +91,14 @@ def init_decoder(decoder_type, layout):
 
 
 def check_ready(decoder_id):
+    print(f"Checking status of decoder {decoder_id}...")
     response = client.get(f"/decoder/{decoder_id}")
     assert response.status_code == 200
     return response.json()["ready"]
 
 
 def set_context(context):
+    print(f"Setting context: '{context}'")
     response = client.post(
         "/context",
         json={"context": context},
@@ -105,6 +108,7 @@ def set_context(context):
 
 
 def reset_points():
+    print("Resetting points...")
     response = client.post("/points/reset")
     assert response.status_code == 200
     assert response.json()["message"] == "Points reset successfully."
@@ -120,6 +124,7 @@ def add_points(points):
 
 
 def decode_gesture(decoder_id):
+    print(f"Decoding gesture with decoder {decoder_id}...")
     response = client.post(
         f"/decoder/{decoder_id}/decode",
     )

@@ -44,10 +44,10 @@ cdef class SuffixGestureDecoder:
     cdef object keyboard
     cdef map[char, pair[double, double]] key_centers
 
-    def __init__(self, is_api: bool = False, keyboard_config: dict[str, tuple[float, float, float, float]] = None):
+    def __init__(self, keyboard_config: dict[str, tuple[float, float, float, float]] = None):
         self._decoder = CDecoder()
         self._trie = ctrie.Trie()
-        if is_api and keyboard_config:
+        if keyboard_config:
             self.keyboard = KeyboardLayout()
             self.keyboard.from_keyboard_config(keyboard_config)
         else:
@@ -57,6 +57,16 @@ cdef class SuffixGestureDecoder:
             for line in f:
                 self._trie.insert(line.strip()[::-1])
 
+        for c in "abcdefghijklmnopqrstuvwxyz'":
+            self.key_centers[c] = self.keyboard[c].normalized_center
+
+    def update_layout(self, layout: dict[str, tuple[float, float, float, float]]) -> None:
+        """
+        Update the keyboard layout for the decoder.
+        :param layout: A dictionary mapping keys to their (x, y, width, height) tuples
+        """
+        self.keyboard.from_keyboard_config(layout)
+        self.key_centers.clear()
         for c in "abcdefghijklmnopqrstuvwxyz'":
             self.key_centers[c] = self.keyboard[c].normalized_center
 

@@ -1,21 +1,20 @@
 import sys
 from pathlib import Path
 
-from datareader import find_keyboard_config, iter_words, read_log_file
-
 sys.path.append(".")
 from decoder import SuffixGestureDecoder
+from iterdata.datareader import find_keyboard_config, iter_words, read_log_file
 
 DATA = Path(__file__).parent / ".." / ".." / ".." / "experiment_server" / "data"
-SESSION_DIR = DATA / "TestParticipant" / "green" / "session-01"
+SESSION_DIR = DATA / "TestParticipant" / "green" / "session-02"
 
-for i in range(3, 8):
+for i in range(1, 9):
     log_file = SESSION_DIR / f"trial-00{i}.csv"
 
     log_data = read_log_file(log_file)
     keyboard_config = find_keyboard_config(log_data)
 
-    decoder = SuffixGestureDecoder(is_api=True, keyboard_config=keyboard_config)
+    decoder = SuffixGestureDecoder(keyboard_config=keyboard_config)
 
     for word, gaze_path in iter_words(log_data):
         candidates = decoder.decode(gaze_path)

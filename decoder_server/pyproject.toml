@@ -17,3 +17,10 @@ build = ["setuptools", "cython"]
 
 [tool.setuptools]
 py-modules = ['decoder']
+
+[dependency-groups]
+dev = [
+    "fastapi[standard]>=0.116.1",
+    "httpx>=0.28.1",
+    "pytest>=8.4.1",
+]

@@ -16,25 +16,26 @@ def read_log_file(file_path):
     return events
 
 
-def parse_trial_start(raw_data: str):
+def parse_trial_start(raw_data: str) -> dict[str, str]:
     return {
         "target_text": raw_data,
     }
 
 
-def parse_trial_end(raw_data: str):
+def parse_trial_end(raw_data: str) -> dict[str, str]:
     return {"final_text": raw_data}
 
 
-def parse_key_press(raw_data: str):
-    label, value = raw_data.split(";")
+def parse_key_press(raw_data: str) -> dict[str, str]:
+    name, label, value = raw_data.split(";")
     return {
+        "name": name,
         "label": label,
         "value": value,
     }
 
 
-def parse_key_pos(raw_data: str):
+def parse_key_pos(raw_data: str) -> dict[str, dict[str, dict[str, str | float]]]:
     parts = raw_data.split(";")
     pos_data = {}
     for i in range(0, len(parts), 7):
@@ -52,7 +53,7 @@ def parse_key_pos(raw_data: str):
     return pos_data
 
 
-def parse_ctx_pos(raw_data: str):
+def parse_ctx_pos(raw_data: str) -> dict[str, dict[str, str | float]]:
     parts = raw_data.split(";")
     ctx_data = {}
     for i in range(0, len(parts), 13):
@@ -75,7 +76,7 @@ def parse_ctx_pos(raw_data: str):
     return ctx_data
 
 
-def parse_context_change(raw_data: str):
+def parse_context_change(raw_data: str) -> dict[str, str]:
     original_context, new_context = raw_data.split(";")
     return {
         "original_context": original_context,
@@ -83,20 +84,20 @@ def parse_context_change(raw_data: str):
     }
 
 
-def parse_text_change(raw_data: str):
+def parse_text_change(raw_data: str) -> dict[str, str]:
     return {
         "new_text": raw_data,
     }
 
 
-def parse_candidates(raw_data: str):
+def parse_candidates(raw_data: str) -> dict[str, list[str]]:
     candidates = raw_data.split(";")
     return {
         "candidates": candidates,
     }
 
 
-def parse_gaze_data(raw_data: str):
+def parse_gaze_data(raw_data: str) -> dict[str, float]:
     parts = raw_data.split(";")
     return {
         "x_2d": float(parts[0]),
@@ -132,7 +133,7 @@ EVENT_PARSERS = {
 }
 
 
-def find_keyboard_config(log_data):
+def find_keyboard_config(log_data) -> dict[str, tuple[float, float, float, float]]:
     keyboard_config = {}
     for event in log_data:
         if event["type"] == "KEY_POS":
@@ -176,6 +177,7 @@ def iter_words(log_data):
                 raise ValueError("Current text not set.")
             target_words = target_sentence.split()
             current_words = current_text.split()
+
             current_word = None
             for target, current in zip(target_words, current_words):
                 if target != current:

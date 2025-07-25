@@ -1564,7 +1564,7 @@ typedef struct __pyx_ctuple_double__and_double__and_double __pyx_ctuple_double__
 /* "decoder/cython/suffix_decoder.pyx":47
  *     cdef map[char, pair[double, double]] key_centers
  * 
- *     def __init__(self, is_api: bool = False, keyboard_config: dict[str, tuple[float, float, float, float]] = None):             # <<<<<<<<<<<<<<
+ *     def __init__(self, keyboard_config: dict[str, tuple[float, float, float, float]] = None):             # <<<<<<<<<<<<<<
  *         self._decoder = CDecoder()
  *         self._trie = ctrie.Trie()
 */
@@ -1575,7 +1575,7 @@ struct __pyx_ctuple_double__and_double__and_double__and_double {
   double f3;
 };
 
-/* "decoder/cython/suffix_decoder.pyx":67
+/* "decoder/cython/suffix_decoder.pyx":77
  *         return self._trie
  * 
  *     def decode(self, gesture: list[tuple[float, float, float]]) -> list[WordScore]:             # <<<<<<<<<<<<<<
@@ -1616,7 +1616,7 @@ struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder {
 };
 
 
-/* "decoder/cython/suffix_decoder.pyx":93
+/* "decoder/cython/suffix_decoder.pyx":103
  *         raw_scores = [score for score in raw_scores if score[0]]
  * 
  *         total_gesture = sum(score[1] for score in raw_scores)             # <<<<<<<<<<<<<<
@@ -2799,6 +2799,7 @@ static const char __pyx_k_doc[] = "__doc__";
 static const char __pyx_k_key[] = "key";
 static const char __pyx_k_pop[] = "pop";
 static const char __pyx_k_sum[] = "sum";
+static const char __pyx_k_None[] = "None";
 static const char __pyx_k_Path[] = "Path";
 static const char __pyx_k_exit[] = "__exit__";
 static const char __pyx_k_file[] = "__file__";
@@ -2831,8 +2832,8 @@ static const char __pyx_k_assets[] = "assets";
 static const char __pyx_k_decode[] = "decode";
 static const char __pyx_k_enable[] = "enable";
 static const char __pyx_k_insert[] = "insert";
-static const char __pyx_k_is_api[] = "is_api";
 static const char __pyx_k_lambda[] = "<lambda>";
+static const char __pyx_k_layout[] = "layout";
 static const char __pyx_k_module[] = "__module__";
 static const char __pyx_k_parent[] = "parent";
 static const char __pyx_k_reduce[] = "__reduce__";
@@ -2875,6 +2876,7 @@ static const char __pyx_k_class_getitem[] = "__class_getitem__";
 static const char __pyx_k_keys_close_to[] = "keys_close_to";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_total_gesture[] = "total_gesture";
+static const char __pyx_k_update_layout[] = "update_layout";
 static const char __pyx_k_KeyboardLayout[] = "KeyboardLayout";
 static const char __pyx_k_list_WordScore[] = "list[WordScore]";
 static const char __pyx_k_time_threshold[] = "time_threshold";
@@ -2888,6 +2890,7 @@ static const char __pyx_k_reversed_gesture[] = "reversed_gesture";
 static const char __pyx_k_normalized_center[] = "normalized_center";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_UUV_I_1_L_a_E_AU_iq[] = "\320\004$\320$U\320UV\360\n\000\t\r\210I\320\025*\250!\2501\330\010\014\210L\230\006\230a\330\010\014\210E\220\021\330\014\020\220\014\230A\230U\240$\240i\250q\260\002\260!";
 static const char __pyx_k_SuffixGestureDecoder[] = "SuffixGestureDecoder";
 static const char __pyx_k_decode_locals_lambda[] = "decode.<locals>.<lambda>";
 static const char __pyx_k_decoder_cython_utils[] = "decoder.cython.utils";
@@ -2904,18 +2907,21 @@ static const char __pyx_k_SuffixGestureDecoder___setstate[] = "SuffixGestureDeco
 static const char __pyx_k_Note_that_Cython_is_deliberately[] = "Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.";
 static const char __pyx_k_SuffixGestureDecoder___reduce_cy[] = "SuffixGestureDecoder.__reduce_cython__";
 static const char __pyx_k_SuffixGestureDecoder__get_last_l[] = "SuffixGestureDecoder._get_last_letter_candidates";
+static const char __pyx_k_SuffixGestureDecoder_update_layo[] = "SuffixGestureDecoder.update_layout";
 static const char __pyx_k_decoder_cython_suffix_decoder_py[] = "decoder/cython/suffix_decoder.pyx";
+static const char __pyx_k_dict_str_tuple_float_float_float[] = "dict[str, tuple[float, float, float, float]]";
 static const char __pyx_k_self__decoder_cannot_be_converte[] = "self._decoder cannot be converted to a Python object for pickling";
 /* #### Code section: decls ### */
 static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_9WordScore___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_word, PyObject *__pyx_v_gesture_prob, PyObject *__pyx_v_gesture_distance, PyObject *__pyx_v_total_gesture); /* proto */
-static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___init__(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_is_api, PyObject *__pyx_v_keyboard_config); /* proto */
+static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___init__(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_keyboard_config); /* proto */
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2update_layout(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_layout); /* proto */
 static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4trie___get__(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_genexpr(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_genexpr_arg_0); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda1(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2decode(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture); /* proto */
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4_get_last_letter_candidates(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture, double __pyx_v_time_threshold); /* proto */
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4decode(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture); /* proto */
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6_get_last_letter_candidates(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture, double __pyx_v_time_threshold); /* proto */
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 /* #### Code section: late_includes ### */
@@ -2965,8 +2971,8 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PySet_Type__update;
   PyObject *__pyx_slice[1];
   PyObject *__pyx_tuple[1];
-  PyObject *__pyx_codeobj_tab[7];
-  PyObject *__pyx_string_tab[118];
+  PyObject *__pyx_codeobj_tab[8];
+  PyObject *__pyx_string_tab[122];
   PyObject *__pyx_float_1_2;
   PyObject *__pyx_int_2;
   PyObject *__pyx_int_200;
@@ -3022,120 +3028,124 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_ASSETS __pyx_string_tab[1]
 #define __pyx_n_u_DEFAULT_KEY_THRESHOLD_PERCENT __pyx_string_tab[2]
 #define __pyx_n_u_KeyboardLayout __pyx_string_tab[3]
-#define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[4]
-#define __pyx_n_u_Path __pyx_string_tab[5]
-#define __pyx_n_u_SuffixGestureDecoder __pyx_string_tab[6]
-#define __pyx_n_u_SuffixGestureDecoder___reduce_cy __pyx_string_tab[7]
-#define __pyx_n_u_SuffixGestureDecoder___setstate __pyx_string_tab[8]
-#define __pyx_n_u_SuffixGestureDecoder__get_last_l __pyx_string_tab[9]
-#define __pyx_n_u_SuffixGestureDecoder_decode __pyx_string_tab[10]
-#define __pyx_n_u_TypeError __pyx_string_tab[11]
-#define __pyx_n_u_WordScore __pyx_string_tab[12]
-#define __pyx_n_u_WordScore___init __pyx_string_tab[13]
-#define __pyx_kp_u__2 __pyx_string_tab[14]
-#define __pyx_kp_u__3 __pyx_string_tab[15]
-#define __pyx_n_u__5 __pyx_string_tab[16]
-#define __pyx_kp_u_add_note __pyx_string_tab[17]
-#define __pyx_n_u_assets __pyx_string_tab[18]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[19]
-#define __pyx_n_u_c __pyx_string_tab[20]
-#define __pyx_n_u_candidates __pyx_string_tab[21]
-#define __pyx_n_u_class_getitem __pyx_string_tab[22]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[23]
-#define __pyx_n_u_close __pyx_string_tab[24]
-#define __pyx_n_u_cscores __pyx_string_tab[25]
-#define __pyx_n_u_decode __pyx_string_tab[26]
-#define __pyx_n_u_decode_locals_genexpr __pyx_string_tab[27]
-#define __pyx_n_u_decode_locals_lambda __pyx_string_tab[28]
-#define __pyx_n_u_decoder_cython_suffix_decoder __pyx_string_tab[29]
-#define __pyx_kp_u_decoder_cython_suffix_decoder_py __pyx_string_tab[30]
-#define __pyx_n_u_decoder_cython_utils __pyx_string_tab[31]
-#define __pyx_kp_u_disable __pyx_string_tab[32]
-#define __pyx_n_u_doc __pyx_string_tab[33]
-#define __pyx_kp_u_enable __pyx_string_tab[34]
-#define __pyx_n_u_encoding __pyx_string_tab[35]
-#define __pyx_n_u_enter __pyx_string_tab[36]
-#define __pyx_n_u_exit __pyx_string_tab[37]
-#define __pyx_n_u_file __pyx_string_tab[38]
-#define __pyx_n_u_filter_fixations __pyx_string_tab[39]
-#define __pyx_n_u_filter_saccades __pyx_string_tab[40]
-#define __pyx_n_u_float __pyx_string_tab[41]
-#define __pyx_n_u_from_keyboard_config __pyx_string_tab[42]
-#define __pyx_n_u_func __pyx_string_tab[43]
-#define __pyx_kp_u_gc __pyx_string_tab[44]
-#define __pyx_n_u_genexpr __pyx_string_tab[45]
-#define __pyx_n_u_gesture __pyx_string_tab[46]
-#define __pyx_n_u_gesture_distance __pyx_string_tab[47]
-#define __pyx_n_u_gesture_prob __pyx_string_tab[48]
-#define __pyx_n_u_get_last_letter_candidates __pyx_string_tab[49]
-#define __pyx_n_u_getstate __pyx_string_tab[50]
-#define __pyx_n_u_i __pyx_string_tab[51]
-#define __pyx_n_u_init __pyx_string_tab[52]
-#define __pyx_n_u_insert __pyx_string_tab[53]
-#define __pyx_n_u_is_api __pyx_string_tab[54]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[55]
-#define __pyx_kp_u_isenabled __pyx_string_tab[56]
-#define __pyx_n_u_key __pyx_string_tab[57]
-#define __pyx_n_u_key_size __pyx_string_tab[58]
-#define __pyx_n_u_keyboard __pyx_string_tab[59]
-#define __pyx_n_u_keyboard_config __pyx_string_tab[60]
-#define __pyx_n_u_keys __pyx_string_tab[61]
-#define __pyx_n_u_keys_close_to __pyx_string_tab[62]
-#define __pyx_kp_u_keys_csv __pyx_string_tab[63]
-#define __pyx_n_u_lambda __pyx_string_tab[64]
-#define __pyx_n_u_last_letters __pyx_string_tab[65]
-#define __pyx_n_u_last_tstamp __pyx_string_tab[66]
-#define __pyx_kp_u_list_WordScore __pyx_string_tab[67]
-#define __pyx_kp_u_list_str __pyx_string_tab[68]
-#define __pyx_kp_u_list_tuple_float_float_float __pyx_string_tab[69]
-#define __pyx_n_u_main __pyx_string_tab[70]
-#define __pyx_n_u_metaclass __pyx_string_tab[71]
-#define __pyx_n_u_module __pyx_string_tab[72]
-#define __pyx_n_u_name __pyx_string_tab[73]
-#define __pyx_n_u_next __pyx_string_tab[74]
-#define __pyx_n_u_normalized_center __pyx_string_tab[75]
-#define __pyx_n_u_open __pyx_string_tab[76]
-#define __pyx_n_u_parent __pyx_string_tab[77]
-#define __pyx_n_u_pathlib __pyx_string_tab[78]
-#define __pyx_n_u_pop __pyx_string_tab[79]
-#define __pyx_n_u_prepare __pyx_string_tab[80]
-#define __pyx_n_u_probability __pyx_string_tab[81]
-#define __pyx_n_u_punct __pyx_string_tab[82]
-#define __pyx_n_u_pyx_state __pyx_string_tab[83]
-#define __pyx_n_u_qualname __pyx_string_tab[84]
-#define __pyx_n_u_r __pyx_string_tab[85]
-#define __pyx_n_u_range __pyx_string_tab[86]
-#define __pyx_n_u_raw_scores __pyx_string_tab[87]
-#define __pyx_n_u_reduce __pyx_string_tab[88]
-#define __pyx_n_u_reduce_cython __pyx_string_tab[89]
-#define __pyx_n_u_reduce_ex __pyx_string_tab[90]
-#define __pyx_n_u_return __pyx_string_tab[91]
-#define __pyx_n_u_reverse __pyx_string_tab[92]
-#define __pyx_n_u_reversed_gesture __pyx_string_tab[93]
-#define __pyx_n_u_score __pyx_string_tab[94]
-#define __pyx_n_u_self __pyx_string_tab[95]
-#define __pyx_kp_u_self__decoder_cannot_be_converte __pyx_string_tab[96]
-#define __pyx_n_u_send __pyx_string_tab[97]
-#define __pyx_n_u_set_name __pyx_string_tab[98]
-#define __pyx_n_u_setstate __pyx_string_tab[99]
-#define __pyx_n_u_setstate_cython __pyx_string_tab[100]
-#define __pyx_n_u_sort __pyx_string_tab[101]
-#define __pyx_kp_u_stringsource __pyx_string_tab[102]
-#define __pyx_n_u_strip __pyx_string_tab[103]
-#define __pyx_n_u_sum __pyx_string_tab[104]
-#define __pyx_n_u_test __pyx_string_tab[105]
-#define __pyx_n_u_threshold __pyx_string_tab[106]
-#define __pyx_n_u_throw __pyx_string_tab[107]
-#define __pyx_n_u_time_threshold __pyx_string_tab[108]
-#define __pyx_n_u_total_gesture __pyx_string_tab[109]
-#define __pyx_n_u_trie __pyx_string_tab[110]
-#define __pyx_n_u_update __pyx_string_tab[111]
-#define __pyx_kp_u_utf_8 __pyx_string_tab[112]
-#define __pyx_n_u_value __pyx_string_tab[113]
-#define __pyx_n_u_word __pyx_string_tab[114]
-#define __pyx_kp_u_words_txt __pyx_string_tab[115]
-#define __pyx_n_u_x __pyx_string_tab[116]
-#define __pyx_n_u_y __pyx_string_tab[117]
+#define __pyx_n_u_None __pyx_string_tab[4]
+#define __pyx_kp_u_Note_that_Cython_is_deliberately __pyx_string_tab[5]
+#define __pyx_n_u_Path __pyx_string_tab[6]
+#define __pyx_n_u_SuffixGestureDecoder __pyx_string_tab[7]
+#define __pyx_n_u_SuffixGestureDecoder___reduce_cy __pyx_string_tab[8]
+#define __pyx_n_u_SuffixGestureDecoder___setstate __pyx_string_tab[9]
+#define __pyx_n_u_SuffixGestureDecoder__get_last_l __pyx_string_tab[10]
+#define __pyx_n_u_SuffixGestureDecoder_decode __pyx_string_tab[11]
+#define __pyx_n_u_SuffixGestureDecoder_update_layo __pyx_string_tab[12]
+#define __pyx_n_u_TypeError __pyx_string_tab[13]
+#define __pyx_n_u_WordScore __pyx_string_tab[14]
+#define __pyx_n_u_WordScore___init __pyx_string_tab[15]
+#define __pyx_kp_u__2 __pyx_string_tab[16]
+#define __pyx_kp_u__3 __pyx_string_tab[17]
+#define __pyx_n_u__5 __pyx_string_tab[18]
+#define __pyx_kp_u_add_note __pyx_string_tab[19]
+#define __pyx_n_u_assets __pyx_string_tab[20]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[21]
+#define __pyx_n_u_c __pyx_string_tab[22]
+#define __pyx_n_u_candidates __pyx_string_tab[23]
+#define __pyx_n_u_class_getitem __pyx_string_tab[24]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[25]
+#define __pyx_n_u_close __pyx_string_tab[26]
+#define __pyx_n_u_cscores __pyx_string_tab[27]
+#define __pyx_n_u_decode __pyx_string_tab[28]
+#define __pyx_n_u_decode_locals_genexpr __pyx_string_tab[29]
+#define __pyx_n_u_decode_locals_lambda __pyx_string_tab[30]
+#define __pyx_n_u_decoder_cython_suffix_decoder __pyx_string_tab[31]
+#define __pyx_kp_u_decoder_cython_suffix_decoder_py __pyx_string_tab[32]
+#define __pyx_n_u_decoder_cython_utils __pyx_string_tab[33]
+#define __pyx_kp_u_dict_str_tuple_float_float_float __pyx_string_tab[34]
+#define __pyx_kp_u_disable __pyx_string_tab[35]
+#define __pyx_n_u_doc __pyx_string_tab[36]
+#define __pyx_kp_u_enable __pyx_string_tab[37]
+#define __pyx_n_u_encoding __pyx_string_tab[38]
+#define __pyx_n_u_enter __pyx_string_tab[39]
+#define __pyx_n_u_exit __pyx_string_tab[40]
+#define __pyx_n_u_file __pyx_string_tab[41]
+#define __pyx_n_u_filter_fixations __pyx_string_tab[42]
+#define __pyx_n_u_filter_saccades __pyx_string_tab[43]
+#define __pyx_n_u_float __pyx_string_tab[44]
+#define __pyx_n_u_from_keyboard_config __pyx_string_tab[45]
+#define __pyx_n_u_func __pyx_string_tab[46]
+#define __pyx_kp_u_gc __pyx_string_tab[47]
+#define __pyx_n_u_genexpr __pyx_string_tab[48]
+#define __pyx_n_u_gesture __pyx_string_tab[49]
+#define __pyx_n_u_gesture_distance __pyx_string_tab[50]
+#define __pyx_n_u_gesture_prob __pyx_string_tab[51]
+#define __pyx_n_u_get_last_letter_candidates __pyx_string_tab[52]
+#define __pyx_n_u_getstate __pyx_string_tab[53]
+#define __pyx_n_u_i __pyx_string_tab[54]
+#define __pyx_n_u_init __pyx_string_tab[55]
+#define __pyx_n_u_insert __pyx_string_tab[56]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[57]
+#define __pyx_kp_u_isenabled __pyx_string_tab[58]
+#define __pyx_n_u_key __pyx_string_tab[59]
+#define __pyx_n_u_key_size __pyx_string_tab[60]
+#define __pyx_n_u_keyboard __pyx_string_tab[61]
+#define __pyx_n_u_keyboard_config __pyx_string_tab[62]
+#define __pyx_n_u_keys __pyx_string_tab[63]
+#define __pyx_n_u_keys_close_to __pyx_string_tab[64]
+#define __pyx_kp_u_keys_csv __pyx_string_tab[65]
+#define __pyx_n_u_lambda __pyx_string_tab[66]
+#define __pyx_n_u_last_letters __pyx_string_tab[67]
+#define __pyx_n_u_last_tstamp __pyx_string_tab[68]
+#define __pyx_n_u_layout __pyx_string_tab[69]
+#define __pyx_kp_u_list_WordScore __pyx_string_tab[70]
+#define __pyx_kp_u_list_str __pyx_string_tab[71]
+#define __pyx_kp_u_list_tuple_float_float_float __pyx_string_tab[72]
+#define __pyx_n_u_main __pyx_string_tab[73]
+#define __pyx_n_u_metaclass __pyx_string_tab[74]
+#define __pyx_n_u_module __pyx_string_tab[75]
+#define __pyx_n_u_name __pyx_string_tab[76]
+#define __pyx_n_u_next __pyx_string_tab[77]
+#define __pyx_n_u_normalized_center __pyx_string_tab[78]
+#define __pyx_n_u_open __pyx_string_tab[79]
+#define __pyx_n_u_parent __pyx_string_tab[80]
+#define __pyx_n_u_pathlib __pyx_string_tab[81]
+#define __pyx_n_u_pop __pyx_string_tab[82]
+#define __pyx_n_u_prepare __pyx_string_tab[83]
+#define __pyx_n_u_probability __pyx_string_tab[84]
+#define __pyx_n_u_punct __pyx_string_tab[85]
+#define __pyx_n_u_pyx_state __pyx_string_tab[86]
+#define __pyx_n_u_qualname __pyx_string_tab[87]
+#define __pyx_n_u_r __pyx_string_tab[88]
+#define __pyx_n_u_range __pyx_string_tab[89]
+#define __pyx_n_u_raw_scores __pyx_string_tab[90]
+#define __pyx_n_u_reduce __pyx_string_tab[91]
+#define __pyx_n_u_reduce_cython __pyx_string_tab[92]
+#define __pyx_n_u_reduce_ex __pyx_string_tab[93]
+#define __pyx_n_u_return __pyx_string_tab[94]
+#define __pyx_n_u_reverse __pyx_string_tab[95]
+#define __pyx_n_u_reversed_gesture __pyx_string_tab[96]
+#define __pyx_n_u_score __pyx_string_tab[97]
+#define __pyx_n_u_self __pyx_string_tab[98]
+#define __pyx_kp_u_self__decoder_cannot_be_converte __pyx_string_tab[99]
+#define __pyx_n_u_send __pyx_string_tab[100]
+#define __pyx_n_u_set_name __pyx_string_tab[101]
+#define __pyx_n_u_setstate __pyx_string_tab[102]
+#define __pyx_n_u_setstate_cython __pyx_string_tab[103]
+#define __pyx_n_u_sort __pyx_string_tab[104]
+#define __pyx_kp_u_stringsource __pyx_string_tab[105]
+#define __pyx_n_u_strip __pyx_string_tab[106]
+#define __pyx_n_u_sum __pyx_string_tab[107]
+#define __pyx_n_u_test __pyx_string_tab[108]
+#define __pyx_n_u_threshold __pyx_string_tab[109]
+#define __pyx_n_u_throw __pyx_string_tab[110]
+#define __pyx_n_u_time_threshold __pyx_string_tab[111]
+#define __pyx_n_u_total_gesture __pyx_string_tab[112]
+#define __pyx_n_u_trie __pyx_string_tab[113]
+#define __pyx_n_u_update __pyx_string_tab[114]
+#define __pyx_n_u_update_layout __pyx_string_tab[115]
+#define __pyx_kp_u_utf_8 __pyx_string_tab[116]
+#define __pyx_n_u_value __pyx_string_tab[117]
+#define __pyx_n_u_word __pyx_string_tab[118]
+#define __pyx_kp_u_words_txt __pyx_string_tab[119]
+#define __pyx_n_u_x __pyx_string_tab[120]
+#define __pyx_n_u_y __pyx_string_tab[121]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -3163,8 +3173,8 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_type_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr);
   for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_slice[i]); }
   for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<7; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<118; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<8; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<122; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   Py_CLEAR(clear_module_state->__pyx_float_1_2);
   Py_CLEAR(clear_module_state->__pyx_int_2);
   Py_CLEAR(clear_module_state->__pyx_int_200);
@@ -3196,8 +3206,8 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_type_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr);
   for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_slice[i]); }
   for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<7; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<118; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<8; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<122; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_float_1_2);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_2);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_int_200);
@@ -3970,7 +3980,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_9WordScore___init__(
 /* "decoder/cython/suffix_decoder.pyx":47
  *     cdef map[char, pair[double, double]] key_centers
  * 
- *     def __init__(self, is_api: bool = False, keyboard_config: dict[str, tuple[float, float, float, float]] = None):             # <<<<<<<<<<<<<<
+ *     def __init__(self, keyboard_config: dict[str, tuple[float, float, float, float]] = None):             # <<<<<<<<<<<<<<
  *         self._decoder = CDecoder()
  *         self._trie = ctrie.Trie()
 */
@@ -3978,11 +3988,10 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_9WordScore___init__(
 /* Python wrapper */
 static int __pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static int __pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_is_api = 0;
   PyObject *__pyx_v_keyboard_config = 0;
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[2] = {0,0};
+  PyObject* values[1] = {0};
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3996,15 +4005,11 @@ static int __pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_1__
   #endif
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   {
-    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_is_api,&__pyx_mstate_global->__pyx_n_u_keyboard_config,0};
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_keyboard_config,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_VARARGS(__pyx_kwds) : 0;
     if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 47, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
-        case  2:
-        values[1] = __Pyx_ArgRef_VARARGS(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 47, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
         if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 47, __pyx_L3_error)
@@ -4014,14 +4019,9 @@ static int __pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_1__
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
       if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__init__", 0) < 0) __PYX_ERR(0, 47, __pyx_L3_error)
-      if (!values[0]) values[0] = __Pyx_NewRef(((PyObject *)Py_False));
-      if (!values[1]) values[1] = __Pyx_NewRef(((PyObject*)Py_None));
+      if (!values[0]) values[0] = __Pyx_NewRef(((PyObject*)Py_None));
     } else {
       switch (__pyx_nargs) {
-        case  2:
-        values[1] = __Pyx_ArgRef_VARARGS(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 47, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
         if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 47, __pyx_L3_error)
@@ -4029,15 +4029,13 @@ static int __pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_1__
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
-      if (!values[0]) values[0] = __Pyx_NewRef(((PyObject *)Py_False));
-      if (!values[1]) values[1] = __Pyx_NewRef(((PyObject*)Py_None));
+      if (!values[0]) values[0] = __Pyx_NewRef(((PyObject*)Py_None));
     }
-    __pyx_v_is_api = values[0];
-    __pyx_v_keyboard_config = ((PyObject*)values[1]);
+    __pyx_v_keyboard_config = ((PyObject*)values[0]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 2, __pyx_nargs); __PYX_ERR(0, 47, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 0, 1, __pyx_nargs); __PYX_ERR(0, 47, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4049,7 +4047,7 @@ static int __pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_1__
   return -1;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_keyboard_config), (&PyDict_Type), 1, "keyboard_config", 2))) __PYX_ERR(0, 47, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___init__(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v_is_api, __pyx_v_keyboard_config);
+  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___init__(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v_keyboard_config);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4068,7 +4066,7 @@ static int __pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_1__
   return __pyx_r;
 }
 
-static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___init__(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_is_api, PyObject *__pyx_v_keyboard_config) {
+static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___init__(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_keyboard_config) {
   PyObject *__pyx_v_f = NULL;
   PyObject *__pyx_v_line = NULL;
   Py_UCS4 __pyx_v_c;
@@ -4080,16 +4078,16 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
   PyObject *__pyx_t_4 = NULL;
   size_t __pyx_t_5;
   int __pyx_t_6;
-  int __pyx_t_7;
+  PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
   PyObject *__pyx_t_10 = NULL;
   PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
-  PyObject *__pyx_t_13 = NULL;
-  Py_ssize_t __pyx_t_14;
-  PyObject *(*__pyx_t_15)(PyObject *);
-  PyObject *__pyx_t_16 = NULL;
+  Py_ssize_t __pyx_t_13;
+  PyObject *(*__pyx_t_14)(PyObject *);
+  PyObject *__pyx_t_15 = NULL;
+  int __pyx_t_16;
   unsigned char const *__pyx_t_17;
   unsigned char const *__pyx_t_18;
   unsigned char const *__pyx_t_19;
@@ -4102,10 +4100,10 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
 
   /* "decoder/cython/suffix_decoder.pyx":48
  * 
- *     def __init__(self, is_api: bool = False, keyboard_config: dict[str, tuple[float, float, float, float]] = None):
+ *     def __init__(self, keyboard_config: dict[str, tuple[float, float, float, float]] = None):
  *         self._decoder = CDecoder()             # <<<<<<<<<<<<<<
  *         self._trie = ctrie.Trie()
- *         if is_api and keyboard_config:
+ *         if keyboard_config:
 */
   try {
     __pyx_t_1 = suffixDecoder::CDecoder();
@@ -4116,10 +4114,10 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
   __pyx_v_self->_decoder = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_1);
 
   /* "decoder/cython/suffix_decoder.pyx":49
- *     def __init__(self, is_api: bool = False, keyboard_config: dict[str, tuple[float, float, float, float]] = None):
+ *     def __init__(self, keyboard_config: dict[str, tuple[float, float, float, float]] = None):
  *         self._decoder = CDecoder()
  *         self._trie = ctrie.Trie()             # <<<<<<<<<<<<<<
- *         if is_api and keyboard_config:
+ *         if keyboard_config:
  *             self.keyboard = KeyboardLayout()
 */
   __pyx_t_3 = NULL;
@@ -4143,24 +4141,16 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
   /* "decoder/cython/suffix_decoder.pyx":50
  *         self._decoder = CDecoder()
  *         self._trie = ctrie.Trie()
- *         if is_api and keyboard_config:             # <<<<<<<<<<<<<<
+ *         if keyboard_config:             # <<<<<<<<<<<<<<
  *             self.keyboard = KeyboardLayout()
  *             self.keyboard.from_keyboard_config(keyboard_config)
 */
-  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_is_api); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 50, __pyx_L1_error)
-  if (__pyx_t_7) {
-  } else {
-    __pyx_t_6 = __pyx_t_7;
-    goto __pyx_L4_bool_binop_done;
-  }
-  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_keyboard_config); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 50, __pyx_L1_error)
-  __pyx_t_6 = __pyx_t_7;
-  __pyx_L4_bool_binop_done:;
+  __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_v_keyboard_config); if (unlikely((__pyx_t_6 < 0))) __PYX_ERR(0, 50, __pyx_L1_error)
   if (__pyx_t_6) {
 
     /* "decoder/cython/suffix_decoder.pyx":51
  *         self._trie = ctrie.Trie()
- *         if is_api and keyboard_config:
+ *         if keyboard_config:
  *             self.keyboard = KeyboardLayout()             # <<<<<<<<<<<<<<
  *             self.keyboard.from_keyboard_config(keyboard_config)
  *         else:
@@ -4195,7 +4185,7 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
     __pyx_t_2 = 0;
 
     /* "decoder/cython/suffix_decoder.pyx":52
- *         if is_api and keyboard_config:
+ *         if keyboard_config:
  *             self.keyboard = KeyboardLayout()
  *             self.keyboard.from_keyboard_config(keyboard_config)             # <<<<<<<<<<<<<<
  *         else:
@@ -4216,7 +4206,7 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
     /* "decoder/cython/suffix_decoder.pyx":50
  *         self._decoder = CDecoder()
  *         self._trie = ctrie.Trie()
- *         if is_api and keyboard_config:             # <<<<<<<<<<<<<<
+ *         if keyboard_config:             # <<<<<<<<<<<<<<
  *             self.keyboard = KeyboardLayout()
  *             self.keyboard.from_keyboard_config(keyboard_config)
 */
@@ -4234,11 +4224,11 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
     __pyx_t_3 = NULL;
     __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_KeyboardLayout); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_ASSETS); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 54, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_ASSETS); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 54, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_8 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_mstate_global->__pyx_kp_u_keys_csv); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 54, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_t_8, __pyx_mstate_global->__pyx_kp_u_keys_csv); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 54, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
     if (unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -4252,10 +4242,10 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
     }
     #endif
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_t_9};
+      PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_t_8};
       __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 54, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
@@ -4278,65 +4268,65 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
   /*with:*/ {
     __pyx_t_4 = NULL;
     __Pyx_INCREF(__pyx_builtin_open);
-    __pyx_t_9 = __pyx_builtin_open; 
+    __pyx_t_8 = __pyx_builtin_open; 
     __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_ASSETS); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_8 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_words_txt); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_mstate_global->__pyx_kp_u_words_txt); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 56, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_5 = 1;
     {
-      PyObject *__pyx_callargs[3 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_8, __pyx_mstate_global->__pyx_n_u_r};
+      PyObject *__pyx_callargs[3 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_4, __pyx_t_7, __pyx_mstate_global->__pyx_n_u_r};
       __pyx_t_3 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 56, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_encoding, __pyx_mstate_global->__pyx_kp_u_utf_8, __pyx_t_3, __pyx_callargs+3, 0) < 0) __PYX_ERR(0, 56, __pyx_L1_error)
-      __pyx_t_2 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_9, __pyx_callargs+__pyx_t_5, (3-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
+      __pyx_t_2 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_8, __pyx_callargs+__pyx_t_5, (3-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_3);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 56, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
     }
-    __pyx_t_10 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 56, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
+    __pyx_t_9 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_exit); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 56, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __pyx_t_3 = NULL;
-    __pyx_t_8 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L6_error)
-    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_7 = __Pyx_PyObject_LookupSpecial(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_enter); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 56, __pyx_L4_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
-    if (likely(PyMethod_Check(__pyx_t_8))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_8);
+    if (likely(PyMethod_Check(__pyx_t_7))) {
+      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_7);
       assert(__pyx_t_3);
-      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_8);
+      PyObject* __pyx__function = PyMethod_GET_FUNCTION(__pyx_t_7);
       __Pyx_INCREF(__pyx_t_3);
       __Pyx_INCREF(__pyx__function);
-      __Pyx_DECREF_SET(__pyx_t_8, __pyx__function);
+      __Pyx_DECREF_SET(__pyx_t_7, __pyx__function);
       __pyx_t_5 = 0;
     }
     #endif
     {
       PyObject *__pyx_callargs[2] = {__pyx_t_3, NULL};
-      __pyx_t_9 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __pyx_t_8 = __Pyx_PyObject_FastCall(__pyx_t_7, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 56, __pyx_L6_error)
-      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L4_error)
+      __Pyx_GOTREF(__pyx_t_8);
     }
-    __pyx_t_8 = __pyx_t_9;
-    __pyx_t_9 = 0;
+    __pyx_t_7 = __pyx_t_8;
+    __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     /*try:*/ {
       {
         __Pyx_PyThreadState_declare
         __Pyx_PyThreadState_assign
-        __Pyx_ExceptionSave(&__pyx_t_11, &__pyx_t_12, &__pyx_t_13);
+        __Pyx_ExceptionSave(&__pyx_t_10, &__pyx_t_11, &__pyx_t_12);
+        __Pyx_XGOTREF(__pyx_t_10);
         __Pyx_XGOTREF(__pyx_t_11);
         __Pyx_XGOTREF(__pyx_t_12);
-        __Pyx_XGOTREF(__pyx_t_13);
         /*try:*/ {
-          __pyx_v_f = __pyx_t_8;
-          __pyx_t_8 = 0;
+          __pyx_v_f = __pyx_t_7;
+          __pyx_t_7 = 0;
 
           /* "decoder/cython/suffix_decoder.pyx":57
  * 
@@ -4346,48 +4336,48 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
  * 
 */
           if (likely(PyList_CheckExact(__pyx_v_f)) || PyTuple_CheckExact(__pyx_v_f)) {
-            __pyx_t_8 = __pyx_v_f; __Pyx_INCREF(__pyx_t_8);
-            __pyx_t_14 = 0;
-            __pyx_t_15 = NULL;
+            __pyx_t_7 = __pyx_v_f; __Pyx_INCREF(__pyx_t_7);
+            __pyx_t_13 = 0;
+            __pyx_t_14 = NULL;
           } else {
-            __pyx_t_14 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_v_f); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 57, __pyx_L10_error)
-            __Pyx_GOTREF(__pyx_t_8);
-            __pyx_t_15 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_8); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 57, __pyx_L10_error)
+            __pyx_t_13 = -1; __pyx_t_7 = PyObject_GetIter(__pyx_v_f); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 57, __pyx_L8_error)
+            __Pyx_GOTREF(__pyx_t_7);
+            __pyx_t_14 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_7); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 57, __pyx_L8_error)
           }
           for (;;) {
-            if (likely(!__pyx_t_15)) {
-              if (likely(PyList_CheckExact(__pyx_t_8))) {
+            if (likely(!__pyx_t_14)) {
+              if (likely(PyList_CheckExact(__pyx_t_7))) {
                 {
-                  Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_8);
+                  Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_7);
                   #if !CYTHON_ASSUME_SAFE_SIZE
-                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 57, __pyx_L10_error)
+                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 57, __pyx_L8_error)
                   #endif
-                  if (__pyx_t_14 >= __pyx_temp) break;
+                  if (__pyx_t_13 >= __pyx_temp) break;
                 }
-                __pyx_t_2 = __Pyx_PyList_GetItemRef(__pyx_t_8, __pyx_t_14);
-                ++__pyx_t_14;
+                __pyx_t_2 = __Pyx_PyList_GetItemRef(__pyx_t_7, __pyx_t_13);
+                ++__pyx_t_13;
               } else {
                 {
-                  Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_8);
+                  Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_7);
                   #if !CYTHON_ASSUME_SAFE_SIZE
-                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 57, __pyx_L10_error)
+                  if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 57, __pyx_L8_error)
                   #endif
-                  if (__pyx_t_14 >= __pyx_temp) break;
+                  if (__pyx_t_13 >= __pyx_temp) break;
                 }
                 #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-                __pyx_t_2 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_14));
+                __pyx_t_2 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_7, __pyx_t_13));
                 #else
-                __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_8, __pyx_t_14);
+                __pyx_t_2 = __Pyx_PySequence_ITEM(__pyx_t_7, __pyx_t_13);
                 #endif
-                ++__pyx_t_14;
+                ++__pyx_t_13;
               }
-              if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L10_error)
+              if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 57, __pyx_L8_error)
             } else {
-              __pyx_t_2 = __pyx_t_15(__pyx_t_8);
+              __pyx_t_2 = __pyx_t_14(__pyx_t_7);
               if (unlikely(!__pyx_t_2)) {
                 PyObject* exc_type = PyErr_Occurred();
                 if (exc_type) {
-                  if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 57, __pyx_L10_error)
+                  if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 57, __pyx_L8_error)
                   PyErr_Clear();
                 }
                 break;
@@ -4404,8 +4394,8 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
  * 
  *         for c in "abcdefghijklmnopqrstuvwxyz'":
 */
-            __pyx_t_9 = __pyx_v_self->_trie;
-            __Pyx_INCREF(__pyx_t_9);
+            __pyx_t_8 = __pyx_v_self->_trie;
+            __Pyx_INCREF(__pyx_t_8);
             __pyx_t_4 = __pyx_v_line;
             __Pyx_INCREF(__pyx_t_4);
             __pyx_t_5 = 0;
@@ -4413,19 +4403,19 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
               PyObject *__pyx_callargs[2] = {__pyx_t_4, NULL};
               __pyx_t_3 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_strip, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
               __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-              if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 58, __pyx_L10_error)
+              if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 58, __pyx_L8_error)
               __Pyx_GOTREF(__pyx_t_3);
             }
-            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_mstate_global->__pyx_slice[0]); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 58, __pyx_L10_error)
+            __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_mstate_global->__pyx_slice[0]); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 58, __pyx_L8_error)
             __Pyx_GOTREF(__pyx_t_4);
             __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
             __pyx_t_5 = 0;
             {
-              PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_t_4};
+              PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_t_4};
               __pyx_t_2 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_insert, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-              __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+              __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
               __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-              if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L10_error)
+              if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 58, __pyx_L8_error)
               __Pyx_GOTREF(__pyx_t_2);
             }
             __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -4438,7 +4428,7 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
  * 
 */
           }
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
           /* "decoder/cython/suffix_decoder.pyx":56
  *             self.keyboard = KeyboardLayout(ASSETS / 'keys.csv')
@@ -4448,78 +4438,78 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
  *                 self._trie.insert(line.strip()[::-1])
 */
         }
+        __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-        __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-        goto __pyx_L15_try_end;
-        __pyx_L10_error:;
+        goto __pyx_L13_try_end;
+        __pyx_L8_error:;
         __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
         /*except:*/ {
           __Pyx_AddTraceback("decoder.cython.suffix_decoder.SuffixGestureDecoder.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
-          if (__Pyx_GetException(&__pyx_t_8, &__pyx_t_2, &__pyx_t_4) < 0) __PYX_ERR(0, 56, __pyx_L12_except_error)
-          __Pyx_XGOTREF(__pyx_t_8);
+          if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_2, &__pyx_t_4) < 0) __PYX_ERR(0, 56, __pyx_L10_except_error)
+          __Pyx_XGOTREF(__pyx_t_7);
           __Pyx_XGOTREF(__pyx_t_2);
           __Pyx_XGOTREF(__pyx_t_4);
-          __pyx_t_9 = PyTuple_Pack(3, __pyx_t_8, __pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 56, __pyx_L12_except_error)
-          __Pyx_GOTREF(__pyx_t_9);
-          __pyx_t_16 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_9, NULL);
-          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+          __pyx_t_8 = PyTuple_Pack(3, __pyx_t_7, __pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 56, __pyx_L10_except_error)
+          __Pyx_GOTREF(__pyx_t_8);
+          __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_8, NULL);
           __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-          if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 56, __pyx_L12_except_error)
-          __Pyx_GOTREF(__pyx_t_16);
-          __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_16);
-          __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-          if (__pyx_t_6 < 0) __PYX_ERR(0, 56, __pyx_L12_except_error)
-          __pyx_t_7 = (!__pyx_t_6);
-          if (unlikely(__pyx_t_7)) {
-            __Pyx_GIVEREF(__pyx_t_8);
+          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 56, __pyx_L10_except_error)
+          __Pyx_GOTREF(__pyx_t_15);
+          __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_15);
+          __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+          if (__pyx_t_6 < 0) __PYX_ERR(0, 56, __pyx_L10_except_error)
+          __pyx_t_16 = (!__pyx_t_6);
+          if (unlikely(__pyx_t_16)) {
+            __Pyx_GIVEREF(__pyx_t_7);
             __Pyx_GIVEREF(__pyx_t_2);
             __Pyx_XGIVEREF(__pyx_t_4);
-            __Pyx_ErrRestoreWithState(__pyx_t_8, __pyx_t_2, __pyx_t_4);
-            __pyx_t_8 = 0;  __pyx_t_2 = 0;  __pyx_t_4 = 0; 
-            __PYX_ERR(0, 56, __pyx_L12_except_error)
+            __Pyx_ErrRestoreWithState(__pyx_t_7, __pyx_t_2, __pyx_t_4);
+            __pyx_t_7 = 0;  __pyx_t_2 = 0;  __pyx_t_4 = 0; 
+            __PYX_ERR(0, 56, __pyx_L10_except_error)
           }
-          __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-          goto __pyx_L11_exception_handled;
+          goto __pyx_L9_exception_handled;
         }
-        __pyx_L12_except_error:;
+        __pyx_L10_except_error:;
+        __Pyx_XGIVEREF(__pyx_t_10);
         __Pyx_XGIVEREF(__pyx_t_11);
         __Pyx_XGIVEREF(__pyx_t_12);
-        __Pyx_XGIVEREF(__pyx_t_13);
-        __Pyx_ExceptionReset(__pyx_t_11, __pyx_t_12, __pyx_t_13);
+        __Pyx_ExceptionReset(__pyx_t_10, __pyx_t_11, __pyx_t_12);
         goto __pyx_L1_error;
-        __pyx_L11_exception_handled:;
+        __pyx_L9_exception_handled:;
+        __Pyx_XGIVEREF(__pyx_t_10);
         __Pyx_XGIVEREF(__pyx_t_11);
         __Pyx_XGIVEREF(__pyx_t_12);
-        __Pyx_XGIVEREF(__pyx_t_13);
-        __Pyx_ExceptionReset(__pyx_t_11, __pyx_t_12, __pyx_t_13);
-        __pyx_L15_try_end:;
+        __Pyx_ExceptionReset(__pyx_t_10, __pyx_t_11, __pyx_t_12);
+        __pyx_L13_try_end:;
       }
     }
     /*finally:*/ {
       /*normal exit:*/{
-        if (__pyx_t_10) {
-          __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_mstate_global->__pyx_tuple[0], NULL);
-          __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 56, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_13);
-          __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+        if (__pyx_t_9) {
+          __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_mstate_global->__pyx_tuple[0], NULL);
+          __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+          if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 56, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_12);
+          __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         }
-        goto __pyx_L9;
+        goto __pyx_L7;
       }
-      __pyx_L9:;
+      __pyx_L7:;
     }
-    goto __pyx_L22;
-    __pyx_L6_error:;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    goto __pyx_L20;
+    __pyx_L4_error:;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     goto __pyx_L1_error;
-    __pyx_L22:;
+    __pyx_L20:;
   }
 
   /* "decoder/cython/suffix_decoder.pyx":60
@@ -4540,7 +4530,7 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
  *         for c in "abcdefghijklmnopqrstuvwxyz'":
  *             self.key_centers[c] = self.keyboard[c].normalized_center             # <<<<<<<<<<<<<<
  * 
- *     @property
+ *     def update_layout(self, layout: dict[str, tuple[float, float, float, float]]) -> None:
 */
     __pyx_t_4 = __Pyx_PyUnicode_FromOrdinal(__pyx_v_c); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 61, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
@@ -4558,7 +4548,7 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
   /* "decoder/cython/suffix_decoder.pyx":47
  *     cdef map[char, pair[double, double]] key_centers
  * 
- *     def __init__(self, is_api: bool = False, keyboard_config: dict[str, tuple[float, float, float, float]] = None):             # <<<<<<<<<<<<<<
+ *     def __init__(self, keyboard_config: dict[str, tuple[float, float, float, float]] = None):             # <<<<<<<<<<<<<<
  *         self._decoder = CDecoder()
  *         self._trie = ctrie.Trie()
 */
@@ -4570,8 +4560,8 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("decoder.cython.suffix_decoder.SuffixGestureDecoder.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
@@ -4582,6 +4572,210 @@ static int __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder___i
 }
 
 /* "decoder/cython/suffix_decoder.pyx":63
+ *             self.key_centers[c] = self.keyboard[c].normalized_center
+ * 
+ *     def update_layout(self, layout: dict[str, tuple[float, float, float, float]]) -> None:             # <<<<<<<<<<<<<<
+ *         """
+ *         Update the keyboard layout for the decoder.
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3update_layout(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+); /*proto*/
+PyDoc_STRVAR(__pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2update_layout, "\n        Update the keyboard layout for the decoder.\n        :param layout: A dictionary mapping keys to their (x, y, width, height) tuples\n        ");
+static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3update_layout = {"update_layout", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3update_layout, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2update_layout};
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3update_layout(PyObject *__pyx_v_self, 
+#if CYTHON_METH_FASTCALL
+PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
+#else
+PyObject *__pyx_args, PyObject *__pyx_kwds
+#endif
+) {
+  PyObject *__pyx_v_layout = 0;
+  #if !CYTHON_METH_FASTCALL
+  CYTHON_UNUSED Py_ssize_t __pyx_nargs;
+  #endif
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject* values[1] = {0};
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("update_layout (wrapper)", 0);
+  #if !CYTHON_METH_FASTCALL
+  #if CYTHON_ASSUME_SAFE_SIZE
+  __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
+  #else
+  __pyx_nargs = PyTuple_Size(__pyx_args); if (unlikely(__pyx_nargs < 0)) return NULL;
+  #endif
+  #endif
+  __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
+  {
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_layout,0};
+    const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 63, __pyx_L3_error)
+    if (__pyx_kwds_len > 0) {
+      switch (__pyx_nargs) {
+        case  1:
+        values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 63, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      const Py_ssize_t kwd_pos_args = __pyx_nargs;
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "update_layout", 0) < 0) __PYX_ERR(0, 63, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("update_layout", 1, 1, 1, i); __PYX_ERR(0, 63, __pyx_L3_error) }
+      }
+    } else if (unlikely(__pyx_nargs != 1)) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 63, __pyx_L3_error)
+    }
+    __pyx_v_layout = ((PyObject*)values[0]);
+  }
+  goto __pyx_L6_skip;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("update_layout", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 63, __pyx_L3_error)
+  __pyx_L6_skip:;
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __Pyx_AddTraceback("decoder.cython.suffix_decoder.SuffixGestureDecoder.update_layout", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_layout), (&PyDict_Type), 0, "layout", 2))) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2update_layout(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v_layout);
+
+  /* function exit code */
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __pyx_r = NULL;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  goto __pyx_L7_cleaned_up;
+  __pyx_L0:;
+  for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
+    Py_XDECREF(values[__pyx_temp]);
+  }
+  __pyx_L7_cleaned_up:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2update_layout(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_layout) {
+  Py_UCS4 __pyx_v_c;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  size_t __pyx_t_3;
+  unsigned char const *__pyx_t_4;
+  unsigned char const *__pyx_t_5;
+  unsigned char const *__pyx_t_6;
+  unsigned char const *__pyx_t_7;
+  std::pair<double,double>  __pyx_t_8;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("update_layout", 0);
+
+  /* "decoder/cython/suffix_decoder.pyx":68
+ *         :param layout: A dictionary mapping keys to their (x, y, width, height) tuples
+ *         """
+ *         self.keyboard.from_keyboard_config(layout)             # <<<<<<<<<<<<<<
+ *         self.key_centers.clear()
+ *         for c in "abcdefghijklmnopqrstuvwxyz'":
+*/
+  __pyx_t_2 = __pyx_v_self->keyboard;
+  __Pyx_INCREF(__pyx_t_2);
+  __pyx_t_3 = 0;
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_v_layout};
+    __pyx_t_1 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_from_keyboard_config, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "decoder/cython/suffix_decoder.pyx":69
+ *         """
+ *         self.keyboard.from_keyboard_config(layout)
+ *         self.key_centers.clear()             # <<<<<<<<<<<<<<
+ *         for c in "abcdefghijklmnopqrstuvwxyz'":
+ *             self.key_centers[c] = self.keyboard[c].normalized_center
+*/
+  __pyx_v_self->key_centers.clear();
+
+  /* "decoder/cython/suffix_decoder.pyx":70
+ *         self.keyboard.from_keyboard_config(layout)
+ *         self.key_centers.clear()
+ *         for c in "abcdefghijklmnopqrstuvwxyz'":             # <<<<<<<<<<<<<<
+ *             self.key_centers[c] = self.keyboard[c].normalized_center
+ * 
+*/
+  __pyx_t_5 = ((unsigned char const *)((char const *)"abcdefghijklmnopqrstuvwxyz'"));
+  __pyx_t_6 = (__pyx_t_5 + 27);
+  for (__pyx_t_7 = __pyx_t_5; __pyx_t_7 < __pyx_t_6; __pyx_t_7++) {
+    __pyx_t_4 = __pyx_t_7;
+    __pyx_v_c = (__pyx_t_4[0]);
+
+    /* "decoder/cython/suffix_decoder.pyx":71
+ *         self.key_centers.clear()
+ *         for c in "abcdefghijklmnopqrstuvwxyz'":
+ *             self.key_centers[c] = self.keyboard[c].normalized_center             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+*/
+    __pyx_t_1 = __Pyx_PyUnicode_FromOrdinal(__pyx_v_c); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_self->keyboard, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_normalized_center); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_8 = __pyx_convert_pair_from_py_double__and_double(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    (__pyx_v_self->key_centers[__pyx_v_c]) = __pyx_t_8;
+  }
+
+  /* "decoder/cython/suffix_decoder.pyx":63
+ *             self.key_centers[c] = self.keyboard[c].normalized_center
+ * 
+ *     def update_layout(self, layout: dict[str, tuple[float, float, float, float]]) -> None:             # <<<<<<<<<<<<<<
+ *         """
+ *         Update the keyboard layout for the decoder.
+*/
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_AddTraceback("decoder.cython.suffix_decoder.SuffixGestureDecoder.update_layout", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "decoder/cython/suffix_decoder.pyx":73
  *             self.key_centers[c] = self.keyboard[c].normalized_center
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -4609,7 +4803,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "decoder/cython/suffix_decoder.pyx":65
+  /* "decoder/cython/suffix_decoder.pyx":75
  *     @property
  *     def trie(self):
  *         return self._trie             # <<<<<<<<<<<<<<
@@ -4621,7 +4815,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __pyx_r = __pyx_v_self->_trie;
   goto __pyx_L0;
 
-  /* "decoder/cython/suffix_decoder.pyx":63
+  /* "decoder/cython/suffix_decoder.pyx":73
  *             self.key_centers[c] = self.keyboard[c].normalized_center
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -4636,7 +4830,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   return __pyx_r;
 }
 
-/* "decoder/cython/suffix_decoder.pyx":67
+/* "decoder/cython/suffix_decoder.pyx":77
  *         return self._trie
  * 
  *     def decode(self, gesture: list[tuple[float, float, float]]) -> list[WordScore]:             # <<<<<<<<<<<<<<
@@ -4645,16 +4839,16 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3decode(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5decode(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-PyDoc_STRVAR(__pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2decode, "\n        Decodes a gesture into a list of words.\n        :param gesture: The gesture to decode.\n        :return: A list of WordScore objects containing the decoded words and their scores.\n        ");
-static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3decode = {"decode", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3decode, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2decode};
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3decode(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4decode, "\n        Decodes a gesture into a list of words.\n        :param gesture: The gesture to decode.\n        :return: A list of WordScore objects containing the decoded words and their scores.\n        ");
+static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5decode = {"decode", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5decode, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4decode};
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5decode(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -4684,32 +4878,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_gesture,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 67, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 77, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 67, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 77, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "decode", 0) < 0) __PYX_ERR(0, 67, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "decode", 0) < 0) __PYX_ERR(0, 77, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("decode", 1, 1, 1, i); __PYX_ERR(0, 67, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("decode", 1, 1, 1, i); __PYX_ERR(0, 77, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 67, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 77, __pyx_L3_error)
     }
     __pyx_v_gesture = ((PyObject*)values[0]);
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("decode", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 67, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("decode", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 77, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4720,8 +4914,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_gesture), (&PyList_Type), 0, "gesture", 2))) __PYX_ERR(0, 67, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2decode(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v_gesture);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_gesture), (&PyList_Type), 0, "gesture", 2))) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4decode(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v_gesture);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4741,7 +4935,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 }
 static PyObject *__pyx_gb_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_2generator(__pyx_CoroutineObject *__pyx_generator, CYTHON_UNUSED PyThreadState *__pyx_tstate, PyObject *__pyx_sent_value); /* proto */
 
-/* "decoder/cython/suffix_decoder.pyx":93
+/* "decoder/cython/suffix_decoder.pyx":103
  *         raw_scores = [score for score in raw_scores if score[0]]
  * 
  *         total_gesture = sum(score[1] for score in raw_scores)             # <<<<<<<<<<<<<<
@@ -4761,7 +4955,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 93, __pyx_L1_error)
+    __PYX_ERR(0, 103, __pyx_L1_error)
   } else {
     __Pyx_GOTREF((PyObject *)__pyx_cur_scope);
   }
@@ -4769,7 +4963,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __Pyx_INCREF(__pyx_cur_scope->__pyx_genexpr_arg_0);
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_genexpr_arg_0);
   {
-    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_2generator, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0]), (PyObject *) __pyx_cur_scope, __pyx_mstate_global->__pyx_n_u_genexpr, __pyx_mstate_global->__pyx_n_u_decode_locals_genexpr, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder); if (unlikely(!gen)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_CoroutineObject *gen = __Pyx_Generator_New((__pyx_coroutine_body_t) __pyx_gb_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_2generator, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0]), (PyObject *) __pyx_cur_scope, __pyx_mstate_global->__pyx_n_u_genexpr, __pyx_mstate_global->__pyx_n_u_decode_locals_genexpr, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder); if (unlikely(!gen)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_DECREF(__pyx_cur_scope);
     __Pyx_RefNannyFinishContext();
     return (PyObject *) gen;
@@ -4807,28 +5001,28 @@ static PyObject *__pyx_gb_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __pyx_L3_first_run:;
   if (unlikely(__pyx_sent_value != Py_None)) {
     if (unlikely(__pyx_sent_value)) PyErr_SetString(PyExc_TypeError, "can't send non-None value to a just-started generator");
-    __PYX_ERR(0, 93, __pyx_L1_error)
+    __PYX_ERR(0, 103, __pyx_L1_error)
   }
-  if (unlikely(!__pyx_cur_scope->__pyx_genexpr_arg_0)) { __Pyx_RaiseUnboundLocalError(".0"); __PYX_ERR(0, 93, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_genexpr_arg_0)) { __Pyx_RaiseUnboundLocalError(".0"); __PYX_ERR(0, 103, __pyx_L1_error) }
   __pyx_t_1 = __pyx_cur_scope->__pyx_genexpr_arg_0; __Pyx_INCREF(__pyx_t_1);
   __pyx_t_2 = 0;
   for (;;) {
     {
       Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
       #if !CYTHON_ASSUME_SAFE_SIZE
-      if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 93, __pyx_L1_error)
+      if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 103, __pyx_L1_error)
       #endif
       if (__pyx_t_2 >= __pyx_temp) break;
     }
     __pyx_t_3 = __Pyx_PyList_GetItemRef(__pyx_t_1, __pyx_t_2);
     ++__pyx_t_2;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_score);
     __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_score, __pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_score, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_score, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_r = __pyx_t_3;
     __pyx_t_3 = 0;
@@ -4846,7 +5040,7 @@ static PyObject *__pyx_gb_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
     __pyx_cur_scope->__pyx_t_0 = 0;
     __Pyx_XGOTREF(__pyx_t_1);
     __pyx_t_2 = __pyx_cur_scope->__pyx_t_1;
-    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely(!__pyx_sent_value)) __PYX_ERR(0, 103, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   CYTHON_MAYBE_UNUSED_VAR(__pyx_cur_scope);
@@ -4872,7 +5066,7 @@ static PyObject *__pyx_gb_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   return __pyx_r;
 }
 
-/* "decoder/cython/suffix_decoder.pyx":96
+/* "decoder/cython/suffix_decoder.pyx":106
  *         candidates = [WordScore(*score, total_gesture) for score in raw_scores]
  * 
  *         candidates.sort(key=lambda x: x.probability, reverse=True)             # <<<<<<<<<<<<<<
@@ -4919,32 +5113,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_x,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 96, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 106, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 96, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 106, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "lambda1", 0) < 0) __PYX_ERR(0, 96, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "lambda1", 0) < 0) __PYX_ERR(0, 106, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("lambda1", 1, 1, 1, i); __PYX_ERR(0, 96, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("lambda1", 1, 1, 1, i); __PYX_ERR(0, 106, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 96, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 106, __pyx_L3_error)
     }
     __pyx_v_x = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("lambda1", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 96, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("lambda1", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 106, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4974,7 +5168,7 @@ static PyObject *__pyx_lambda_funcdef_lambda1(CYTHON_UNUSED PyObject *__pyx_self
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("lambda1", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_mstate_global->__pyx_n_u_probability); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_x, __pyx_mstate_global->__pyx_n_u_probability); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4991,7 +5185,7 @@ static PyObject *__pyx_lambda_funcdef_lambda1(CYTHON_UNUSED PyObject *__pyx_self
   return __pyx_r;
 }
 
-/* "decoder/cython/suffix_decoder.pyx":67
+/* "decoder/cython/suffix_decoder.pyx":77
  *         return self._trie
  * 
  *     def decode(self, gesture: list[tuple[float, float, float]]) -> list[WordScore]:             # <<<<<<<<<<<<<<
@@ -4999,7 +5193,7 @@ static PyObject *__pyx_lambda_funcdef_lambda1(CYTHON_UNUSED PyObject *__pyx_self
  *         Decodes a gesture into a list of words.
 */
 
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2decode(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture) {
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4decode(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture) {
   PyObject *__pyx_v_key_size = NULL;
   PyObject *__pyx_v_reversed_gesture = NULL;
   struct __pyx_obj_7decoder_6cython_4trie_Trie *__pyx_v_trie = 0;
@@ -5043,7 +5237,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("decode", 0);
 
-  /* "decoder/cython/suffix_decoder.pyx":73
+  /* "decoder/cython/suffix_decoder.pyx":83
  *         :return: A list of WordScore objects containing the decoded words and their scores.
  *         """
  *         if not gesture:             # <<<<<<<<<<<<<<
@@ -5051,11 +5245,11 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  * 
 */
   __pyx_t_1 = (__Pyx_PyList_GET_SIZE(__pyx_v_gesture) != 0);
-  if (unlikely(((!CYTHON_ASSUME_SAFE_MACROS) && __pyx_t_1 < 0))) __PYX_ERR(0, 73, __pyx_L1_error)
+  if (unlikely(((!CYTHON_ASSUME_SAFE_MACROS) && __pyx_t_1 < 0))) __PYX_ERR(0, 83, __pyx_L1_error)
   __pyx_t_2 = (!__pyx_t_1);
   if (__pyx_t_2) {
 
-    /* "decoder/cython/suffix_decoder.pyx":74
+    /* "decoder/cython/suffix_decoder.pyx":84
  *         """
  *         if not gesture:
  *             return []             # <<<<<<<<<<<<<<
@@ -5063,13 +5257,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *         key_size = self.keyboard.key_size
 */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 74, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 84, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_r = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
     goto __pyx_L0;
 
-    /* "decoder/cython/suffix_decoder.pyx":73
+    /* "decoder/cython/suffix_decoder.pyx":83
  *         :return: A list of WordScore objects containing the decoded words and their scores.
  *         """
  *         if not gesture:             # <<<<<<<<<<<<<<
@@ -5078,19 +5272,19 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
   }
 
-  /* "decoder/cython/suffix_decoder.pyx":76
+  /* "decoder/cython/suffix_decoder.pyx":86
  *             return []
  * 
  *         key_size = self.keyboard.key_size             # <<<<<<<<<<<<<<
  *         reversed_gesture = [(x, y) for _, x, y in filter_fixations(gesture, threshold=key_size/2)][::-1]
  *         reversed_gesture = [(x / key_size, y / key_size) for x, y in reversed_gesture]
 */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->keyboard, __pyx_mstate_global->__pyx_n_u_key_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 76, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->keyboard, __pyx_mstate_global->__pyx_n_u_key_size); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 86, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_v_key_size = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":77
+  /* "decoder/cython/suffix_decoder.pyx":87
  * 
  *         key_size = self.keyboard.key_size
  *         reversed_gesture = [(x, y) for _, x, y in filter_fixations(gesture, threshold=key_size/2)][::-1]             # <<<<<<<<<<<<<<
@@ -5098,12 +5292,12 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  * 
 */
   { /* enter inner scope */
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L6_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 87, __pyx_L6_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_5 = NULL;
-    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_filter_fixations); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 77, __pyx_L6_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_filter_fixations); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 87, __pyx_L6_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_7 = __Pyx_PyLong_TrueDivideObjC(__pyx_v_key_size, __pyx_mstate_global->__pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 77, __pyx_L6_error)
+    __pyx_t_7 = __Pyx_PyLong_TrueDivideObjC(__pyx_v_key_size, __pyx_mstate_global->__pyx_int_2, 2, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 87, __pyx_L6_error)
     __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_8 = 1;
     #if CYTHON_UNPACK_METHODS
@@ -5119,15 +5313,15 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
     #endif
     {
       PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 1 : 0)] = {__pyx_t_5, __pyx_v_gesture};
-      __pyx_t_9 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 77, __pyx_L6_error)
+      __pyx_t_9 = __Pyx_MakeVectorcallBuilderKwds(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 87, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_9);
-      if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_threshold, __pyx_t_7, __pyx_t_9, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 77, __pyx_L6_error)
+      if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_threshold, __pyx_t_7, __pyx_t_9, __pyx_callargs+2, 0) < 0) __PYX_ERR(0, 87, __pyx_L6_error)
       __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder(__pyx_t_6, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_9);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L6_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_4);
     }
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
@@ -5135,9 +5329,9 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       __pyx_t_10 = 0;
       __pyx_t_11 = NULL;
     } else {
-      __pyx_t_10 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 77, __pyx_L6_error)
+      __pyx_t_10 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 87, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_11 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 77, __pyx_L6_error)
+      __pyx_t_11 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 87, __pyx_L6_error)
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     for (;;) {
@@ -5146,7 +5340,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
           {
             Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_6);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 77, __pyx_L6_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 87, __pyx_L6_error)
             #endif
             if (__pyx_t_10 >= __pyx_temp) break;
           }
@@ -5156,7 +5350,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
           {
             Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_6);
             #if !CYTHON_ASSUME_SAFE_SIZE
-            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 77, __pyx_L6_error)
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 87, __pyx_L6_error)
             #endif
             if (__pyx_t_10 >= __pyx_temp) break;
           }
@@ -5167,13 +5361,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
           #endif
           ++__pyx_t_10;
         }
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L6_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L6_error)
       } else {
         __pyx_t_4 = __pyx_t_11(__pyx_t_6);
         if (unlikely(!__pyx_t_4)) {
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
-            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 77, __pyx_L6_error)
+            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 87, __pyx_L6_error)
             PyErr_Clear();
           }
           break;
@@ -5186,7 +5380,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
         if (unlikely(size != 3)) {
           if (size > 3) __Pyx_RaiseTooManyValuesError(3);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 77, __pyx_L6_error)
+          __PYX_ERR(0, 87, __pyx_L6_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -5198,27 +5392,27 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
           __Pyx_INCREF(__pyx_t_5);
         } else {
           __pyx_t_9 = __Pyx_PyList_GetItemRef(sequence, 0);
-          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 77, __pyx_L6_error)
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 87, __pyx_L6_error)
           __Pyx_XGOTREF(__pyx_t_9);
           __pyx_t_7 = __Pyx_PyList_GetItemRef(sequence, 1);
-          if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 77, __pyx_L6_error)
+          if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 87, __pyx_L6_error)
           __Pyx_XGOTREF(__pyx_t_7);
           __pyx_t_5 = __Pyx_PyList_GetItemRef(sequence, 2);
-          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L6_error)
+          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 87, __pyx_L6_error)
           __Pyx_XGOTREF(__pyx_t_5);
         }
         #else
-        __pyx_t_9 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 77, __pyx_L6_error)
+        __pyx_t_9 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 87, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_9);
-        __pyx_t_7 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 77, __pyx_L6_error)
+        __pyx_t_7 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 87, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_5 = __Pyx_PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 77, __pyx_L6_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 87, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_12 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 77, __pyx_L6_error)
+        __pyx_t_12 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 87, __pyx_L6_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_t_13 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_12);
@@ -5228,7 +5422,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
         __Pyx_GOTREF(__pyx_t_7);
         index = 2; __pyx_t_5 = __pyx_t_13(__pyx_t_12); if (unlikely(!__pyx_t_5)) goto __pyx_L9_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_5);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_12), 3) < 0) __PYX_ERR(0, 77, __pyx_L6_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_12), 3) < 0) __PYX_ERR(0, 87, __pyx_L6_error)
         __pyx_t_13 = NULL;
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         goto __pyx_L10_unpacking_done;
@@ -5236,7 +5430,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __pyx_t_13 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 77, __pyx_L6_error)
+        __PYX_ERR(0, 87, __pyx_L6_error)
         __pyx_L10_unpacking_done:;
       }
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v__, __pyx_t_9);
@@ -5245,15 +5439,15 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       __pyx_t_7 = 0;
       __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_y, __pyx_t_5);
       __pyx_t_5 = 0;
-      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L6_error)
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 87, __pyx_L6_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_7genexpr__pyx_v_x);
       __Pyx_GIVEREF(__pyx_7genexpr__pyx_v_x);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_7genexpr__pyx_v_x) != (0)) __PYX_ERR(0, 77, __pyx_L6_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_7genexpr__pyx_v_x) != (0)) __PYX_ERR(0, 87, __pyx_L6_error);
       __Pyx_INCREF(__pyx_7genexpr__pyx_v_y);
       __Pyx_GIVEREF(__pyx_7genexpr__pyx_v_y);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_7genexpr__pyx_v_y) != (0)) __PYX_ERR(0, 77, __pyx_L6_error);
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 77, __pyx_L6_error)
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_7genexpr__pyx_v_y) != (0)) __PYX_ERR(0, 87, __pyx_L6_error);
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 87, __pyx_L6_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -5268,13 +5462,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
     goto __pyx_L1_error;
     __pyx_L12_exit_scope:;
   } /* exit inner scope */
-  __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_mstate_global->__pyx_slice[0]); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_t_3, __pyx_mstate_global->__pyx_slice[0]); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 87, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_reversed_gesture = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":78
+  /* "decoder/cython/suffix_decoder.pyx":88
  *         key_size = self.keyboard.key_size
  *         reversed_gesture = [(x, y) for _, x, y in filter_fixations(gesture, threshold=key_size/2)][::-1]
  *         reversed_gesture = [(x / key_size, y / key_size) for x, y in reversed_gesture]             # <<<<<<<<<<<<<<
@@ -5282,7 +5476,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *         cdef ctrie.Trie trie = self.trie
 */
   { /* enter inner scope */
-    __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 78, __pyx_L15_error)
+    __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 88, __pyx_L15_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_3 = __pyx_v_reversed_gesture; __Pyx_INCREF(__pyx_t_3);
     __pyx_t_10 = 0;
@@ -5290,13 +5484,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       {
         Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_3);
         #if !CYTHON_ASSUME_SAFE_SIZE
-        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 78, __pyx_L15_error)
+        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 88, __pyx_L15_error)
         #endif
         if (__pyx_t_10 >= __pyx_temp) break;
       }
       __pyx_t_4 = __Pyx_PyList_GetItemRef(__pyx_t_3, __pyx_t_10);
       ++__pyx_t_10;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 78, __pyx_L15_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 88, __pyx_L15_error)
       __Pyx_GOTREF(__pyx_t_4);
       if ((likely(PyTuple_CheckExact(__pyx_t_4))) || (PyList_CheckExact(__pyx_t_4))) {
         PyObject* sequence = __pyx_t_4;
@@ -5304,7 +5498,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
         if (unlikely(size != 2)) {
           if (size > 2) __Pyx_RaiseTooManyValuesError(2);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 78, __pyx_L15_error)
+          __PYX_ERR(0, 88, __pyx_L15_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -5314,22 +5508,22 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
           __Pyx_INCREF(__pyx_t_7);
         } else {
           __pyx_t_5 = __Pyx_PyList_GetItemRef(sequence, 0);
-          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L15_error)
+          if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 88, __pyx_L15_error)
           __Pyx_XGOTREF(__pyx_t_5);
           __pyx_t_7 = __Pyx_PyList_GetItemRef(sequence, 1);
-          if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 78, __pyx_L15_error)
+          if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 88, __pyx_L15_error)
           __Pyx_XGOTREF(__pyx_t_7);
         }
         #else
-        __pyx_t_5 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L15_error)
+        __pyx_t_5 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 88, __pyx_L15_error)
         __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_7 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 78, __pyx_L15_error)
+        __pyx_t_7 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 88, __pyx_L15_error)
         __Pyx_GOTREF(__pyx_t_7);
         #endif
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_9 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 78, __pyx_L15_error)
+        __pyx_t_9 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 88, __pyx_L15_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_t_13 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_9);
@@ -5337,7 +5531,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
         __Pyx_GOTREF(__pyx_t_5);
         index = 1; __pyx_t_7 = __pyx_t_13(__pyx_t_9); if (unlikely(!__pyx_t_7)) goto __pyx_L18_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_7);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_9), 2) < 0) __PYX_ERR(0, 78, __pyx_L15_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_13(__pyx_t_9), 2) < 0) __PYX_ERR(0, 88, __pyx_L15_error)
         __pyx_t_13 = NULL;
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         goto __pyx_L19_unpacking_done;
@@ -5345,26 +5539,26 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __pyx_t_13 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 78, __pyx_L15_error)
+        __PYX_ERR(0, 88, __pyx_L15_error)
         __pyx_L19_unpacking_done:;
       }
       __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_x, __pyx_t_5);
       __pyx_t_5 = 0;
       __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_y, __pyx_t_7);
       __pyx_t_7 = 0;
-      __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_8genexpr1__pyx_v_x, __pyx_v_key_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 78, __pyx_L15_error)
+      __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_8genexpr1__pyx_v_x, __pyx_v_key_size); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 88, __pyx_L15_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_8genexpr1__pyx_v_y, __pyx_v_key_size); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 78, __pyx_L15_error)
+      __pyx_t_7 = __Pyx_PyNumber_Divide(__pyx_8genexpr1__pyx_v_y, __pyx_v_key_size); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 88, __pyx_L15_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 78, __pyx_L15_error)
+      __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 88, __pyx_L15_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GIVEREF(__pyx_t_4);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4) != (0)) __PYX_ERR(0, 78, __pyx_L15_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4) != (0)) __PYX_ERR(0, 88, __pyx_L15_error);
       __Pyx_GIVEREF(__pyx_t_7);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_7) != (0)) __PYX_ERR(0, 78, __pyx_L15_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 1, __pyx_t_7) != (0)) __PYX_ERR(0, 88, __pyx_L15_error);
       __pyx_t_4 = 0;
       __pyx_t_7 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 78, __pyx_L15_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 88, __pyx_L15_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -5380,20 +5574,20 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __Pyx_DECREF_SET(__pyx_v_reversed_gesture, ((PyObject*)__pyx_t_6));
   __pyx_t_6 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":80
+  /* "decoder/cython/suffix_decoder.pyx":90
  *         reversed_gesture = [(x / key_size, y / key_size) for x, y in reversed_gesture]
  * 
  *         cdef ctrie.Trie trie = self.trie             # <<<<<<<<<<<<<<
  *         last_letters = self._get_last_letter_candidates(gesture, 200)
  * 
 */
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_trie); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 80, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_trie); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 90, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (!(likely(((__pyx_t_6) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_6, __pyx_mstate_global->__pyx_ptype_7decoder_6cython_4trie_Trie))))) __PYX_ERR(0, 80, __pyx_L1_error)
+  if (!(likely(((__pyx_t_6) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_6, __pyx_mstate_global->__pyx_ptype_7decoder_6cython_4trie_Trie))))) __PYX_ERR(0, 90, __pyx_L1_error)
   __pyx_v_trie = ((struct __pyx_obj_7decoder_6cython_4trie_Trie *)__pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":81
+  /* "decoder/cython/suffix_decoder.pyx":91
  * 
  *         cdef ctrie.Trie trie = self.trie
  *         last_letters = self._get_last_letter_candidates(gesture, 200)             # <<<<<<<<<<<<<<
@@ -5407,40 +5601,40 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
     PyObject *__pyx_callargs[3] = {__pyx_t_3, __pyx_v_gesture, __pyx_mstate_global->__pyx_int_200};
     __pyx_t_6 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_get_last_letter_candidates, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 81, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 91, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
   }
   __pyx_v_last_letters = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":83
+  /* "decoder/cython/suffix_decoder.pyx":93
  *         last_letters = self._get_last_letter_candidates(gesture, 200)
  * 
  *         cscores = self._decoder.decode(trie._trie, self.key_centers, reversed_gesture, ''.join(last_letters).encode('utf-8'), DEFAULT_KEY_THRESHOLD_PERCENT)             # <<<<<<<<<<<<<<
  * 
  *         raw_scores = [(
 */
-  __pyx_t_14 = __pyx_convert_vector_from_py_std_3a__3a_pair_3c_double_2c_double_3e___(__pyx_v_reversed_gesture); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 83, __pyx_L1_error)
-  __pyx_t_6 = PyUnicode_Join(__pyx_mstate_global->__pyx_kp_u_, __pyx_v_last_letters); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_14 = __pyx_convert_vector_from_py_std_3a__3a_pair_3c_double_2c_double_3e___(__pyx_v_reversed_gesture); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_6 = PyUnicode_Join(__pyx_mstate_global->__pyx_kp_u_, __pyx_v_last_letters); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_3 = PyUnicode_AsUTF8String(((PyObject*)__pyx_t_6)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_3 = PyUnicode_AsUTF8String(((PyObject*)__pyx_t_6)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_15 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_15 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_3); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_DEFAULT_KEY_THRESHOLD_PERCENT); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_DEFAULT_KEY_THRESHOLD_PERCENT); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_16 = __Pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_16 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 83, __pyx_L1_error)
+  __pyx_t_16 = __Pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_16 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 93, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   try {
     __pyx_t_17 = __pyx_v_self->_decoder.decode(__pyx_v_trie->_trie, __pyx_v_self->key_centers, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_14), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_15), __pyx_t_16);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 83, __pyx_L1_error)
+    __PYX_ERR(0, 93, __pyx_L1_error)
   }
   __pyx_v_cscores = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17);
 
-  /* "decoder/cython/suffix_decoder.pyx":85
+  /* "decoder/cython/suffix_decoder.pyx":95
  *         cscores = self._decoder.decode(trie._trie, self.key_centers, reversed_gesture, ''.join(last_letters).encode('utf-8'), DEFAULT_KEY_THRESHOLD_PERCENT)
  * 
  *         raw_scores = [(             # <<<<<<<<<<<<<<
@@ -5448,10 +5642,10 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *             1 / (1 + score.dtwBestDistance),
 */
   { /* enter inner scope */
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 85, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 95, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
 
-    /* "decoder/cython/suffix_decoder.pyx":89
+    /* "decoder/cython/suffix_decoder.pyx":99
  *             1 / (1 + score.dtwBestDistance),
  *             score.dtwBestDistance,
  *         ) for score in cscores]             # <<<<<<<<<<<<<<
@@ -5463,20 +5657,20 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       __pyx_t_19 = *__pyx_t_18;
       __pyx_8genexpr2__pyx_v_score = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_19);
 
-      /* "decoder/cython/suffix_decoder.pyx":86
+      /* "decoder/cython/suffix_decoder.pyx":96
  * 
  *         raw_scores = [(
  *             score.word.decode('utf-8')[::-1],             # <<<<<<<<<<<<<<
  *             1 / (1 + score.dtwBestDistance),
  *             score.dtwBestDistance,
 */
-      __pyx_t_6 = __Pyx_decode_cpp_string(__pyx_8genexpr2__pyx_v_score.word, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_decode_cpp_string(__pyx_8genexpr2__pyx_v_score.word, 0, PY_SSIZE_T_MAX, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 96, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_mstate_global->__pyx_slice[0]); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_GetItem(__pyx_t_6, __pyx_mstate_global->__pyx_slice[0]); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 96, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "decoder/cython/suffix_decoder.pyx":87
+      /* "decoder/cython/suffix_decoder.pyx":97
  *         raw_scores = [(
  *             score.word.decode('utf-8')[::-1],
  *             1 / (1 + score.dtwBestDistance),             # <<<<<<<<<<<<<<
@@ -5486,43 +5680,43 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       __pyx_t_16 = (1.0 + __pyx_8genexpr2__pyx_v_score.dtwBestDistance);
       if (unlikely(__pyx_t_16 == 0)) {
         PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-        __PYX_ERR(0, 87, __pyx_L1_error)
+        __PYX_ERR(0, 97, __pyx_L1_error)
       }
-      __pyx_t_6 = PyFloat_FromDouble((1.0 / __pyx_t_16)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 87, __pyx_L1_error)
+      __pyx_t_6 = PyFloat_FromDouble((1.0 / __pyx_t_16)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 97, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
 
-      /* "decoder/cython/suffix_decoder.pyx":88
+      /* "decoder/cython/suffix_decoder.pyx":98
  *             score.word.decode('utf-8')[::-1],
  *             1 / (1 + score.dtwBestDistance),
  *             score.dtwBestDistance,             # <<<<<<<<<<<<<<
  *         ) for score in cscores]
  *         # Will return a lot of empty strings because some words haven't been processed because they didn't end with the expected letters
 */
-      __pyx_t_7 = PyFloat_FromDouble(__pyx_8genexpr2__pyx_v_score.dtwBestDistance); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 88, __pyx_L1_error)
+      __pyx_t_7 = PyFloat_FromDouble(__pyx_8genexpr2__pyx_v_score.dtwBestDistance); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 98, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "decoder/cython/suffix_decoder.pyx":86
+      /* "decoder/cython/suffix_decoder.pyx":96
  * 
  *         raw_scores = [(
  *             score.word.decode('utf-8')[::-1],             # <<<<<<<<<<<<<<
  *             1 / (1 + score.dtwBestDistance),
  *             score.dtwBestDistance,
 */
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 86, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 96, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_5);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5) != (0)) __PYX_ERR(0, 86, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5) != (0)) __PYX_ERR(0, 96, __pyx_L1_error);
       __Pyx_GIVEREF(__pyx_t_6);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6) != (0)) __PYX_ERR(0, 86, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6) != (0)) __PYX_ERR(0, 96, __pyx_L1_error);
       __Pyx_GIVEREF(__pyx_t_7);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_t_7) != (0)) __PYX_ERR(0, 86, __pyx_L1_error);
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_t_7) != (0)) __PYX_ERR(0, 96, __pyx_L1_error);
       __pyx_t_5 = 0;
       __pyx_t_6 = 0;
       __pyx_t_7 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 85, __pyx_L1_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_4))) __PYX_ERR(0, 95, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "decoder/cython/suffix_decoder.pyx":89
+      /* "decoder/cython/suffix_decoder.pyx":99
  *             1 / (1 + score.dtwBestDistance),
  *             score.dtwBestDistance,
  *         ) for score in cscores]             # <<<<<<<<<<<<<<
@@ -5534,7 +5728,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __pyx_v_raw_scores = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":91
+  /* "decoder/cython/suffix_decoder.pyx":101
  *         ) for score in cscores]
  *         # Will return a lot of empty strings because some words haven't been processed because they didn't end with the expected letters
  *         raw_scores = [score for score in raw_scores if score[0]]             # <<<<<<<<<<<<<<
@@ -5542,7 +5736,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *         total_gesture = sum(score[1] for score in raw_scores)
 */
   { /* enter inner scope */
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 91, __pyx_L27_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 101, __pyx_L27_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_4 = __pyx_v_raw_scores; __Pyx_INCREF(__pyx_t_4);
     __pyx_t_10 = 0;
@@ -5550,22 +5744,22 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       {
         Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_4);
         #if !CYTHON_ASSUME_SAFE_SIZE
-        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 91, __pyx_L27_error)
+        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 101, __pyx_L27_error)
         #endif
         if (__pyx_t_10 >= __pyx_temp) break;
       }
       __pyx_t_7 = __Pyx_PyList_GetItemRef(__pyx_t_4, __pyx_t_10);
       ++__pyx_t_10;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 91, __pyx_L27_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 101, __pyx_L27_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_XDECREF_SET(__pyx_8genexpr3__pyx_v_score, __pyx_t_7);
       __pyx_t_7 = 0;
-      __pyx_t_7 = __Pyx_GetItemInt(__pyx_8genexpr3__pyx_v_score, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 91, __pyx_L27_error)
+      __pyx_t_7 = __Pyx_GetItemInt(__pyx_8genexpr3__pyx_v_score, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 101, __pyx_L27_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 91, __pyx_L27_error)
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_7); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 101, __pyx_L27_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       if (__pyx_t_2) {
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_8genexpr3__pyx_v_score))) __PYX_ERR(0, 91, __pyx_L27_error)
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_8genexpr3__pyx_v_score))) __PYX_ERR(0, 101, __pyx_L27_error)
       }
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -5579,7 +5773,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __Pyx_DECREF_SET(__pyx_v_raw_scores, ((PyObject*)__pyx_t_3));
   __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":93
+  /* "decoder/cython/suffix_decoder.pyx":103
  *         raw_scores = [score for score in raw_scores if score[0]]
  * 
  *         total_gesture = sum(score[1] for score in raw_scores)             # <<<<<<<<<<<<<<
@@ -5589,7 +5783,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __pyx_t_4 = NULL;
   __Pyx_INCREF(__pyx_builtin_sum);
   __pyx_t_7 = __pyx_builtin_sum; 
-  __pyx_t_6 = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_genexpr(NULL, __pyx_v_raw_scores); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_6 = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_genexpr(NULL, __pyx_v_raw_scores); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 103, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_t_8 = 1;
   {
@@ -5598,13 +5792,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 93, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
   }
   __pyx_v_total_gesture = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":94
+  /* "decoder/cython/suffix_decoder.pyx":104
  * 
  *         total_gesture = sum(score[1] for score in raw_scores)
  *         candidates = [WordScore(*score, total_gesture) for score in raw_scores]             # <<<<<<<<<<<<<<
@@ -5612,7 +5806,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *         candidates.sort(key=lambda x: x.probability, reverse=True)
 */
   { /* enter inner scope */
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 94, __pyx_L35_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 104, __pyx_L35_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_7 = __pyx_v_raw_scores; __Pyx_INCREF(__pyx_t_7);
     __pyx_t_10 = 0;
@@ -5620,34 +5814,34 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       {
         Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_7);
         #if !CYTHON_ASSUME_SAFE_SIZE
-        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 94, __pyx_L35_error)
+        if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 104, __pyx_L35_error)
         #endif
         if (__pyx_t_10 >= __pyx_temp) break;
       }
       __pyx_t_6 = __Pyx_PyList_GetItemRef(__pyx_t_7, __pyx_t_10);
       ++__pyx_t_10;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L35_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 104, __pyx_L35_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_XDECREF_SET(__pyx_8genexpr5__pyx_v_score, __pyx_t_6);
       __pyx_t_6 = 0;
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_WordScore); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L35_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_WordScore); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 104, __pyx_L35_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_4 = __Pyx_PySequence_Tuple(__pyx_8genexpr5__pyx_v_score); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 94, __pyx_L35_error)
+      __pyx_t_4 = __Pyx_PySequence_Tuple(__pyx_8genexpr5__pyx_v_score); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 104, __pyx_L35_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 94, __pyx_L35_error)
+      __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 104, __pyx_L35_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_INCREF(__pyx_v_total_gesture);
       __Pyx_GIVEREF(__pyx_v_total_gesture);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_total_gesture) != (0)) __PYX_ERR(0, 94, __pyx_L35_error);
-      __pyx_t_9 = PyNumber_Add(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 94, __pyx_L35_error)
+      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_total_gesture) != (0)) __PYX_ERR(0, 104, __pyx_L35_error);
+      __pyx_t_9 = PyNumber_Add(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 104, __pyx_L35_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 94, __pyx_L35_error)
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 104, __pyx_L35_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 94, __pyx_L35_error)
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 104, __pyx_L35_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
@@ -5661,7 +5855,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __pyx_v_candidates = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":96
+  /* "decoder/cython/suffix_decoder.pyx":106
  *         candidates = [WordScore(*score, total_gesture) for score in raw_scores]
  * 
  *         candidates.sort(key=lambda x: x.probability, reverse=True)             # <<<<<<<<<<<<<<
@@ -5670,25 +5864,25 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
   __pyx_t_7 = __pyx_v_candidates;
   __Pyx_INCREF(__pyx_t_7);
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_3lambda1, 0, __pyx_mstate_global->__pyx_n_u_decode_locals_lambda, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 96, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6decode_3lambda1, 0, __pyx_mstate_global->__pyx_n_u_decode_locals_lambda, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 106, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_8 = 0;
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_7, NULL};
-    __pyx_t_9 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 96, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 106, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_key, __pyx_t_5, __pyx_t_9, __pyx_callargs+1, 0) < 0) __PYX_ERR(0, 96, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_reverse, Py_True, __pyx_t_9, __pyx_callargs+1, 1) < 0) __PYX_ERR(0, 96, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_key, __pyx_t_5, __pyx_t_9, __pyx_callargs+1, 0) < 0) __PYX_ERR(0, 106, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_reverse, Py_True, __pyx_t_9, __pyx_callargs+1, 1) < 0) __PYX_ERR(0, 106, __pyx_L1_error)
     __pyx_t_3 = __Pyx_Object_VectorcallMethod_CallFromBuilder(__pyx_mstate_global->__pyx_n_u_sort, __pyx_callargs+__pyx_t_8, (1-__pyx_t_8) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_9);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 96, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":97
+  /* "decoder/cython/suffix_decoder.pyx":107
  * 
  *         candidates.sort(key=lambda x: x.probability, reverse=True)
  *         return candidates             # <<<<<<<<<<<<<<
@@ -5700,7 +5894,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   __pyx_r = __pyx_v_candidates;
   goto __pyx_L0;
 
-  /* "decoder/cython/suffix_decoder.pyx":67
+  /* "decoder/cython/suffix_decoder.pyx":77
  *         return self._trie
  * 
  *     def decode(self, gesture: list[tuple[float, float, float]]) -> list[WordScore]:             # <<<<<<<<<<<<<<
@@ -5740,7 +5934,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   return __pyx_r;
 }
 
-/* "decoder/cython/suffix_decoder.pyx":99
+/* "decoder/cython/suffix_decoder.pyx":109
  *         return candidates
  * 
  *     def _get_last_letter_candidates(self, gesture: list[tuple[float, float, float]], time_threshold: float) -> list[str]:             # <<<<<<<<<<<<<<
@@ -5749,16 +5943,16 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5_get_last_letter_candidates(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7_get_last_letter_candidates(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-PyDoc_STRVAR(__pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4_get_last_letter_candidates, "\n        Get the last letter candidates from the last time_threshold ms of the gesture.\n        :param gesture: The gesture to decode.\n        :param time_threshold: The time threshold in ms.\n        :return: A list of last letter candidates.\n        ");
-static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5_get_last_letter_candidates = {"_get_last_letter_candidates", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5_get_last_letter_candidates, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4_get_last_letter_candidates};
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5_get_last_letter_candidates(PyObject *__pyx_v_self, 
+PyDoc_STRVAR(__pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6_get_last_letter_candidates, "\n        Get the last letter candidates from the last time_threshold ms of the gesture.\n        :param gesture: The gesture to decode.\n        :param time_threshold: The time threshold in ms.\n        :return: A list of last letter candidates.\n        ");
+static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7_get_last_letter_candidates = {"_get_last_letter_candidates", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7_get_last_letter_candidates, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6_get_last_letter_candidates};
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7_get_last_letter_candidates(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -5789,39 +5983,39 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_gesture,&__pyx_mstate_global->__pyx_n_u_time_threshold,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 99, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 109, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 99, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 109, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 99, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 109, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "_get_last_letter_candidates", 0) < 0) __PYX_ERR(0, 99, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "_get_last_letter_candidates", 0) < 0) __PYX_ERR(0, 109, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("_get_last_letter_candidates", 1, 2, 2, i); __PYX_ERR(0, 99, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("_get_last_letter_candidates", 1, 2, 2, i); __PYX_ERR(0, 109, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 99, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 109, __pyx_L3_error)
       values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 99, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 109, __pyx_L3_error)
     }
     __pyx_v_gesture = ((PyObject*)values[0]);
-    __pyx_v_time_threshold = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_time_threshold == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 99, __pyx_L3_error)
+    __pyx_v_time_threshold = __Pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_time_threshold == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 109, __pyx_L3_error)
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_get_last_letter_candidates", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 99, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_get_last_letter_candidates", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 109, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5832,8 +6026,8 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_gesture), (&PyList_Type), 0, "gesture", 2))) __PYX_ERR(0, 99, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4_get_last_letter_candidates(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v_gesture, __pyx_v_time_threshold);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_gesture), (&PyList_Type), 0, "gesture", 2))) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6_get_last_letter_candidates(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v_gesture, __pyx_v_time_threshold);
 
   /* function exit code */
   goto __pyx_L0;
@@ -5852,7 +6046,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4_get_last_letter_candidates(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture, double __pyx_v_time_threshold) {
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6_get_last_letter_candidates(struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, PyObject *__pyx_v_gesture, double __pyx_v_time_threshold) {
   PyObject *__pyx_v_last_tstamp = NULL;
   PyObject *__pyx_v_keys = NULL;
   Py_ssize_t __pyx_v_i;
@@ -5880,7 +6074,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_get_last_letter_candidates", 0);
 
-  /* "decoder/cython/suffix_decoder.pyx":106
+  /* "decoder/cython/suffix_decoder.pyx":116
  *         :return: A list of last letter candidates.
  *         """
  *         if not gesture:             # <<<<<<<<<<<<<<
@@ -5888,11 +6082,11 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *         last_tstamp = gesture[-1][0]
 */
   __pyx_t_1 = (__Pyx_PyList_GET_SIZE(__pyx_v_gesture) != 0);
-  if (unlikely(((!CYTHON_ASSUME_SAFE_MACROS) && __pyx_t_1 < 0))) __PYX_ERR(0, 106, __pyx_L1_error)
+  if (unlikely(((!CYTHON_ASSUME_SAFE_MACROS) && __pyx_t_1 < 0))) __PYX_ERR(0, 116, __pyx_L1_error)
   __pyx_t_2 = (!__pyx_t_1);
   if (__pyx_t_2) {
 
-    /* "decoder/cython/suffix_decoder.pyx":107
+    /* "decoder/cython/suffix_decoder.pyx":117
  *         """
  *         if not gesture:
  *             return []             # <<<<<<<<<<<<<<
@@ -5900,13 +6094,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *         keys = set()
 */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 117, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_r = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
     goto __pyx_L0;
 
-    /* "decoder/cython/suffix_decoder.pyx":106
+    /* "decoder/cython/suffix_decoder.pyx":116
  *         :return: A list of last letter candidates.
  *         """
  *         if not gesture:             # <<<<<<<<<<<<<<
@@ -5915,69 +6109,69 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
   }
 
-  /* "decoder/cython/suffix_decoder.pyx":108
+  /* "decoder/cython/suffix_decoder.pyx":118
  *         if not gesture:
  *             return []
  *         last_tstamp = gesture[-1][0]             # <<<<<<<<<<<<<<
  *         keys = set()
  *         for i in range(len(gesture) - 1, -1, -1):
 */
-  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_gesture, -1L, long, 1, __Pyx_PyLong_From_long, 1, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_gesture, -1L, long, 1, __Pyx_PyLong_From_long, 1, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 118, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 108, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 118, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_last_tstamp = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":109
+  /* "decoder/cython/suffix_decoder.pyx":119
  *             return []
  *         last_tstamp = gesture[-1][0]
  *         keys = set()             # <<<<<<<<<<<<<<
  *         for i in range(len(gesture) - 1, -1, -1):
  *             if gesture[i][0] < last_tstamp - time_threshold:
 */
-  __pyx_t_4 = PySet_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_t_4 = PySet_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_v_keys = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":110
+  /* "decoder/cython/suffix_decoder.pyx":120
  *         last_tstamp = gesture[-1][0]
  *         keys = set()
  *         for i in range(len(gesture) - 1, -1, -1):             # <<<<<<<<<<<<<<
  *             if gesture[i][0] < last_tstamp - time_threshold:
  *                 break
 */
-  __pyx_t_5 = __Pyx_PyList_GET_SIZE(__pyx_v_gesture); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyList_GET_SIZE(__pyx_v_gesture); if (unlikely(__pyx_t_5 == ((Py_ssize_t)-1))) __PYX_ERR(0, 120, __pyx_L1_error)
   for (__pyx_t_6 = (__pyx_t_5 - 1); __pyx_t_6 > -1L; __pyx_t_6-=1) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "decoder/cython/suffix_decoder.pyx":111
+    /* "decoder/cython/suffix_decoder.pyx":121
  *         keys = set()
  *         for i in range(len(gesture) - 1, -1, -1):
  *             if gesture[i][0] < last_tstamp - time_threshold:             # <<<<<<<<<<<<<<
  *                 break
  *             candidates = self.keyboard.keys_close_to(gesture[i][1], gesture[i][2], DEFAULT_KEY_THRESHOLD_PERCENT * self.keyboard.key_size)
 */
-    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_gesture, __pyx_v_i, Py_ssize_t, 1, PyLong_FromSsize_t, 1, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_gesture, __pyx_v_i, Py_ssize_t, 1, PyLong_FromSsize_t, 1, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_4, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyFloat_FromDouble(__pyx_v_time_threshold); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_4 = PyFloat_FromDouble(__pyx_v_time_threshold); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_7 = PyNumber_Subtract(__pyx_v_last_tstamp, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_7 = PyNumber_Subtract(__pyx_v_last_tstamp, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyObject_RichCompare(__pyx_t_3, __pyx_t_7, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_4 = PyObject_RichCompare(__pyx_t_3, __pyx_t_7, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 111, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (__pyx_t_2) {
 
-      /* "decoder/cython/suffix_decoder.pyx":112
+      /* "decoder/cython/suffix_decoder.pyx":122
  *         for i in range(len(gesture) - 1, -1, -1):
  *             if gesture[i][0] < last_tstamp - time_threshold:
  *                 break             # <<<<<<<<<<<<<<
@@ -5986,7 +6180,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
       goto __pyx_L5_break;
 
-      /* "decoder/cython/suffix_decoder.pyx":111
+      /* "decoder/cython/suffix_decoder.pyx":121
  *         keys = set()
  *         for i in range(len(gesture) - 1, -1, -1):
  *             if gesture[i][0] < last_tstamp - time_threshold:             # <<<<<<<<<<<<<<
@@ -5995,7 +6189,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
     }
 
-    /* "decoder/cython/suffix_decoder.pyx":113
+    /* "decoder/cython/suffix_decoder.pyx":123
  *             if gesture[i][0] < last_tstamp - time_threshold:
  *                 break
  *             candidates = self.keyboard.keys_close_to(gesture[i][1], gesture[i][2], DEFAULT_KEY_THRESHOLD_PERCENT * self.keyboard.key_size)             # <<<<<<<<<<<<<<
@@ -6004,21 +6198,21 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
     __pyx_t_7 = __pyx_v_self->keyboard;
     __Pyx_INCREF(__pyx_t_7);
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_gesture, __pyx_v_i, Py_ssize_t, 1, PyLong_FromSsize_t, 1, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_gesture, __pyx_v_i, Py_ssize_t, 1, PyLong_FromSsize_t, 1, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_gesture, __pyx_v_i, Py_ssize_t, 1, PyLong_FromSsize_t, 1, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_gesture, __pyx_v_i, Py_ssize_t, 1, PyLong_FromSsize_t, 1, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_3, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_3, 2, long, 1, __Pyx_PyLong_From_long, 0, 0, 1, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_DEFAULT_KEY_THRESHOLD_PERCENT); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_DEFAULT_KEY_THRESHOLD_PERCENT); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->keyboard, __pyx_mstate_global->__pyx_n_u_key_size); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->keyboard, __pyx_mstate_global->__pyx_n_u_key_size); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_11 = PyNumber_Multiply(__pyx_t_3, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 113, __pyx_L1_error)
+    __pyx_t_11 = PyNumber_Multiply(__pyx_t_3, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 123, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -6030,13 +6224,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 113, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
     }
     __Pyx_XDECREF_SET(__pyx_v_candidates, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "decoder/cython/suffix_decoder.pyx":114
+    /* "decoder/cython/suffix_decoder.pyx":124
  *                 break
  *             candidates = self.keyboard.keys_close_to(gesture[i][1], gesture[i][2], DEFAULT_KEY_THRESHOLD_PERCENT * self.keyboard.key_size)
  *             keys.update([c.key for c in candidates])             # <<<<<<<<<<<<<<
@@ -6044,16 +6238,16 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
  *             keys.remove('punct')
 */
     { /* enter inner scope */
-      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 114, __pyx_L9_error)
+      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L9_error)
       __Pyx_GOTREF(__pyx_t_4);
       if (likely(PyList_CheckExact(__pyx_v_candidates)) || PyTuple_CheckExact(__pyx_v_candidates)) {
         __pyx_t_11 = __pyx_v_candidates; __Pyx_INCREF(__pyx_t_11);
         __pyx_t_13 = 0;
         __pyx_t_14 = NULL;
       } else {
-        __pyx_t_13 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_v_candidates); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 114, __pyx_L9_error)
+        __pyx_t_13 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_v_candidates); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 124, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_14 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_11); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 114, __pyx_L9_error)
+        __pyx_t_14 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_11); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 124, __pyx_L9_error)
       }
       for (;;) {
         if (likely(!__pyx_t_14)) {
@@ -6061,7 +6255,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
             {
               Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_11);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 114, __pyx_L9_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 124, __pyx_L9_error)
               #endif
               if (__pyx_t_13 >= __pyx_temp) break;
             }
@@ -6071,7 +6265,7 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
             {
               Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_11);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 114, __pyx_L9_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 124, __pyx_L9_error)
               #endif
               if (__pyx_t_13 >= __pyx_temp) break;
             }
@@ -6082,13 +6276,13 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
             #endif
             ++__pyx_t_13;
           }
-          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 114, __pyx_L9_error)
+          if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 124, __pyx_L9_error)
         } else {
           __pyx_t_9 = __pyx_t_14(__pyx_t_11);
           if (unlikely(!__pyx_t_9)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
-              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 114, __pyx_L9_error)
+              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 124, __pyx_L9_error)
               PyErr_Clear();
             }
             break;
@@ -6097,9 +6291,9 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_XDECREF_SET(__pyx_8genexpr6__pyx_v_c, __pyx_t_9);
         __pyx_t_9 = 0;
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr6__pyx_v_c, __pyx_mstate_global->__pyx_n_u_key); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 114, __pyx_L9_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_8genexpr6__pyx_v_c, __pyx_mstate_global->__pyx_n_u_key); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 124, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_9);
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 114, __pyx_L9_error)
+        if (unlikely(__Pyx_ListComp_Append(__pyx_t_4, (PyObject*)__pyx_t_9))) __PYX_ERR(0, 124, __pyx_L9_error)
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -6110,32 +6304,32 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
       goto __pyx_L1_error;
       __pyx_L13_exit_scope:;
     } /* exit inner scope */
-    __pyx_t_11 = __Pyx_CallUnboundCMethod1(&__pyx_mstate_global->__pyx_umethod_PySet_Type__update, __pyx_v_keys, __pyx_t_4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 114, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_CallUnboundCMethod1(&__pyx_mstate_global->__pyx_umethod_PySet_Type__update, __pyx_v_keys, __pyx_t_4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 124, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   }
   __pyx_L5_break:;
 
-  /* "decoder/cython/suffix_decoder.pyx":115
+  /* "decoder/cython/suffix_decoder.pyx":125
  *             candidates = self.keyboard.keys_close_to(gesture[i][1], gesture[i][2], DEFAULT_KEY_THRESHOLD_PERCENT * self.keyboard.key_size)
  *             keys.update([c.key for c in candidates])
  *         if 'punct' in keys:             # <<<<<<<<<<<<<<
  *             keys.remove('punct')
  *         return list(keys)
 */
-  __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_mstate_global->__pyx_n_u_punct, __pyx_v_keys, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 115, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_mstate_global->__pyx_n_u_punct, __pyx_v_keys, Py_EQ)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 125, __pyx_L1_error)
   if (__pyx_t_2) {
 
-    /* "decoder/cython/suffix_decoder.pyx":116
+    /* "decoder/cython/suffix_decoder.pyx":126
  *             keys.update([c.key for c in candidates])
  *         if 'punct' in keys:
  *             keys.remove('punct')             # <<<<<<<<<<<<<<
  *         return list(keys)
 */
-    __pyx_t_15 = __Pyx_PySet_Remove(__pyx_v_keys, __pyx_mstate_global->__pyx_n_u_punct); if (unlikely(__pyx_t_15 == ((int)-1))) __PYX_ERR(0, 116, __pyx_L1_error)
+    __pyx_t_15 = __Pyx_PySet_Remove(__pyx_v_keys, __pyx_mstate_global->__pyx_n_u_punct); if (unlikely(__pyx_t_15 == ((int)-1))) __PYX_ERR(0, 126, __pyx_L1_error)
 
-    /* "decoder/cython/suffix_decoder.pyx":115
+    /* "decoder/cython/suffix_decoder.pyx":125
  *             candidates = self.keyboard.keys_close_to(gesture[i][1], gesture[i][2], DEFAULT_KEY_THRESHOLD_PERCENT * self.keyboard.key_size)
  *             keys.update([c.key for c in candidates])
  *         if 'punct' in keys:             # <<<<<<<<<<<<<<
@@ -6144,19 +6338,19 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
   }
 
-  /* "decoder/cython/suffix_decoder.pyx":117
+  /* "decoder/cython/suffix_decoder.pyx":127
  *         if 'punct' in keys:
  *             keys.remove('punct')
  *         return list(keys)             # <<<<<<<<<<<<<<
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_11 = PySequence_List(__pyx_v_keys); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_11 = PySequence_List(__pyx_v_keys); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __pyx_r = ((PyObject*)__pyx_t_11);
   __pyx_t_11 = 0;
   goto __pyx_L0;
 
-  /* "decoder/cython/suffix_decoder.pyx":99
+  /* "decoder/cython/suffix_decoder.pyx":109
  *         return candidates
  * 
  *     def _get_last_letter_candidates(self, gesture: list[tuple[float, float, float]], time_threshold: float) -> list[str]:             # <<<<<<<<<<<<<<
@@ -6192,15 +6386,15 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7__reduce_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7__reduce_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__reduce_cython__ = {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__reduce_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -6226,14 +6420,14 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   const Py_ssize_t __pyx_kwds_len = unlikely(__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
   if (unlikely(__pyx_kwds_len < 0)) return NULL;
   if (unlikely(__pyx_kwds_len > 0)) {__Pyx_RejectKeywords("__reduce_cython__", __pyx_kwds); return NULL;}
-  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6__reduce_cython__(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self));
+  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_8__reduce_cython__(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self) {
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_8__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -6273,15 +6467,15 @@ static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecod
 */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__setstate_cython__(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_11__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__setstate_cython__(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_11__setstate_cython__ = {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_11__setstate_cython__(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -6347,7 +6541,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_8__setstate_cython__(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v___pyx_state);
+  __pyx_r = __pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_10__setstate_cython__(((struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *)__pyx_v_self), __pyx_v___pyx_state);
 
   /* function exit code */
   for (Py_ssize_t __pyx_temp=0; __pyx_temp < (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
@@ -6357,7 +6551,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_8__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_10__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_lineno = 0;
@@ -6469,10 +6663,11 @@ static PyObject *__pyx_getprop_7decoder_6cython_14suffix_decoder_20SuffixGesture
 }
 
 static PyMethodDef __pyx_methods_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder[] = {
-  {"decode", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3decode, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2decode},
-  {"_get_last_letter_candidates", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5_get_last_letter_candidates, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4_get_last_letter_candidates},
-  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
-  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"update_layout", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3update_layout, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_2update_layout},
+  {"decode", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5decode, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_4decode},
+  {"_get_last_letter_candidates", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7_get_last_letter_candidates, __Pyx_METH_FASTCALL|METH_KEYWORDS, __pyx_doc_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_6_get_last_letter_candidates},
+  {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
+  {"__setstate_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_11__setstate_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 
@@ -6814,15 +7009,15 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder, (PyObject *) __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
   if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder) < 0) __PYX_ERR(0, 41, __pyx_L1_error)
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr)) __PYX_ERR(0, 93, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr_spec, __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr)) __PYX_ERR(0, 103, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr_spec, __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr) < 0) __PYX_ERR(0, 103, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr = &__pyx_type_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr) < 0) __PYX_ERR(0, 93, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr) < 0) __PYX_ERR(0, 103, __pyx_L1_error)
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr->tp_dictoffset && __pyx_mstate->__pyx_ptype_7decoder_6cython_14suffix_decoder___pyx_scope_struct__genexpr->tp_getattro == PyObject_GenericGetAttr)) {
@@ -7308,52 +7503,70 @@ __Pyx_RefNannySetupContext("PyInit_suffix_decoder", 0);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":67
+  /* "decoder/cython/suffix_decoder.pyx":63
+ *             self.key_centers[c] = self.keyboard[c].normalized_center
+ * 
+ *     def update_layout(self, layout: dict[str, tuple[float, float, float, float]]) -> None:             # <<<<<<<<<<<<<<
+ *         """
+ *         Update the keyboard layout for the decoder.
+*/
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_layout, __pyx_mstate_global->__pyx_kp_u_dict_str_tuple_float_float_float) < 0) __PYX_ERR(0, 63, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_None) < 0) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3update_layout, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder_update_layo, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_3);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder, __pyx_mstate_global->__pyx_n_u_update_layout, __pyx_t_4) < 0) __PYX_ERR(0, 63, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+  /* "decoder/cython/suffix_decoder.pyx":77
  *         return self._trie
  * 
  *     def decode(self, gesture: list[tuple[float, float, float]]) -> list[WordScore]:             # <<<<<<<<<<<<<<
  *         """
  *         Decodes a gesture into a list of words.
 */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_gesture, __pyx_mstate_global->__pyx_kp_u_list_tuple_float_float_float) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_kp_u_list_WordScore) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_3decode, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder_decode, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 77, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_3);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder, __pyx_mstate_global->__pyx_n_u_decode, __pyx_t_4) < 0) __PYX_ERR(0, 67, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_gesture, __pyx_mstate_global->__pyx_kp_u_list_tuple_float_float_float) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_kp_u_list_WordScore) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5decode, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder_decode, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_4);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder, __pyx_mstate_global->__pyx_n_u_decode, __pyx_t_3) < 0) __PYX_ERR(0, 77, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "decoder/cython/suffix_decoder.pyx":99
+  /* "decoder/cython/suffix_decoder.pyx":109
  *         return candidates
  * 
  *     def _get_last_letter_candidates(self, gesture: list[tuple[float, float, float]], time_threshold: float) -> list[str]:             # <<<<<<<<<<<<<<
  *         """
  *         Get the last letter candidates from the last time_threshold ms of the gesture.
 */
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_gesture, __pyx_mstate_global->__pyx_kp_u_list_tuple_float_float_float) < 0) __PYX_ERR(0, 99, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_time_threshold, __pyx_mstate_global->__pyx_n_u_float) < 0) __PYX_ERR(0, 99, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_kp_u_list_str) < 0) __PYX_ERR(0, 99, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_5_get_last_letter_candidates, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder__get_last_l, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 99, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_3, __pyx_t_4);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder, __pyx_mstate_global->__pyx_n_u_get_last_letter_candidates, __pyx_t_3) < 0) __PYX_ERR(0, 99, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_gesture, __pyx_mstate_global->__pyx_kp_u_list_tuple_float_float_float) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_time_threshold, __pyx_mstate_global->__pyx_n_u_float) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_kp_u_list_str) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7_get_last_letter_candidates, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder__get_last_l, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_3);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_7decoder_6cython_14suffix_decoder_SuffixGestureDecoder, __pyx_mstate_global->__pyx_n_u_get_last_letter_candidates, __pyx_t_4) < 0) __PYX_ERR(0, 109, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "(tree fragment)":1
  * def __reduce_cython__(self):             # <<<<<<<<<<<<<<
  *     raise TypeError, "self._decoder cannot be converted to a Python object for pickling"
  * def __setstate_cython__(self, __pyx_state):
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_7__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder___reduce_cy, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5])); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_3) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder___reduce_cy, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_reduce_cython, __pyx_t_4) < 0) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "(tree fragment)":3
  * def __reduce_cython__(self):
@@ -7361,20 +7574,20 @@ __Pyx_RefNannySetupContext("PyInit_suffix_decoder", 0);
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     raise TypeError, "self._decoder cannot be converted to a Python object for pickling"
 */
-  __pyx_t_3 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_9__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder___setstate, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6])); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 3, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_3) < 0) __PYX_ERR(1, 3, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_7decoder_6cython_14suffix_decoder_20SuffixGestureDecoder_11__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_SuffixGestureDecoder___setstate, NULL, __pyx_mstate_global->__pyx_n_u_decoder_cython_suffix_decoder, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[7])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_setstate_cython, __pyx_t_4) < 0) __PYX_ERR(1, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "decoder/cython/suffix_decoder.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
  * # distutils: language = c++
  * # distutils: sources = [decoder/cython/suffixDecoder.cpp, decoder/cython/prefixTree.cpp, decoder/cython/utils.cpp]
 */
-  __pyx_t_3 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_3) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_4) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -7441,6 +7654,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_ASSETS, sizeof(__pyx_k_ASSETS), 0, 1, 1}, /* PyObject cname: __pyx_n_u_ASSETS */
   {__pyx_k_DEFAULT_KEY_THRESHOLD_PERCENT, sizeof(__pyx_k_DEFAULT_KEY_THRESHOLD_PERCENT), 0, 1, 1}, /* PyObject cname: __pyx_n_u_DEFAULT_KEY_THRESHOLD_PERCENT */
   {__pyx_k_KeyboardLayout, sizeof(__pyx_k_KeyboardLayout), 0, 1, 1}, /* PyObject cname: __pyx_n_u_KeyboardLayout */
+  {__pyx_k_None, sizeof(__pyx_k_None), 0, 1, 1}, /* PyObject cname: __pyx_n_u_None */
   {__pyx_k_Note_that_Cython_is_deliberately, sizeof(__pyx_k_Note_that_Cython_is_deliberately), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_Note_that_Cython_is_deliberately */
   {__pyx_k_Path, sizeof(__pyx_k_Path), 0, 1, 1}, /* PyObject cname: __pyx_n_u_Path */
   {__pyx_k_SuffixGestureDecoder, sizeof(__pyx_k_SuffixGestureDecoder), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SuffixGestureDecoder */
@@ -7448,6 +7662,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_SuffixGestureDecoder___setstate, sizeof(__pyx_k_SuffixGestureDecoder___setstate), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SuffixGestureDecoder___setstate */
   {__pyx_k_SuffixGestureDecoder__get_last_l, sizeof(__pyx_k_SuffixGestureDecoder__get_last_l), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SuffixGestureDecoder__get_last_l */
   {__pyx_k_SuffixGestureDecoder_decode, sizeof(__pyx_k_SuffixGestureDecoder_decode), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SuffixGestureDecoder_decode */
+  {__pyx_k_SuffixGestureDecoder_update_layo, sizeof(__pyx_k_SuffixGestureDecoder_update_layo), 0, 1, 1}, /* PyObject cname: __pyx_n_u_SuffixGestureDecoder_update_layo */
   {__pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 1, 1}, /* PyObject cname: __pyx_n_u_TypeError */
   {__pyx_k_WordScore, sizeof(__pyx_k_WordScore), 0, 1, 1}, /* PyObject cname: __pyx_n_u_WordScore */
   {__pyx_k_WordScore___init, sizeof(__pyx_k_WordScore___init), 0, 1, 1}, /* PyObject cname: __pyx_n_u_WordScore___init */
@@ -7469,6 +7684,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_decoder_cython_suffix_decoder, sizeof(__pyx_k_decoder_cython_suffix_decoder), 0, 1, 1}, /* PyObject cname: __pyx_n_u_decoder_cython_suffix_decoder */
   {__pyx_k_decoder_cython_suffix_decoder_py, sizeof(__pyx_k_decoder_cython_suffix_decoder_py), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_decoder_cython_suffix_decoder_py */
   {__pyx_k_decoder_cython_utils, sizeof(__pyx_k_decoder_cython_utils), 0, 1, 1}, /* PyObject cname: __pyx_n_u_decoder_cython_utils */
+  {__pyx_k_dict_str_tuple_float_float_float, sizeof(__pyx_k_dict_str_tuple_float_float_float), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_dict_str_tuple_float_float_float */
   {__pyx_k_disable, sizeof(__pyx_k_disable), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_disable */
   {__pyx_k_doc, sizeof(__pyx_k_doc), 0, 1, 1}, /* PyObject cname: __pyx_n_u_doc */
   {__pyx_k_enable, sizeof(__pyx_k_enable), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_enable */
@@ -7491,7 +7707,6 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_i, sizeof(__pyx_k_i), 0, 1, 1}, /* PyObject cname: __pyx_n_u_i */
   {__pyx_k_init, sizeof(__pyx_k_init), 0, 1, 1}, /* PyObject cname: __pyx_n_u_init */
   {__pyx_k_insert, sizeof(__pyx_k_insert), 0, 1, 1}, /* PyObject cname: __pyx_n_u_insert */
-  {__pyx_k_is_api, sizeof(__pyx_k_is_api), 0, 1, 1}, /* PyObject cname: __pyx_n_u_is_api */
   {__pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 1, 1}, /* PyObject cname: __pyx_n_u_is_coroutine */
   {__pyx_k_isenabled, sizeof(__pyx_k_isenabled), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_isenabled */
   {__pyx_k_key, sizeof(__pyx_k_key), 0, 1, 1}, /* PyObject cname: __pyx_n_u_key */
@@ -7504,6 +7719,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_lambda, sizeof(__pyx_k_lambda), 0, 1, 1}, /* PyObject cname: __pyx_n_u_lambda */
   {__pyx_k_last_letters, sizeof(__pyx_k_last_letters), 0, 1, 1}, /* PyObject cname: __pyx_n_u_last_letters */
   {__pyx_k_last_tstamp, sizeof(__pyx_k_last_tstamp), 0, 1, 1}, /* PyObject cname: __pyx_n_u_last_tstamp */
+  {__pyx_k_layout, sizeof(__pyx_k_layout), 0, 1, 1}, /* PyObject cname: __pyx_n_u_layout */
   {__pyx_k_list_WordScore, sizeof(__pyx_k_list_WordScore), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_list_WordScore */
   {__pyx_k_list_str, sizeof(__pyx_k_list_str), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_list_str */
   {__pyx_k_list_tuple_float_float_float, sizeof(__pyx_k_list_tuple_float_float_float), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_list_tuple_float_float_float */
@@ -7549,6 +7765,7 @@ static const __Pyx_StringTabEntry __pyx_string_tab[] = {
   {__pyx_k_total_gesture, sizeof(__pyx_k_total_gesture), 0, 1, 1}, /* PyObject cname: __pyx_n_u_total_gesture */
   {__pyx_k_trie, sizeof(__pyx_k_trie), 0, 1, 1}, /* PyObject cname: __pyx_n_u_trie */
   {__pyx_k_update, sizeof(__pyx_k_update), 0, 1, 1}, /* PyObject cname: __pyx_n_u_update */
+  {__pyx_k_update_layout, sizeof(__pyx_k_update_layout), 0, 1, 1}, /* PyObject cname: __pyx_n_u_update_layout */
   {__pyx_k_utf_8, sizeof(__pyx_k_utf_8), 0, 1, 0}, /* PyObject cname: __pyx_kp_u_utf_8 */
   {__pyx_k_value, sizeof(__pyx_k_value), 0, 1, 1}, /* PyObject cname: __pyx_n_u_value */
   {__pyx_k_word, sizeof(__pyx_k_word), 0, 1, 1}, /* PyObject cname: __pyx_n_u_word */
@@ -7565,8 +7782,8 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry const *t, PyObject **target, c
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_open); if (!__pyx_builtin_open) __PYX_ERR(0, 56, __pyx_L1_error)
-  __pyx_builtin_sum = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_sum); if (!__pyx_builtin_sum) __PYX_ERR(0, 93, __pyx_L1_error)
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_range); if (!__pyx_builtin_range) __PYX_ERR(0, 110, __pyx_L1_error)
+  __pyx_builtin_sum = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_sum); if (!__pyx_builtin_sum) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_range); if (!__pyx_builtin_range) __PYX_ERR(0, 120, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -7649,12 +7866,12 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {0, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS|CO_GENERATOR), 93, 2};
+    const __Pyx_PyCode_New_function_description descr = {0, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS|CO_GENERATOR), 103, 2};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_score};
     __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_genexpr, __pyx_k__4, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 96, 6};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 106, 6};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_x};
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_lambda, __pyx_k_Jaq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
@@ -7664,24 +7881,29 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_init, __pyx_k_A_HA_O, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 20, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 67, 279};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_gesture, __pyx_mstate->__pyx_n_u_key_size, __pyx_mstate->__pyx_n_u_reversed_gesture, __pyx_mstate->__pyx_n_u_trie, __pyx_mstate->__pyx_n_u_last_letters, __pyx_mstate->__pyx_n_u_cscores, __pyx_mstate->__pyx_n_u_raw_scores, __pyx_mstate->__pyx_n_u_total_gesture, __pyx_mstate->__pyx_n_u_candidates, __pyx_mstate->__pyx_n_u__5, __pyx_mstate->__pyx_n_u_x, __pyx_mstate->__pyx_n_u_y, __pyx_mstate->__pyx_n_u_x, __pyx_mstate->__pyx_n_u_y, __pyx_mstate->__pyx_n_u_score, __pyx_mstate->__pyx_n_u_score, __pyx_mstate->__pyx_n_u_genexpr, __pyx_mstate->__pyx_n_u_genexpr, __pyx_mstate->__pyx_n_u_score};
-    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_decode, __pyx_k_C1_4q_1_4y_2S_4s_U2B_9JV___bbff, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 63, 58};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_layout, __pyx_mstate->__pyx_n_u_c};
+    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_update_layout, __pyx_k_UUV_I_1_L_a_E_AU_iq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 8, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 99, 191};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 20, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 77, 279};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_gesture, __pyx_mstate->__pyx_n_u_key_size, __pyx_mstate->__pyx_n_u_reversed_gesture, __pyx_mstate->__pyx_n_u_trie, __pyx_mstate->__pyx_n_u_last_letters, __pyx_mstate->__pyx_n_u_cscores, __pyx_mstate->__pyx_n_u_raw_scores, __pyx_mstate->__pyx_n_u_total_gesture, __pyx_mstate->__pyx_n_u_candidates, __pyx_mstate->__pyx_n_u__5, __pyx_mstate->__pyx_n_u_x, __pyx_mstate->__pyx_n_u_y, __pyx_mstate->__pyx_n_u_x, __pyx_mstate->__pyx_n_u_y, __pyx_mstate->__pyx_n_u_score, __pyx_mstate->__pyx_n_u_score, __pyx_mstate->__pyx_n_u_genexpr, __pyx_mstate->__pyx_n_u_genexpr, __pyx_mstate->__pyx_n_u_score};
+    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_decode, __pyx_k_C1_4q_1_4y_2S_4s_U2B_9JV___bbff, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 8, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 109, 191};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_gesture, __pyx_mstate->__pyx_n_u_time_threshold, __pyx_mstate->__pyx_n_u_last_tstamp, __pyx_mstate->__pyx_n_u_keys, __pyx_mstate->__pyx_n_u_i, __pyx_mstate->__pyx_n_u_candidates, __pyx_mstate->__pyx_n_u_c};
-    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_get_last_letter_candidates, __pyx_k_33eeoop_4q_1_gRr_E_as_9Bd_a_war, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_decoder_cython_suffix_decoder_py, __pyx_mstate->__pyx_n_u_get_last_letter_candidates, __pyx_k_33eeoop_4q_1_gRr_E_as_9Bd_a_war, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1, 9};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_k_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_k_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 3, 9};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_k_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[7] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_k_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[7])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;

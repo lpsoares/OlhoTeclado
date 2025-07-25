@@ -32,23 +32,41 @@ The API will be available at:
 
 ## API Workflow
 
-### 1. Create Keyboard Layout
+### 0. Check if server is running
+
+```bash
+GET /
+```
+
+**Response:**
+
+```json
+{
+  "ok": true
+}
+```
+
+### 1. Create Decoder
 
 Create a new keyboard configuration and initialize the decoder:
 
 ```bash
-POST /keyboard
+POST /decoder/{decoder_type}
 ```
+
+**Path Parameters:**
+
+- `decoder_type`: Type of decoder to create, either `suffix` or `glancewriter`.
 
 **Body example:**
 
 ```json
 {
-  "q": [0, 0, 50, 50],
-  "w": [50, 0, 50, 50],
-  "e": [100, 0, 50, 50],
-  "r": [150, 0, 50, 50],
-  "t": [200, 0, 50, 50]
+  "qKey": [0, 0, 50, 50],
+  "wKey": [50, 0, 50, 50],
+  "eKey": [100, 0, 50, 50],
+  "rKey": [150, 0, 50, 50],
+  "tKey": [200, 0, 50, 50]
 }
 ```
 
@@ -66,7 +84,7 @@ POST /keyboard
 Monitor the decoder initialization progress:
 
 ```bash
-GET /keyboard/status
+GET /decoder/{decoder_id}
 ```
 
 **Response:**
@@ -100,7 +118,7 @@ POST /context
 Add swipe gesture coordinates:
 
 ```bash
-POST /points/post
+POST /points
 ```
 
 **Body:**
@@ -122,7 +140,7 @@ POST /points/post
 Get word predictions from the accumulated points:
 
 ```bash
-POST /decode/
+POST /decoder/{decoder_id}/decode
 ```
 
 **Response:**

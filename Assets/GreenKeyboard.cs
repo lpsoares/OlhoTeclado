@@ -111,6 +111,7 @@ public class GreenKeyboard : AbstractKeyboard
                 {
                     wordSequence[^1].CurrentWord = lastKey.label.ToLower();
                     curContext.Candidates = wordSequence[^1].Candidates;
+                    NotifyCandidateListListeners(curContext.Candidates.ToArray());
                 }
                 else
                 {
@@ -127,6 +128,7 @@ public class GreenKeyboard : AbstractKeyboard
                 {
                     decodingGesture = false;
                     curContext.Candidates = decodedWords;
+                    NotifyCandidateListListeners(curContext.Candidates.ToArray());
                     if (decodedWords.Count > 0)
                     {
                         var candidates = new List<string>(decodedWords);
@@ -134,9 +136,12 @@ public class GreenKeyboard : AbstractKeyboard
                         Debug.Log($"Decoded words: {string.Join(", ", decodedWords)}");
                         UpdateTextFromSequence();
                     }
+                    else
+                    {
+                        Debug.Log("No words decoded.");
+                    }
                 });
             }
-            NotifyCandidateListListeners(curContext.Candidates.ToArray());
         }
         else if (previousState == KeyboardState.Current && curState == KeyboardState.Previous)
         {

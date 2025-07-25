@@ -35,7 +35,7 @@ public class DecoderAPI
 
         while (decoderId.Length == 0)
         {
-            UnityWebRequest startRequest = UnityWebRequest.Post($"{baseUrl}/keyboard", body, "application/json");
+            UnityWebRequest startRequest = UnityWebRequest.Post($"{baseUrl}/decoder/suffix", body, "application/json");
             var operation = startRequest.SendWebRequest();
             while (!operation.isDone)
             {
@@ -51,7 +51,7 @@ public class DecoderAPI
                 try
                 {
                     string jsonResponse = startRequest.downloadHandler.text;
-                    KeyboardResponse responseData = JsonUtility.FromJson<KeyboardResponse>(jsonResponse);
+                    DecoderResponse responseData = JsonUtility.FromJson<DecoderResponse>(jsonResponse);
                     decoderId = responseData.decoder_id;
                     isReady = responseData.status == "ready";
                 }
@@ -65,7 +65,7 @@ public class DecoderAPI
         while (!isReady)
         {
             yield return new WaitForSeconds(1f);
-            UnityWebRequest statusRequest = UnityWebRequest.Get($"{baseUrl}/keyboard/status");
+            UnityWebRequest statusRequest = UnityWebRequest.Get($"{baseUrl}/decoder/{decoderId}");
             statusRequest.SetRequestHeader("Content-Type", "application/json");
             var statusOperation = statusRequest.SendWebRequest();
             while (!statusOperation.isDone)
@@ -82,7 +82,7 @@ public class DecoderAPI
                 try
                 {
                     string jsonResponse = statusRequest.downloadHandler.text;
-                    KeyboardResponse responseData = JsonUtility.FromJson<KeyboardResponse>(jsonResponse);
+                    DecoderResponse responseData = JsonUtility.FromJson<DecoderResponse>(jsonResponse);
                     isReady = responseData.status == "ready";
                     Debug.Log($"Decoder status: {responseData.status}, ID: {responseData.decoder_id}, Original data: {jsonResponse}");
                 }
@@ -158,7 +158,7 @@ public class DecoderAPI
     {
         requestQueue.Enqueue(new DecoderRequest
         {
-            endpoint = "/decode",
+            endpoint = $"/decoder/{decoderId}/decode",
             method = "POST",
             callback = (response) =>
             {
@@ -213,7 +213,7 @@ public class AddGesturePointsRequest : DecoderRequest
 
     public AddGesturePointsRequest()
     {
-        endpoint = "/points/post";
+        endpoint = "/points";
         method = "POST";
     }
 
@@ -247,7 +247,7 @@ public class PeekEndQueue<T> : Queue<T>
 }
 
 [Serializable]
-public class KeyboardResponse
+public class DecoderResponse
 {
     public string decoder_id;
     public string status;

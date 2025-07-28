@@ -61,6 +61,20 @@ class GPT2LanguageModel:
         self.non_first_words_to_token_ids[word] = token_id_non_first
         self.token_ids_to_words.setdefault(token_id_non_first, []).append(word)
 
+    def remove_word(self, word: str):
+        """Remove a word from the model's vocab"""
+        if word in self.first_words_to_token_ids:
+            token_id_first = self.first_words_to_token_ids.pop(word)
+            self.token_ids_to_words[token_id_first].remove(word)
+            if not self.token_ids_to_words[token_id_first]:
+                del self.token_ids_to_words[token_id_first]
+
+        if word in self.non_first_words_to_token_ids:
+            token_id_non_first = self.non_first_words_to_token_ids.pop(word)
+            self.token_ids_to_words[token_id_non_first].remove(word)
+            if not self.token_ids_to_words[token_id_non_first]:
+                del self.token_ids_to_words[token_id_non_first]
+
     @lru_cache(maxsize=10000)
     def _tokenize_cached(self, word: str, as_first_word: bool = True) -> tuple:
         """caches tokenization for most used words"""

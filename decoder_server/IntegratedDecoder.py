@@ -20,9 +20,9 @@ class IntegratedWordScore:
 class IntegratedDecoder:
     def __init__(
         self,
-        gesture_weight: float = 0.8,
-        language_weight: float = 0.2,
-        combine_x: float = 0.8,
+        gesture_weight: float = 0.75,
+        language_weight: float = 0.15,
+        combine_x: float = 0.10,
         combiner: Callable[
             [float, float, float], Callable[[float, float], float]
         ] = linear_combiner,
@@ -53,26 +53,22 @@ class IntegratedDecoder:
         gesture_candidates = self.suffix_decoder.decode(gesture_points)
 
         language_probs = {}
+        context_idx = context.strip().count(" ")
         if context.strip():
-            start_time = time.time()
-            # QUESTION: This method uses the added words, shouldn't we add the words before this?
-            # QUESTION: The context doesn't end with a space, shouldn't we add one so the prediction doesn't try to continue the last word?
-            predictions = self.language_model.predict_next_word(context)
-            end_time = time.time()
-            print(
-                f"Language model prediction took {end_time - start_time:.4f} seconds for context: '{context}'"
-            )
+            context_with_space = context + " "
+            
             for candidate in gesture_candidates[:50]:
-                # QUESTION: Shouldn't we remove the previous words from the language model?
                 self.language_model.add_word(candidate.word)
-
-                # QUESTION: Why is this inside the loop? Do we need to do this for all candidates even though we only added the first 50?
-                for candidate in gesture_candidates:
-                    word = candidate.word
-                    language_probs[word] = predictions.get(word, 0.0)
-
-            for candidate in gesture_candidates[:10]:
-                print(candidate.word, predictions.get(candidate.word, 0.0))
+            
+            predictions = self.language_model.predict_next_word(context_with_space)
+            
+            for candidate in gesture_candidates:
+                word = candidate.word
+                language_probs[word] = predictions.get(word, 0.0)
+                
+            # for candidate in gesture_candidates[:50]:
+            #     self.language_model.remove_word(candidate.word)
+                
         else:
             uniform_prob = 1.0 / len(gesture_candidates) if gesture_candidates else 0
             language_probs = {
@@ -85,7 +81,7 @@ class IntegratedDecoder:
                 gesture_probability=c.probability,
                 language_probability=language_probs.get(c.word, 0.0),
                 combined_probability=self.combiner_fn(
-                    c.probability, language_probs.get(c.word, 0.0)
+                    c.probability, language_probs.get(c.word, 0.0), context_idx=context_idx
                 ),
                 gesture_distance=getattr(c, "distance", 0.0),
             )
@@ -94,7 +90,7 @@ class IntegratedDecoder:
 
         integrated_scores.sort(key=lambda x: x.combined_probability, reverse=True)
         return integrated_scores[:top_n]
-
+    
     def extract_sentence_context(self, word_data: WordData) -> str:
         words = word_data.target_sentence.split()
         if word_data.word_index <= 1:

@@ -173,6 +173,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             {
                 var lastWord = wordSequence.Last();
                 lastWord.Candidates.Add(key.label);
+                // TODO: Word should only be set here - not before any candidate is selected
                 lastWord.CurrentWord = key.label.ToLower();
                 context.Candidates = lastWord.Candidates;
                 NotifyCandidateListListeners(lastWord.Candidates.ToArray());

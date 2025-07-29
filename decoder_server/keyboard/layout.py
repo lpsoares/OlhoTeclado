@@ -108,6 +108,25 @@ class KeyboardLayout:
                 path.append(button.center)
         return path
 
+    def get_closest_key(
+        self, x: float, y: float, threshold: float
+    ) -> KeyboardButton | None:
+        """
+        Returns the closest button to the given coordinates.
+        :param x: The x coordinate.
+        :param y: The y coordinate.
+        :param threshold: The distance threshold to consider a button as close (value will be multiplied by key_size).
+        :return: The closest button or None if no button is close enough.
+        """
+        closest_button = None
+        min_distance = float("inf")
+        for button in self.buttons.values():
+            distance = ((button.cx - x) ** 2 + (button.cy - y) ** 2) ** 0.5
+            if distance < min_distance:
+                min_distance = distance
+                closest_button = button
+        return closest_button if min_distance < threshold * self.key_size else None
+
     def keys_close_to(
         self, x: float, y: float, threshold: float
     ) -> list[KeyboardButton]:

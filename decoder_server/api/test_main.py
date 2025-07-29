@@ -23,7 +23,7 @@ LAYOUT = find_keyboard_config(LOG_DATA)
 client = TestClient(app)
 
 
-def test_decode_gesture():
+def test_ping():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"ok": True}
@@ -32,6 +32,7 @@ def test_decode_gesture():
 def test_initializing_same_decoder_multiple_times():
     for _ in range(3):
         init_decoder("suffix", LAYOUT)
+        init_decoder("glancewriter", LAYOUT)
 
 
 def test_status_of_non_existent_decoder():
@@ -44,8 +45,38 @@ def test_status_of_non_existent_decoder():
     }
 
 
-def test_regular_flow():
+def test_regular_flow_with_suffix():
     decoder_id, _ = init_decoder("suffix", LAYOUT)
+
+    ready = False
+    while not ready:
+        print(f"Checking if decoder {decoder_id} is ready...")
+        ready = check_ready(decoder_id)
+
+    context = ""
+    set_context(context)
+
+    for word, gaze_path in iter_words(LOG_DATA):
+        # Split in random chunks to simulate real-time input
+        reset_points()
+        i = 0
+        print(f"Adding points for word: '{word}'")
+        while i < len(gaze_path):
+            chunk_size = randint(1, 5)
+            chunk = gaze_path[i : i + chunk_size]
+            add_points(chunk)
+            i += chunk_size
+        stored_points = get_points()
+        assert len(gaze_path) == len(stored_points)
+
+        candidates = decode_gesture(decoder_id)
+        assert word in candidates, f"Expected '{word}' in candidates: {candidates}"
+        context = f"{context} {word}".strip()
+        set_context(context)
+
+
+def test_regular_flow_with_glancewriter():
+    decoder_id, _ = init_decoder("glancewriter", LAYOUT)
 
     ready = False
     while not ready:
@@ -127,6 +158,7 @@ def decode_gesture(decoder_id):
     print(f"Decoding gesture with decoder {decoder_id}...")
     response = client.post(
         f"/decoder/{decoder_id}/decode",
+        json={"max_cand": 10},
     )
     assert response.status_code == 200
     return response.json()["decoded_words"]

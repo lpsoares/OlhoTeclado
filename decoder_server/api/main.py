@@ -1,7 +1,7 @@
 from typing import Literal
 
 from fastapi import BackgroundTasks, FastAPI
-from models.schemas import ContextUpdate, DecoderStatus, PointsSimplePost
+from models.schemas import ContextUpdate, DecodeParams, DecoderStatus, PointsSimplePost
 from services.app_state import app_state, initialize_decoder
 
 app = FastAPI()
@@ -47,6 +47,10 @@ def get_decoder_status(decoder_id: str):
     """
 
     status = app_state.decoder_status.get(decoder_id, DecoderStatus.ERROR)
+    if status == DecoderStatus.READY:
+        for decoder in app_state.decoders.values():
+            if decoder:
+                decoder.active = decoder.decoder_id == decoder_id
 
     return {
         "decoder_id": decoder_id,
@@ -56,12 +60,15 @@ def get_decoder_status(decoder_id: str):
 
 
 @app.post("/context")
-def update_context(context: ContextUpdate):
+def update_context(context: ContextUpdate, background_tasks: BackgroundTasks):
     """
     Update the context for the decoder
     :param context: The new context to set
     """
-    app_state.context = context.context
+    ctx = context.context
+    for decoder in app_state.decoders.values():
+        if decoder is not None:
+            background_tasks.add_task(decoder.set_context, ctx)
     return {"message": "context updated. OK"}
 
 
@@ -70,7 +77,9 @@ def reset_points():
     """
     Reset the global points
     """
-    app_state.points = []
+    for decoder in app_state.decoders.values():
+        if decoder is not None:
+            decoder.reset_points()
     return {"message": "Points reset successfully."}
 
 
@@ -80,7 +89,10 @@ def get_points():
     Get the current global points.
     :return: A list of points.
     """
-    return {"points": app_state.points}
+    active_decoder = app_state.get_active_decoder()
+    if active_decoder:
+        return {"points": active_decoder.points}
+    return {"points": []}
 
 
 @app.post("/points")
@@ -89,12 +101,14 @@ def add_points(points: PointsSimplePost):
     Add points to the global list.
     :param points: A list of points to add.
     """
-    app_state.points.extend(points.points)
+    for decoder in app_state.decoders.values():
+        if decoder is not None:
+            decoder.add_points(points.points)
     return {"message": "Points added successfully."}
 
 
 @app.post("/decoder/{decoder_id}/decode")
-async def decode_gesture(decoder_id: str, max_cand: int = 5):
+async def decode_gesture(decoder_id: str, params: DecodeParams = DecodeParams()):
     """
     Decode a gesture using the specified decoder.
     :param decoder_id: The unique identifier for the decoder.
@@ -103,11 +117,11 @@ async def decode_gesture(decoder_id: str, max_cand: int = 5):
 
     decoder = app_state.decoders[decoder_id]
 
-    if not app_state.points:
-        return {"decoded_words": [], "error": "No points provided."}
     if decoder is None:
         return {"decoded_words": [], "error": f"Decoder {decoder_id} not initialized."}
+    if not decoder.points:
+        return {"decoded_words": [], "error": "No points provided."}
 
-    result = decoder.decode_word(app_state.points, app_state.context)
+    result = decoder.decode_word(top_n=params.max_cand)
 
-    return {"decoded_words": [word_score.word for word_score in result[:max_cand]]}
+    return {"decoded_words": result}

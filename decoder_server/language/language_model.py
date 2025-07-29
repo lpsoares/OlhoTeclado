@@ -84,6 +84,10 @@ class GPT2LanguageModel:
         tokens = self.tokenizer.encode(word, return_tensors="pt")[0].tolist()
         return tuple(tokens)
 
+    def preprocess_sentence(self, sentence: str) -> None:
+        """Run prediction with context to store it in the LRU cache"""
+        self._get_sentence_encoding(sentence)
+
     def predict_next_word(self, sentence: str) -> Dict[str, float]:
         """Predicts the next word probabilities based on a given sentence"""
         if sentence:

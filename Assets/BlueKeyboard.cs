@@ -30,7 +30,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
             new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
             new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'", "." },
-        }, 5, null, new List<string> { "Candidate_Keys" });
+        }, 5, dwellEnabledKeys: new List<string> { "Candidate_Keys" }, keyPressListener: this);
         keyboardContexts.Add(context);
         context.backgroundColor = backgroundColor;
         context.keyColor = keyColor;

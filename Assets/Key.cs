@@ -30,7 +30,8 @@ public class Key : MonoBehaviour
     public float dwellTime = 0.6f;
     public Material dwellMaterial;
     private GameObject dwellObject;
-
+    public IKeyPressListener keyPressListener;
+    
     void Start()
     {
         keyRectangle = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -89,12 +90,15 @@ public class Key : MonoBehaviour
                     if (elapsedDwellTime >= dwellTime)
                     {
                         elapsedDwellTime = Mathf.Infinity;
-
-                        List<IKeyPressListener> keyPressListeners = new();
-                        GetComponents(keyPressListeners);
-                        for (int i = 0; i < keyPressListeners.Count; i++)
+                        if (keyPressListener == null)
                         {
-                            keyPressListeners[i].OnKeyPress(this);
+                            // Fallback to default behavior if no listener is set
+                            Debug.Log($"Key {label} pressed without listener.");
+                        }
+                        else
+                        {
+                            // Notify the key press listener
+                            keyPressListener.OnKeyPress(this);
                         }
                     }
                 }

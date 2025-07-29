@@ -34,7 +34,7 @@ export function TrialVideo({
     if (playerRef.current) {
       playerRef.current.seekTo(0);
     }
-  }, [baseEvents]);
+  }, [baseEvents, fps]);
 
   if (durationInFrames === null) {
     return <div className="text-red-500">No trial data available.</div>;

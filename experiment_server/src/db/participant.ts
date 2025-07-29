@@ -118,7 +118,7 @@ export function addParticipantUsedSentence(participantId: string, sentenceId: nu
   const participantDir = path.join(DATA_DIR, participantId);
   const sentencesFile = path.join(participantDir, USED_SENTENCES_FILENAME);
 
-  let usedSentences = getParticipantUsedSentences(participantId);
+  const usedSentences = getParticipantUsedSentences(participantId);
   if (!usedSentences.includes(sentenceId)) {
     usedSentences.push(sentenceId);
   }

@@ -213,6 +213,7 @@ export function useTrial(
   };
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 async function doPost(
   uri: string,
   config?: {
@@ -232,6 +233,7 @@ function doGet(uri: string, errorMsg?: string) {
   return doRequest("GET", uri, null, errorMsg);
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 async function doRequest(
   method: "POST" | "GET",
   uri: string,

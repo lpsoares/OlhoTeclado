@@ -115,7 +115,7 @@ export function TrialStatsView({ trialEvents, trialId }: TrialStatsViewProps) {
       const stats = computeTrialStats(trialEvents, trialId);
       setStats(stats);
     }
-  }, [trialEvents]);
+  }, [trialEvents, trialId]);
 
   if (!trialEvents || trialEvents.length === 0 || !stats) {
     return <div className="text-red-500">No trial events available.</div>;

@@ -184,7 +184,7 @@ public class KeyboardContext : MonoBehaviour
         }
     }
 
-    public void InitKeyLayout(List<List<string>> newLayout, int candidateButtonCount = 0, List<string> nonKeys = null, List<string> dwellEnabledKeys = null)
+    public void InitKeyLayout(List<List<string>> newLayout, int candidateButtonCount = 0, List<string> nonKeys = null, List<string> dwellEnabledKeys = null, IKeyPressListener keyPressListener = null)
     {
         keyLayout = newLayout;
         CleanUp();
@@ -213,7 +213,7 @@ public class KeyboardContext : MonoBehaviour
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
                 string label = keyLayout[row][col];
-                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys == null || nonKeys.IndexOf(label) < 0, false, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf(label) >= 0);
+                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys == null || nonKeys.IndexOf(label) < 0, false, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf(label) >= 0, keyPressListener);
                 Keys.Add(key);
             }
         }
@@ -224,7 +224,7 @@ public class KeyboardContext : MonoBehaviour
         for (int i = 0; i < candidateButtonCount; i++)
         {
             float x0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);
-            Key key = InstantiateKey($"Candidate_{i + 1}", "", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true, true, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf("Candidate_Keys") >= 0);
+            Key key = InstantiateKey($"Candidate_{i + 1}", "", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true, true, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf("Candidate_Keys") >= 0, keyPressListener);
             Keys.Add(key);
             CandidateKeys.Add(key);
         }
@@ -232,7 +232,7 @@ public class KeyboardContext : MonoBehaviour
         keyboardStateMachine = new KeyboardStateMachine(Keys);
     }
 
-    private Key InstantiateKey(string name, string label, float cx, float cy, float width, float height, float depth, bool isKey, bool isCandidateKey, bool dwellEnabled)
+    private Key InstantiateKey(string name, string label, float cx, float cy, float width, float height, float depth, bool isKey, bool isCandidateKey, bool dwellEnabled, IKeyPressListener keyPressListener)
     {
         GameObject keyObject = new(name);
         keyObject.transform.SetParent(transform);
@@ -243,6 +243,7 @@ public class KeyboardContext : MonoBehaviour
         key.IsKey = isKey;
         key.IsCandidateKey = isCandidateKey;
         key.dwellEnabled = dwellEnabled;
+        key.keyPressListener = keyPressListener;
 
         key.X = cx;
         key.Y = cy;

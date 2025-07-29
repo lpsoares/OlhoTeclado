@@ -84,7 +84,6 @@ export default function SessionView({
 const CustomTooltip = ({
   active,
   payload,
-  label,
 }: {
   active?: boolean;
   payload?: Payload<number, string>[];

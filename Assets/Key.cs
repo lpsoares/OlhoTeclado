@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ public class Key : MonoBehaviour
     public string label = "A"; // The text to display
     public Material keyMaterial;
     public Color backgroundColor = new(0.15f, 0.15f, 0.15f);
+    public Color textColor = new(1.0f, 1.0f, 1.0f);
+    public Color highlightColor = new(0.3f, 0.3f, 0.3f, 1.0f);
+    public Color dwellColor = new(0.5f, 0.5f, 1.0f, 0.5f);
     public float alpha = 1.0f;
     private TextMesh textMesh;
 
@@ -20,6 +24,12 @@ public class Key : MonoBehaviour
     public bool IsCandidateKey = false; // Indicates if this key is a candidate key
     public float Probability = 0.0f; // Probability of the key being pressed (used for non keys only)
     private GameObject keyRectangle;
+    public bool dwellEnabled = false;
+    private bool dwelling = false;
+    private float elapsedDwellTime = Mathf.Infinity;
+    public float dwellTime = 0.6f;
+    public Material dwellMaterial;
+    private GameObject dwellObject;
 
     void Start()
     {
@@ -28,10 +38,20 @@ public class Key : MonoBehaviour
         keyRectangle.transform.localPosition = new Vector3(0, 0, 0);
         keyRectangle.transform.localScale = new Vector3(Width, Height, Depth);
 
+        float delta = Depth / 100;
+
+        dwellObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        dwellObject.transform.SetParent(transform);
+        dwellObject.transform.localPosition = new Vector3(0, 0, -Depth / 2 - delta);
+        dwellObject.transform.localScale = new Vector3(Width, Height, delta);
+        dwellMaterial = dwellObject.GetComponent<Renderer>().material;
+        dwellMaterial.color = Color.clear;
+        dwellObject.SetActive(false);
+
         // Create a new GameObject for the text
         GameObject textObj = new("KeyText");
         textObj.transform.SetParent(transform);
-        textObj.transform.localPosition = new Vector3(0, 0, -Depth / 2);
+        textObj.transform.localPosition = new Vector3(0, 0, -Depth / 2 - 2 * delta);
 
         // Add TextMesh component
         textMesh = textObj.AddComponent<TextMesh>();
@@ -40,7 +60,7 @@ public class Key : MonoBehaviour
         textMesh.characterSize = 0.02f;
         textMesh.anchor = TextAnchor.MiddleCenter;
         textMesh.alignment = TextAlignment.Center;
-        textMesh.color = Color.white.WithAlpha(alpha);
+        textMesh.color = textColor.WithAlpha(alpha);
 
         keyMaterial = keyRectangle.GetComponent<Renderer>().material;
         keyMaterial.SetTransparent();
@@ -51,11 +71,56 @@ public class Key : MonoBehaviour
 
     void Update()
     {
-        textMesh.text = label;
-        keyMaterial.color = IsKey ? backgroundColor.WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
-        textMesh.color = Color.white.WithAlpha(alpha);
+        if (dwellEnabled)
+        {
+            if (IsCurrent)
+            {
+                dwellObject.SetActive(true);
+                dwellMaterial.color = dwellColor.WithAlpha(alpha);
+                if (!dwelling)
+                {
+                    dwelling = true;
+                    elapsedDwellTime = 0.0f;
+                }
 
-        float z = IsCurrent ? -0.02f : 0.0f;
+                if (elapsedDwellTime != Mathf.Infinity)
+                {
+                    elapsedDwellTime += Time.deltaTime;
+                    if (elapsedDwellTime >= dwellTime)
+                    {
+                        elapsedDwellTime = Mathf.Infinity;
+
+                        List<IKeyPressListener> keyPressListeners = new();
+                        GetComponents(keyPressListeners);
+                        for (int i = 0; i < keyPressListeners.Count; i++)
+                        {
+                            keyPressListeners[i].OnKeyPress(this);
+                        }
+                    }
+                }
+                else
+                {
+                    dwellObject.SetActive(false);
+                    dwellMaterial.color = Color.clear;
+                }
+            }
+            else
+            {
+                dwellObject.SetActive(false);
+                dwellMaterial.color = Color.clear;
+                dwelling = false;
+                elapsedDwellTime = Mathf.Infinity;
+            }
+            float dwellRectWidth = Width * (1.0f - Math.Min(0.99999f, elapsedDwellTime / dwellTime));
+            float dwellRectHeight = Height * (1.0f - Math.Min(0.99999f, elapsedDwellTime / dwellTime));
+            dwellObject.transform.localScale = new Vector3(dwellRectWidth, dwellRectHeight, Depth / 100);   
+        }
+
+        textMesh.text = label;
+        keyMaterial.color = IsKey ? (IsCurrent ? highlightColor : backgroundColor).WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
+        textMesh.color = textColor.WithAlpha(alpha);
+
+        float z = 0.0f;
         float scaleFactor = 1.0f;
         if (!IsKey)
         {
@@ -94,4 +159,9 @@ public class Key : MonoBehaviour
         }
         return width * textMesh.characterSize * 0.1f;
     }
+}
+
+public interface IKeyPressListener
+{
+    void OnKeyPress(Key key);
 }

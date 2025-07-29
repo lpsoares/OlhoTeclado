@@ -68,11 +68,11 @@ public abstract class AbstractKeyboard
         NotifyTextChangeListeners(Text);
     }
 
-    public void NotifyKeyPressListeners(string keyName, string keyLabel, string keyValue)
+    public void NotifyKeyPressListeners(Key key)
     {
         foreach (var listener in keyPressListeners)
         {
-            listener.OnKeyPress(keyName, keyLabel, keyValue);
+            listener.OnKeyPress(key);
         }
     }
 
@@ -110,11 +110,6 @@ public abstract class AbstractKeyboard
     }
 }
 
-public interface IKeyPressListener
-{
-    void OnKeyPress(string keyName, string keyLabel, string keyValue);
-}
-
 public interface ITextChangeListener
 {
     void OnTextChanged(string newText);
@@ -150,5 +145,17 @@ public class ContextPositionData
         this.upVector = upVector;
         this.rightVector = rightVector;
         this.forwardVector = forwardVector;
+    }
+}
+
+public class WordCandidates
+{
+    public List<string> Candidates { get; } = new();
+    public string CurrentWord { get; set; } = string.Empty;
+
+    public WordCandidates(string word, List<string> candidates)
+    {
+        CurrentWord = word;
+        Candidates.AddRange(candidates);
     }
 }

@@ -16,7 +16,7 @@ public class GreenKeyboard : AbstractKeyboard
     private bool decodingGesture = false;
 
     public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners, List<IKeyPressListener> keyPressListeners)
-        : base(KeyboardType.Blue, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners)
+        : base(KeyboardType.Green, instantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners)
     {
         this.contextGazeInteraction = contextGazeInteraction;
         this.decoderAPI = decoderAPI;
@@ -117,7 +117,7 @@ public class GreenKeyboard : AbstractKeyboard
                 {
                     wordSequence.Add(new WordCandidates(previousContext.LastSelectedKey.label.ToLower(), new List<string>()));
                 }
-                NotifyKeyPressListeners(lastKey.name, lastKey.label, lastKey.label.ToLower());
+                NotifyKeyPressListeners(lastKey);
                 UpdateTextFromSequence();
             }
             else
@@ -218,17 +218,5 @@ public class GreenKeyboard : AbstractKeyboard
         wordSequence.Clear();
         ResetAllContextCandidates();
         decoderAPI.SetContext(Text);
-    }
-}
-
-internal class WordCandidates
-{
-    public List<string> Candidates { get; } = new();
-    public string CurrentWord { get; set; } = string.Empty;
-
-    public WordCandidates(string word, List<string> candidates)
-    {
-        CurrentWord = word;
-        Candidates.AddRange(candidates);
     }
 }

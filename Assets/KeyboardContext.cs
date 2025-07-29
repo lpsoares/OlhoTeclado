@@ -8,8 +8,10 @@ public class KeyboardContext : MonoBehaviour
 {
     public Color backgroundColor = new(0f, 0f, 0f, 0f);
     public Color keyColor = new(0.15f, 0.15f, 0.15f, 1.0f);
+    public Color textColor = new(1.0f, 1.0f, 1.0f, 1.0f);
+    public Color highlightColor = new(0.3f, 0.3f, 0.3f, 1.0f);
+    public Color dwellColor = new(0.5f, 0.5f, 1.0f, 0.5f);
     public bool GazeInKeys { get; private set; } = true;
-    private Color prevColor;
     private const float INACTIVE_NEXT_DEPTH = 3.0f;
     private const float NEXT_DEPTH = 1.0f;
     private const float CURR_DEPTH = 0.0f;
@@ -25,9 +27,10 @@ public class KeyboardContext : MonoBehaviour
     {
         get => DEPTHS[(int)State];
     }
+    public bool hasAlpha = true;
     public float Alpha
     {
-        get => Mathf.Clamp(Depth > 0 ? 1.0f - Depth * 0.5f : 1.0f + Depth * 1.9f, 0.0f, 1.0f);
+        get => hasAlpha ? Mathf.Clamp(Depth > 0 ? 1.0f - Depth * 0.5f : 1.0f + Depth * 1.9f, 0.0f, 1.0f) : 1.0f;
     }
     public Plane Plane
     {
@@ -102,15 +105,6 @@ public class KeyboardContext : MonoBehaviour
             key.gameObject.SetActive(State == KeyboardState.Current);
         }
 
-        if (prevColor != keyColor)
-        {
-            prevColor = keyColor;
-            foreach (Key key in Keys)
-            {
-                key.backgroundColor = keyColor;
-            }
-        }
-
         if (Depth != TargetDepth)
         {
             Depth += depthSpeed * Time.deltaTime;
@@ -127,11 +121,22 @@ public class KeyboardContext : MonoBehaviour
         foreach (Key key in Keys)
         {
             key.alpha = Alpha;
+            key.backgroundColor = keyColor;
+            key.textColor = textColor;
+            key.highlightColor = highlightColor;
+            key.dwellColor = dwellColor;
         }
         transform.localPosition = new Vector3(0, 0, Depth);
 
         UpdateGazeInKeys();
-        backgroundMaterial.color = backgroundColor.WithAlpha(Alpha * (GazeInKeys ? 0.5f : 0.4f));
+        if (backgroundColor.a == 0)
+        {
+            backgroundMaterial.color = Color.clear;
+        }
+        else
+        {
+            backgroundMaterial.color = backgroundColor.WithAlpha(Alpha * (GazeInKeys ? 0.5f : 0.4f));
+        }
 
         if (State == KeyboardState.Current && CurrentGaze != Vector3.zero)
         {
@@ -179,7 +184,7 @@ public class KeyboardContext : MonoBehaviour
         }
     }
 
-    public void InitKeyLayout(List<List<string>> newLayout, int candidateButtonCount = 0, List<string> nonKeys = null)
+    public void InitKeyLayout(List<List<string>> newLayout, int candidateButtonCount = 0, List<string> nonKeys = null, List<string> dwellEnabledKeys = null)
     {
         keyLayout = newLayout;
         CleanUp();
@@ -208,18 +213,18 @@ public class KeyboardContext : MonoBehaviour
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
                 string label = keyLayout[row][col];
-                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys?.IndexOf(label) < 0, false);
+                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys == null || nonKeys.IndexOf(label) < 0, false, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf(label) >= 0);
                 Keys.Add(key);
             }
         }
 
         float candidateButtonWidth = width / candidateButtonCount;
         float candidateButtonsX0 = (candidateButtonWidth - width) / 2;
-        float candidateButtonsY0 = 0.2f;
+        float candidateButtonsY0 = keyboardY0 + 3 * (keySpacing + keySize);
         for (int i = 0; i < candidateButtonCount; i++)
         {
             float x0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);
-            Key key = InstantiateKey($"Candidate_{i + 1}", "", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true, true);
+            Key key = InstantiateKey($"Candidate_{i + 1}", "", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true, true, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf("Candidate_Keys") >= 0);
             Keys.Add(key);
             CandidateKeys.Add(key);
         }
@@ -227,7 +232,7 @@ public class KeyboardContext : MonoBehaviour
         keyboardStateMachine = new KeyboardStateMachine(Keys);
     }
 
-    private Key InstantiateKey(string name, string label, float cx, float cy, float width, float height, float depth, bool isKey, bool isCandidateKey)
+    private Key InstantiateKey(string name, string label, float cx, float cy, float width, float height, float depth, bool isKey, bool isCandidateKey, bool dwellEnabled)
     {
         GameObject keyObject = new(name);
         keyObject.transform.SetParent(transform);
@@ -237,6 +242,7 @@ public class KeyboardContext : MonoBehaviour
         key.alpha = Alpha;
         key.IsKey = isKey;
         key.IsCandidateKey = isCandidateKey;
+        key.dwellEnabled = dwellEnabled;
 
         key.X = cx;
         key.Y = cy;

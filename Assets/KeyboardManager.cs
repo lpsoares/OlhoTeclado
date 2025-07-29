@@ -20,8 +20,8 @@ public class KeyboardManager : MonoBehaviour
 
     private GameObject gazeDebugObject;
     private ContextGazeInteraction contextGazeInteraction;
-    private TextOutput textReference;
-    private TextOutput textOutput;
+    public TextOutput textReference;
+    public TextOutput textOutput;
     private readonly List<ITextChangeListener> textChangeListeners = new();
     private readonly List<IKeyPressListener> keyPressListeners = new();
     private readonly List<IContextChangeListener> contextChangeListeners = new();
@@ -34,9 +34,13 @@ public class KeyboardManager : MonoBehaviour
     }
 
     InputAction resetKeyboardAction;
+    private DecoderAPI decoderAPI;
 
     void Start()
     {
+        decoderAPI = new DecoderAPI();
+        StartCoroutine(decoderAPI.StartRequestLoop());
+
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
@@ -77,12 +81,12 @@ public class KeyboardManager : MonoBehaviour
 
         textReference = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textReference.transform.SetParent(transform);
-        textReference.transform.localPosition = new Vector3(0, 0.1f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textReference.transform.localPosition = new Vector3(0, 0.20f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textReference.text = "";
 
         textOutput = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textOutput.transform.SetParent(transform);
-        textOutput.transform.localPosition = new Vector3(0, 0.05f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textOutput.transform.localPosition = new Vector3(0, 0.25f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textOutput.text = "";
 
         // Instantiate a red sphere for gaze debugging
@@ -144,11 +148,9 @@ public class KeyboardManager : MonoBehaviour
                 Keyboard = new RedKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             case KeyboardType.Blue:
-                Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
+                Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             case KeyboardType.Green:
-                var decoderAPI = new DecoderAPI();
-                StartCoroutine(decoderAPI.StartRequestLoop());
                 Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             default:

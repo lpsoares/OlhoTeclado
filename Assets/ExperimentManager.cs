@@ -70,14 +70,14 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
         }
     }
 
-    public void OnKeyPress(string keyName, string keyLabel, string keyValue)
+    public void OnKeyPress(Key key)
     {
         if (trialState != TrialState.Ongoing)
         {
             return;
         }
 
-        string eventData = EventBuilder.BuildKeyPressEvent(GetTimestamp(), keyName, keyLabel, keyValue);
+        string eventData = EventBuilder.BuildKeyPressEvent(GetTimestamp(), key.name, key.label, key.label.ToLower());
         events.Add(eventData);
     }
 
@@ -229,6 +229,10 @@ public class ExperimentManager : MonoBehaviour, IContextChangeListener, ITextCha
                 keyPositions.Add(new KeyPositionData(key.name, key.label, context.State.ToString(), key.Width, key.Height, new Vector2(key.X, key.Y)));
             }
         }
+
+        keyPositions.Add(new KeyPositionData("textField", "---", "Current", 1.0f, 1.0f, keyboardManager.textOutput.transform.localPosition));
+        keyPositions.Add(new KeyPositionData("textReference", "---", "Reference", 1.0f, 1.0f, keyboardManager.textReference.transform.localPosition));
+
         return keyPositions.ToArray();
     }
 

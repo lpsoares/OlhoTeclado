@@ -30,7 +30,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
             new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
             new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'", "." },
-        }, 5, dwellEnabledKeys: new List<string> { "Candidate_Keys" }, keyPressListener: this);
+        }, 5, dwellEnabledKeys: new List<string> { "Candidate_Keys", "Backspace" }, keyPressListener: this, withBackspace: true);
         keyboardContexts.Add(context);
         context.backgroundColor = backgroundColor;
         context.keyColor = keyColor;
@@ -176,6 +176,23 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
                 lastWord.CurrentWord = key.label.ToLower();
                 context.Candidates = lastWord.Candidates;
                 NotifyCandidateListListeners(lastWord.Candidates.ToArray());
+                UpdateTextFromSequence();
+            }
+        }
+        else if (key.name == "Backspace")
+        {
+            if (wordSequence.Count > 0)
+            {
+                wordSequence.RemoveAt(wordSequence.Count - 1);
+                if (wordSequence.Count > 0)
+                {
+                    context.Candidates = wordSequence.Last().Candidates;
+                    NotifyCandidateListListeners(context.Candidates.ToArray());
+                }
+                else
+                {
+                    context.Candidates = new List<string>();
+                }
                 UpdateTextFromSequence();
             }
         }

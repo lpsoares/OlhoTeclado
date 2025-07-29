@@ -184,7 +184,7 @@ public class KeyboardContext : MonoBehaviour
         }
     }
 
-    public void InitKeyLayout(List<List<string>> newLayout, int candidateButtonCount = 0, List<string> nonKeys = null, List<string> dwellEnabledKeys = null, IKeyPressListener keyPressListener = null)
+    public void InitKeyLayout(List<List<string>> newLayout, int candidateButtonCount = 0, List<string> nonKeys = null, List<string> dwellEnabledKeys = null, IKeyPressListener keyPressListener = null, bool withBackspace = false)
     {
         keyLayout = newLayout;
         CleanUp();
@@ -205,9 +205,10 @@ public class KeyboardContext : MonoBehaviour
         backgroundRect.transform.localPosition = new Vector3(0, keyboardY0 - keyLayout.Count / 2 * keySpacing - keyLayout.Count / 2f * keySize, keySize / 5);
         backgroundRect.transform.localScale = new Vector3(width, height, keySize / 10);
 
+        float x0 = -(keyLayout[0].Count - 1) * (keySpacing + keySize) / 2.0f; // Center the row (x0 is the center of the leftmost key)
         for (int row = 0; row < keyLayout.Count; row++)
         {
-            float x0 = -(keyLayout[row].Count - 1) * (keySpacing + keySize) / 2.0f; // Center the row (x0 is the center of the leftmost key)
+            x0 += row * ((keySpacing + keySize) / 2); // Adjust x0 for each row
             float y0 = keyboardY0 - row * (keySpacing + keySize);
 
             for (int col = 0; col < keyLayout[row].Count; col++)
@@ -223,10 +224,18 @@ public class KeyboardContext : MonoBehaviour
         float candidateButtonsY0 = keyboardY0 + 3 * (keySpacing + keySize);
         for (int i = 0; i < candidateButtonCount; i++)
         {
-            float x0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);
-            Key key = InstantiateKey($"Candidate_{i + 1}", "", x0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true, true, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf("Candidate_Keys") >= 0, keyPressListener);
+            float candidatesX0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);
+            Key key = InstantiateKey($"Candidate_{i + 1}", "", candidatesX0, candidateButtonsY0, candidateButtonWidth, keySize, keySize / 10, true, true, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf("Candidate_Keys") >= 0, keyPressListener);
             Keys.Add(key);
             CandidateKeys.Add(key);
+        }
+
+        if (withBackspace)
+        {
+            float backspaceX0 = candidateButtonsX0 + (candidateButtonCount - 1) * (candidateButtonWidth + keySpacing);
+            float backspaceY0 = keyboardY0 + 2 * (keySpacing + keySize);
+            Key backspaceKey = InstantiateKey("Backspace", "←", backspaceX0, backspaceY0, candidateButtonWidth, keySize, keySize / 10, true, false, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf("Backspace") >= 0, keyPressListener);
+            Keys.Add(backspaceKey);
         }
 
         keyboardStateMachine = new KeyboardStateMachine(Keys);

@@ -40,7 +40,15 @@ class KeyboardButton:
         Returns the normalized center coordinates of the button.
         :return: A tuple containing the normalized x and y coordinates of the center.
         """
-        return self.cx / self.key_size, self.cy / self.key_size
+        return self.normalize_point((self.cx, self.cy))
+
+    def normalize_point(self, point: tuple[float, float]) -> tuple[float, float]:
+        """
+        Normalizes a point based on the button's key size.
+        :param point: A tuple (x, y) representing the point to normalize.
+        :return: A tuple containing the normalized x and y coordinates.
+        """
+        return point[0] / self.key_size, point[1] / self.key_size
 
     @property
     def key_size(self) -> float:
@@ -75,7 +83,7 @@ class KeyboardLayout:
 
     @property
     def key_size(self) -> float:
-        return self.buttons["aKey"].key_size
+        return self.buttons["aKey"].key_size if "aKey" in self.buttons else 1.0
 
     def from_file(self, layout_file: PathLike) -> None:
         """
@@ -117,7 +125,7 @@ class KeyboardLayout:
         return path
 
     def get_closest_key(
-        self, x: float, y: float, threshold: float
+        self, x: float, y: float, threshold: float, normalized: bool = False
     ) -> KeyboardButton | None:
         """
         Returns the closest button to the given coordinates.
@@ -129,11 +137,22 @@ class KeyboardLayout:
         closest_button = None
         min_distance = float("inf")
         for button in self.buttons.values():
-            distance = ((button.cx - x) ** 2 + (button.cy - y) ** 2) ** 0.5
+            cx, cy = button.center
+            if normalized:
+                cx, cy = self.normalize_point((cx, cy))
+            distance = ((cx - x) ** 2 + (cy - y) ** 2) ** 0.5
             if distance < min_distance:
                 min_distance = distance
                 closest_button = button
-        return closest_button if min_distance < threshold * self.key_size else None
+        return closest_button if min_distance < threshold else None
+
+    def normalize_point(self, point: tuple[float, float]) -> tuple[float, float]:
+        """
+        Normalizes a point based on the button's key size.
+        :param point: A tuple (x, y) representing the point to normalize.
+        :return: A tuple containing the normalized x and y coordinates.
+        """
+        return point[0] / self.key_size, point[1] / self.key_size
 
     def keys_close_to(
         self, x: float, y: float, threshold: float

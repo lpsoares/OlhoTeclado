@@ -96,7 +96,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             {
                 context.Candidates = decodedWords;
                 var candidates = new List<string>(decodedWords);
-                wordSequence.Add(new WordCandidates(candidates[0], candidates));
+                wordSequence.Add(new WordCandidates(string.Empty, candidates));
                 Debug.Log($"Decoded words: {string.Join(", ", decodedWords)}");
                 UpdateTextFromSequence();
             }
@@ -139,11 +139,12 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             var markedWord = currentWord;
             if (isLast && markLast)
             {
+                string wordOrSpace = string.IsNullOrEmpty(currentWord) ? " " : currentWord;
                 // If the last word has candidates, we mark it with a special character
-                markedWord = $"<mark=#{keyColor.WithAlpha(0.3f).ToHexString()}>{currentWord}</mark>";
+                markedWord = $"<mark=#{keyColor.WithAlpha(0.3f).ToHexString()}>{wordOrSpace}</mark>";
             }
             // If the word has no candidates, it is a single character that came from a key press (e.g. punctuation)
-            string preText = word.Candidates.Count > 0 ? " " : "";
+            string preText = word.Candidates.Count > 0 && !string.IsNullOrEmpty(currentWord) ? " " : "";
             text += preText + currentWord;
             richText += preText + markedWord;
         }
@@ -172,8 +173,6 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             if (wordSequence.Count > 0)
             {
                 var lastWord = wordSequence.Last();
-                lastWord.Candidates.Add(key.label);
-                // TODO: Word should only be set here - not before any candidate is selected
                 lastWord.CurrentWord = key.label.ToLower();
                 context.Candidates = lastWord.Candidates;
                 NotifyCandidateListListeners(lastWord.Candidates.ToArray());
@@ -182,9 +181,12 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
         }
         else if (key.name == "Backspace")
         {
+            PopRightWhileEmpty();
+
             if (wordSequence.Count > 0)
             {
                 wordSequence.RemoveAt(wordSequence.Count - 1);
+                PopRightWhileEmpty();
                 if (wordSequence.Count > 0)
                 {
                     context.Candidates = wordSequence.Last().Candidates;
@@ -196,6 +198,14 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
                 }
                 UpdateTextFromSequence();
             }
+        }
+    }
+
+    private void PopRightWhileEmpty()
+    {
+        while (wordSequence.Count > 0 && string.IsNullOrEmpty(wordSequence.Last().CurrentWord))
+        {
+            wordSequence.RemoveAt(wordSequence.Count - 1);
         }
     }
 }

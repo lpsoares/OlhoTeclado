@@ -94,8 +94,10 @@ class GlanceWriterDecoder(BaseDecoder):
         :param points: A list of tuples representing points (timestamp, x, y)
         """
         for point in points:
-            self.points.append(point)
-            self._update_point(point)
+            tstamp, x, y = point
+            normalized_point = tstamp, *self.keyboard.normalize_point((x, y))
+            self.points.append(normalized_point)
+            self._update_point(normalized_point)
 
     def set_context(self, context: str):
         self.processing_context = True
@@ -137,11 +139,11 @@ class GlanceWriterDecoder(BaseDecoder):
         tstamp, x, y = point
 
         self._trim_held_nodes(50)
-        key = self.keyboard.get_closest_key(x, y, 1.5)
+        key = self.keyboard.get_closest_key(x, y, 1.5, True)
         if not key:
             return
 
-        key_score = self._key_score(key.center)
+        key_score = self._key_score(key.normalized_center)
 
         # Scan the first letter of each word
         for child in root_children:
@@ -158,17 +160,15 @@ class GlanceWriterDecoder(BaseDecoder):
             # Scan next letters
             for next_char, next_node in node.children.items():
                 if next_char == key.key:
-                    next_node.update_key_score(key_score)
+                    next_node.key_score = key_score
+                    next_node.sum_score = node.sum_score + key_score
                     self.held_nodes.add(next_node)
 
             self._remove_old_candidates()
             # If node is last letter of words, add to word_candidates
             if node.words:
                 for w in node.words:
-                    if (
-                        w not in self.word_candidates
-                        or node.sum_score > self.word_candidates[w].score
-                    ):
+                    if w not in self.word_candidates:
                         self.word_candidates[w] = WordCandidate(
                             w, node.sum_score, tstamp
                         )

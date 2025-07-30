@@ -17,14 +17,13 @@ HOLD_TIME = 1000  # (milliseconds) Time to hold a key before releasing
 class GlanceWriterDecoder(BaseDecoder):
     def __init__(
         self,
-        decoder_id: str,
         lexicon: list[str],
         keyboard_config: dict[str, tuple[float, float, float, float]] | None = None,
         gaussian_std: float = GAUSSIAN_STD,
         stability_window_size: int = STABILITY_WINDOW_SIZE,
         hold_time: int = HOLD_TIME,
     ):
-        super().__init__(decoder_id=decoder_id)
+        super().__init__()
         self.lexicon = lexicon
         self.gaussian_std = gaussian_std
         self.stability_window_size = stability_window_size
@@ -34,9 +33,10 @@ class GlanceWriterDecoder(BaseDecoder):
         self.held_nodes = set()
         self.word_candidates: dict[str, WordCandidate] = {}
         self._reset()
+        self.processing_context = False
 
+        self.keyboard = KeyboardLayout()
         if keyboard_config:
-            self.keyboard = KeyboardLayout()
             self.keyboard.from_keyboard_config(keyboard_config)
 
     def update_layout(
@@ -55,6 +55,11 @@ class GlanceWriterDecoder(BaseDecoder):
         self,
         top_n: int = 5,
     ) -> list[str]:
+        assert self.keyboard.is_initialized
+
+        while self.processing_context:
+            print("Waiting for context processing to finish...")
+
         # Sort word_candidates by sum_score and output top 10
         top_candidates = [
             candidate
@@ -62,6 +67,7 @@ class GlanceWriterDecoder(BaseDecoder):
                 self.word_candidates.items(), key=lambda x: x[1].score, reverse=True
             )[: top_n * 2]
         ]
+        print(f"Top candidates: {[candidate.word for candidate in top_candidates]}")
 
         # Combine with language model (we don't really need to divide by the total because we only care about the relative probabilities)
         results = []
@@ -72,11 +78,13 @@ class GlanceWriterDecoder(BaseDecoder):
                 [candidate.word for candidate in top_candidates]
             )
             predictions = self.language_model.predict_next_word(context)
+
         for candidate in top_candidates:
             lm_score = predictions.get(candidate.word, 0.0) if predictions else 1.0
             prob = candidate.score * lm_score
             results.append((candidate.word, prob))
         results.sort(key=lambda x: x[1], reverse=True)
+        print(f"Results: {results}")
 
         return [word for word, _ in results[:top_n]]
 
@@ -90,8 +98,10 @@ class GlanceWriterDecoder(BaseDecoder):
             self._update_point(point)
 
     def set_context(self, context: str):
+        self.processing_context = True
         super().set_context(context)
         self.language_model.preprocess_sentence(context)
+        self.processing_context = False
 
     def reset_points(self):
         super().reset_points()

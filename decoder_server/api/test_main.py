@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 from random import randint
 
+import pytest
 from fastapi.testclient import TestClient
 
 sys.path.append(str(Path(__file__).parent.parent))
@@ -29,6 +30,14 @@ def test_ping():
     assert response.json() == {"ok": True}
 
 
+def test_list_decoders():
+    response = client.get("/decoder")
+    assert response.status_code == 200
+    assert response.json() == {
+        "decoders": ["suffix", "glancewriter"]
+    }
+
+
 def test_initializing_same_decoder_multiple_times():
     for _ in range(3):
         init_decoder("suffix", LAYOUT)
@@ -37,72 +46,38 @@ def test_initializing_same_decoder_multiple_times():
 
 def test_status_of_non_existent_decoder():
     response = client.get("/decoder/non_existent")
-    assert response.status_code == 200
-    assert response.json() == {
-        "decoder_id": "non_existent",
-        "status": "error",
-        "ready": False,
-    }
+    assert response.status_code == 422
+    
 
-
-def test_regular_flow_with_suffix():
-    decoder_id, _ = init_decoder("suffix", LAYOUT)
+@pytest.mark.parametrize("decoder_type", ["suffix", "glancewriter"])
+def test_regular_flow_with_suffix(decoder_type):
+    init_decoder(decoder_type, LAYOUT)
 
     ready = False
     while not ready:
-        print(f"Checking if decoder {decoder_id} is ready...")
-        ready = check_ready(decoder_id)
+        print(f"Checking if decoder {decoder_type} is ready...")
+        ready = check_ready(decoder_type)
 
     context = ""
-    set_context(context)
+    set_context(decoder_type, context)
 
     for word, gaze_path in iter_words(LOG_DATA):
         # Split in random chunks to simulate real-time input
-        reset_points()
+        reset_points(decoder_type)
         i = 0
         print(f"Adding points for word: '{word}'")
         while i < len(gaze_path):
             chunk_size = randint(1, 5)
             chunk = gaze_path[i : i + chunk_size]
-            add_points(chunk)
+            add_points(decoder_type, chunk)
             i += chunk_size
-        stored_points = get_points()
+        stored_points = get_points(decoder_type)
         assert len(gaze_path) == len(stored_points)
 
-        candidates = decode_gesture(decoder_id)
+        candidates = decode_gesture(decoder_type)
         assert word in candidates, f"Expected '{word}' in candidates: {candidates}"
         context = f"{context} {word}".strip()
-        set_context(context)
-
-
-def test_regular_flow_with_glancewriter():
-    decoder_id, _ = init_decoder("glancewriter", LAYOUT)
-
-    ready = False
-    while not ready:
-        print(f"Checking if decoder {decoder_id} is ready...")
-        ready = check_ready(decoder_id)
-
-    context = ""
-    set_context(context)
-
-    for word, gaze_path in iter_words(LOG_DATA):
-        # Split in random chunks to simulate real-time input
-        reset_points()
-        i = 0
-        print(f"Adding points for word: '{word}'")
-        while i < len(gaze_path):
-            chunk_size = randint(1, 5)
-            chunk = gaze_path[i : i + chunk_size]
-            add_points(chunk)
-            i += chunk_size
-        stored_points = get_points()
-        assert len(gaze_path) == len(stored_points)
-
-        candidates = decode_gesture(decoder_id)
-        assert word in candidates, f"Expected '{word}' in candidates: {candidates}"
-        context = f"{context} {word}".strip()
-        set_context(context)
+        set_context(decoder_type, context)
 
 
 def init_decoder(decoder_type, layout):
@@ -113,12 +88,10 @@ def init_decoder(decoder_type, layout):
     )
     assert response.status_code == 200
     response_json = response.json()
-    decoder_id = response_json["decoder_id"]
     status = response_json["status"]
-    assert decoder_id is not None
     assert status is not None
 
-    return decoder_id, status
+    return status
 
 
 def check_ready(decoder_id):
@@ -128,43 +101,43 @@ def check_ready(decoder_id):
     return response.json()["ready"]
 
 
-def set_context(context):
-    print(f"Setting context: '{context}'")
+def set_context(decoder_type, context):
+    print(f"Setting context: '{context}' for decoder {decoder_type}")
     response = client.post(
-        "/context",
+        f"/decoder/{decoder_type}/context",
         json={"context": context},
     )
     assert response.status_code == 200
     assert response.json()["message"] == "context updated. OK"
 
 
-def reset_points():
-    print("Resetting points...")
-    response = client.post("/points/reset")
+def reset_points(decoder_type):
+    print(f"Resetting points for decoder {decoder_type}...")
+    response = client.post(f"/decoder/{decoder_type}/points/reset")
     assert response.status_code == 200
     assert response.json()["message"] == "Points reset successfully."
 
 
-def add_points(points):
+def add_points(decoder_type, points):
     response = client.post(
-        "/points",
+        f"/decoder/{decoder_type}/points",
         json={"points": points},
     )
     assert response.status_code == 200
     assert response.json()["message"] == "Points added successfully."
 
 
-def decode_gesture(decoder_id):
-    print(f"Decoding gesture with decoder {decoder_id}...")
+def decode_gesture(decoder_type):
+    print(f"Decoding gesture with decoder {decoder_type}...")
     response = client.post(
-        f"/decoder/{decoder_id}/decode",
+        f"/decoder/{decoder_type}/decode",
         json={"max_cand": 10},
     )
     assert response.status_code == 200
     return response.json()["decoded_words"]
 
 
-def get_points():
-    response = client.get("/points")
+def get_points(decoder_type):
+    response = client.get(f"/decoder/{decoder_type}/points")
     assert response.status_code == 200
     return response.json()["points"]

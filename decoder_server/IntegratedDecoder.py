@@ -20,7 +20,6 @@ class IntegratedWordScore:
 class IntegratedDecoder(BaseDecoder):
     def __init__(
         self,
-        decoder_id: str,
         gesture_weight: float = 0.8,
         language_weight: float = 0.2,
         combine_x: float = 0.8,
@@ -29,7 +28,7 @@ class IntegratedDecoder(BaseDecoder):
         ] = linear_combiner,
         keyboard_config: dict[str, tuple[float, float, float, float]] | None = None,
     ):
-        super().__init__(decoder_id=decoder_id)
+        super().__init__()
         self.suffix_decoder = SuffixGestureDecoder(keyboard_config=keyboard_config)
         self.language_model = GPT2LanguageModel()
         self.combiner_fn = combiner(gesture_weight, language_weight, combine_x)
@@ -37,6 +36,7 @@ class IntegratedDecoder(BaseDecoder):
         self.language_weight = language_weight
         self.combine_x = combine_x
         self.context = ""
+        self.processing_context = False
 
     def update_layout(
         self, layout: dict[str, tuple[float, float, float, float]]
@@ -52,13 +52,18 @@ class IntegratedDecoder(BaseDecoder):
         Set the context for the language model.
         :param context: The context string to set
         """
+        self.processing_context = True
         self.context = context.strip()
         self.language_model.preprocess_sentence(self.context)
+        self.processing_context = False
 
     def decode_word(
         self,
         top_n: int = 5,
     ) -> list[str]:
+        while self.processing_context:
+            print("Waiting for context processing to finish...")
+
         gesture_candidates = self.suffix_decoder.decode(self.points)
 
         language_probs = {}

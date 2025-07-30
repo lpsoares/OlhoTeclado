@@ -1,7 +1,5 @@
 class BaseDecoder:
-    def __init__(self, decoder_id: str):
-        self.decoder_id = decoder_id
-        self.active = True
+    def __init__(self):
         self.points = []
         self.context = ""
 

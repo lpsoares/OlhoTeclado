@@ -46,9 +46,23 @@ GET /
 }
 ```
 
-### 1. Create Decoder
+#### [Optional] List Available Decoders
 
-Create a new keyboard configuration and initialize the decoder:
+```bash
+GET /decoder
+```
+
+**Response:**
+
+```json
+{
+  "decoders": ["suffix", "glancewriter"]
+}
+```
+
+### 1. Initialize Decoder
+
+Create or update a new keyboard configuration and initialize the decoder:
 
 ```bash
 POST /decoder/{decoder_type}
@@ -74,36 +88,38 @@ POST /decoder/{decoder_type}
 
 ```json
 {
-  "decoder_id": "0",
-  "status": "initializing"
+  "status": "ready"
 }
 ```
 
-### 2. Check Decoder Status
+#### [Optional] Check Decoder Status
 
-Monitor the decoder initialization progress:
+Get the status of a specific decoder:
 
 ```bash
-GET /decoder/{decoder_id}
+GET /decoder/{decoder_type}
 ```
 
 **Response:**
 
 ```json
 {
-  "decoder_id": "0",
   "status": "ready",
   "ready": true
 }
 ```
 
-### 3. Set Context
+### 2. Set Context
 
 Provide context. (it will also be used as a reset context, by using it with an empty string as the body)
 
 ```bash
-POST /context
+POST /decoder/{decoder_type}/context
 ```
+
+**Path Parameters:**
+
+- `decoder_type`: Type of decoder to create, either `suffix` or `glancewriter`.
 
 **Body:**
 
@@ -113,13 +129,17 @@ POST /context
 }
 ```
 
-### 4. Add Gesture Points
+### 3. Add Gesture Points
 
 Add swipe gesture coordinates:
 
 ```bash
-POST /points
+POST /decoder/{decoder_type}/points
 ```
+
+**Path Parameters:**
+
+- `decoder_type`: Type of decoder to create, either `suffix` or `glancewriter`.
 
 **Body:**
 
@@ -140,8 +160,12 @@ POST /points
 Get word predictions from the accumulated points:
 
 ```bash
-POST /decoder/{decoder_id}/decode
+POST /decoder/{decoder_type}/decode
 ```
+
+**Path Parameters:**
+
+- `decoder_type`: Type of decoder to create, either `suffix` or `glancewriter`.
 
 **Response:**
 
@@ -156,9 +180,17 @@ POST /decoder/{decoder_id}/decode
 Clear accumulated points for next gesture:
 
 ```bash
-POST /points/reset
+POST /decoder/{decoder_type}/points/reset
 ```
 
-NOTES:
+**Path Parameters:**
 
-- When integrating, if there's an overhead in getting the prediction with increasing size contexts, it is possible to build a logic to pre compute the language probabilities as a background task in the moment the context is updated
+- `decoder_type`: Type of decoder to create, either `suffix` or `glancewriter`.
+
+**Response:**
+
+```json
+{
+  "message": "Points reset successfully."
+}
+```

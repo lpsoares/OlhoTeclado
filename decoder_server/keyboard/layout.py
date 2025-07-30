@@ -66,6 +66,14 @@ class KeyboardLayout:
             self.from_file(layout_file)
 
     @property
+    def is_initialized(self) -> bool:
+        """
+        Returns True if the keyboard layout is initialized, False otherwise.
+        :return: True if initialized, False otherwise.
+        """
+        return bool(self.buttons)
+
+    @property
     def key_size(self) -> float:
         return self.buttons["aKey"].key_size
 

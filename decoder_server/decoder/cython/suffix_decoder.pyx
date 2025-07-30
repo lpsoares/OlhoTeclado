@@ -47,18 +47,16 @@ cdef class SuffixGestureDecoder:
     def __init__(self, keyboard_config: dict[str, tuple[float, float, float, float]] = None):
         self._decoder = CDecoder()
         self._trie = ctrie.Trie()
+        self.keyboard = KeyboardLayout()
         if keyboard_config:
-            self.keyboard = KeyboardLayout()
             self.keyboard.from_keyboard_config(keyboard_config)
-        else:
-            self.keyboard = KeyboardLayout(ASSETS / 'keys.csv')
+        
+            for c in "abcdefghijklmnopqrstuvwxyz'":
+                self.key_centers[c] = self.keyboard[c].normalized_center
 
         with open(ASSETS / 'words.txt', 'r', encoding='utf-8') as f:
             for line in f:
                 self._trie.insert(line.strip()[::-1])
-
-        for c in "abcdefghijklmnopqrstuvwxyz'":
-            self.key_centers[c] = self.keyboard[c].normalized_center
 
     def update_layout(self, layout: dict[str, tuple[float, float, float, float]]) -> None:
         """
@@ -67,6 +65,7 @@ cdef class SuffixGestureDecoder:
         """
         self.keyboard.from_keyboard_config(layout)
         self.key_centers.clear()
+        
         for c in "abcdefghijklmnopqrstuvwxyz'":
             self.key_centers[c] = self.keyboard[c].normalized_center
 
@@ -83,6 +82,7 @@ cdef class SuffixGestureDecoder:
         if not gesture:
             return []
 
+        assert self.keyboard.is_initialized
         key_size = self.keyboard.key_size
         reversed_gesture = [(x, y) for _, x, y in filter_fixations(gesture, threshold=key_size/2)][::-1]
         reversed_gesture = [(x / key_size, y / key_size) for x, y in reversed_gesture]

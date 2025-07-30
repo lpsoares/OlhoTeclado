@@ -80,11 +80,14 @@ class GlanceWriterDecoder(BaseDecoder):
             predictions = self.language_model.predict_next_word(context)
 
         for candidate in top_candidates:
-            lm_score = predictions.get(candidate.word, 0.0) if predictions else 1.0
+            lm_score = 1.0
+            if predictions:
+                # We use the square root of the LM score to balance it with the gesture score
+                # This is a heuristic to ensure that the LM score does not overpower the gesture score
+                lm_score = predictions.get(candidate.word, 0.0) ** 0.5
             prob = candidate.score * lm_score
             results.append((candidate.word, prob))
         results.sort(key=lambda x: x[1], reverse=True)
-        print(f"Results: {results}")
 
         return [word for word, _ in results[:top_n]]
 

@@ -11,12 +11,17 @@ from iterdata.datareader import find_keyboard_config, iter_words, read_log_file
 from .main import app
 
 DATA = Path(__file__).parent / ".." / ".." / "experiment_server" / "data"
-SESSION_DIR = DATA / "TestParticipant" / "green" / "session-02"
-LOG_FILE = SESSION_DIR / "trial-006.csv"
+SUFFIX_LOG_FILE = DATA / "TestParticipant" / "green" / "session-02" / "trial-006.csv"
+GLANCEWRITER_LOG_FILE = (
+    DATA / "TestParticipant" / "blue" / "session-02" / "trial-003.csv"
+)
 
 
-LOG_DATA = read_log_file(LOG_FILE)
-LAYOUT = find_keyboard_config(LOG_DATA)
+LOG_DATA = {
+    "suffix": read_log_file(SUFFIX_LOG_FILE),
+    "glancewriter": read_log_file(GLANCEWRITER_LOG_FILE),
+}
+LAYOUT = {name: find_keyboard_config(log_data) for name, log_data in LOG_DATA.items()}
 
 
 # This may take a while because it loads the model
@@ -33,25 +38,23 @@ def test_ping():
 def test_list_decoders():
     response = client.get("/decoder")
     assert response.status_code == 200
-    assert response.json() == {
-        "decoders": ["suffix", "glancewriter"]
-    }
+    assert response.json() == {"decoders": ["suffix", "glancewriter"]}
 
 
 def test_initializing_same_decoder_multiple_times():
     for _ in range(3):
-        init_decoder("suffix", LAYOUT)
-        init_decoder("glancewriter", LAYOUT)
+        for decoder_type in ["suffix", "glancewriter"]:
+            init_decoder(decoder_type, LAYOUT[decoder_type])
 
 
 def test_status_of_non_existent_decoder():
     response = client.get("/decoder/non_existent")
     assert response.status_code == 422
-    
+
 
 @pytest.mark.parametrize("decoder_type", ["suffix", "glancewriter"])
-def test_regular_flow_with_suffix(decoder_type):
-    init_decoder(decoder_type, LAYOUT)
+def test_regular_flow_with_(decoder_type):
+    init_decoder(decoder_type, LAYOUT[decoder_type])
 
     ready = False
     while not ready:
@@ -61,7 +64,7 @@ def test_regular_flow_with_suffix(decoder_type):
     context = ""
     set_context(decoder_type, context)
 
-    for word, gaze_path in iter_words(LOG_DATA):
+    for word, gaze_path in iter_words(LOG_DATA[decoder_type]):
         # Split in random chunks to simulate real-time input
         reset_points(decoder_type)
         i = 0
@@ -131,7 +134,7 @@ def decode_gesture(decoder_type):
     print(f"Decoding gesture with decoder {decoder_type}...")
     response = client.post(
         f"/decoder/{decoder_type}/decode",
-        json={"max_cand": 10},
+        # json={"max_cand": 10},
     )
     assert response.status_code == 200
     return response.json()["decoded_words"]

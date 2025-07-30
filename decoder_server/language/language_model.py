@@ -79,14 +79,16 @@ class GPT2LanguageModel:
     def _tokenize_cached(self, word: str, as_first_word: bool = True) -> tuple:
         """caches tokenization for most used words"""
         word = word.strip()
-        if not as_first_word:
-            word = f" {word}"
+        if as_first_word:
+            word = f"{word} "
+        else:
+            word = f" {word} "
         tokens = self.tokenizer.encode(word, return_tensors="pt")[0].tolist()
         return tuple(tokens)
 
     def preprocess_sentence(self, sentence: str) -> None:
         """Run prediction with context to store it in the LRU cache"""
-        self._get_sentence_encoding(sentence)
+        self._get_last_token_logits(sentence)
 
     def predict_next_word(self, sentence: str) -> Dict[str, float]:
         """Predicts the next word probabilities based on a given sentence"""
@@ -109,28 +111,26 @@ class GPT2LanguageModel:
         return result
 
     @lru_cache(maxsize=1000)
-    def _get_sentence_encoding(self, sentence: str) -> torch.Tensor:
+    def _get_last_token_logits(self, sentence: str) -> torch.Tensor:
         sentence = sentence.strip() or " "
-        return self.tokenizer.encode(sentence, return_tensors="pt").to(self.device)
+        inputs = self.tokenizer.encode(sentence, return_tensors="pt").to(self.device)
+        with torch.no_grad():
+            with torch.inference_mode():
+                outputs = self.model(inputs)
+                return outputs.logits[0, -1, :]
 
     def _get_next_token_probabilities(
         self, sentence: str, token_ids: List[int]
     ) -> Dict[int, float]:
         """gets the next token probabilities for a given sentence and token IDs"""
-        inputs = self._get_sentence_encoding(sentence)
+        last_token_logits = self._get_last_token_logits(sentence)
 
         token_ids_tensor = torch.tensor(token_ids, device=self.device, dtype=torch.long)
+        relevant_logits = last_token_logits[token_ids_tensor]
+        probabilities = self.softmax(relevant_logits, dim=0)
 
-        with torch.no_grad():
-            with torch.inference_mode():
-                outputs = self.model(inputs)
-                last_token_logits = outputs.logits[0, -1, :]
-
-                relevant_logits = last_token_logits[token_ids_tensor]
-                probabilities = self.softmax(relevant_logits, dim=0)
-
-                return dict(zip(token_ids, probabilities.cpu().numpy().tolist()))
+        return dict(zip(token_ids, probabilities.cpu().numpy().tolist()))
 
     def clear_cache(self):
         self._tokenize_cached.cache_clear()
-        self._get_sentence_encoding.cache_clear()
+        self._get_last_token_logits.cache_clear()

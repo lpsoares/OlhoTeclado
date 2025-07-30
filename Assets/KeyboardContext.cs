@@ -208,7 +208,7 @@ public class KeyboardContext : MonoBehaviour
         float x0 = -(keyLayout[0].Count - 1) * (keySpacing + keySize) / 2.0f; // Center the row (x0 is the center of the leftmost key)
         for (int row = 0; row < keyLayout.Count; row++)
         {
-            x0 += row * ((keySpacing + keySize) / 2); // Adjust x0 for each row
+            x0 += (keySpacing + keySize) / 2; // Adjust x0 for each row
             float y0 = keyboardY0 - row * (keySpacing + keySize);
 
             for (int col = 0; col < keyLayout[row].Count; col++)

@@ -38,9 +38,6 @@ public class KeyboardManager : MonoBehaviour
 
     void Start()
     {
-        decoderAPI = new DecoderAPI();
-        StartCoroutine(decoderAPI.StartRequestLoop());
-
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
@@ -148,9 +145,13 @@ public class KeyboardManager : MonoBehaviour
                 Keyboard = new RedKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             case KeyboardType.Blue:
+                decoderAPI = new DecoderAPI("glancewriter");
+                StartCoroutine(decoderAPI.StartRequestLoop());
                 Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             case KeyboardType.Green:
+                decoderAPI = new DecoderAPI("suffix");
+                StartCoroutine(decoderAPI.StartRequestLoop());
                 Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 break;
             default:

@@ -8,14 +8,15 @@ public class DecoderAPI
 {
     private readonly string baseUrl = "http://localhost:8000";
     private readonly PeekEndQueue<DecoderRequest> requestQueue = new();
-    private string decoderId = string.Empty;
+    private readonly string decoderType;
     public Dictionary<string, List<float>> Keys;
     private bool isReady = false;
     private bool shouldReset = false;
 
-    public DecoderAPI(string baseUrl = "http://localhost:8000")
+    public DecoderAPI(string decoderType, string baseUrl = "http://localhost:8000")
     {
         this.baseUrl = baseUrl;
+        this.decoderType = decoderType;
     }
 
     public IEnumerator StartRequestLoop()
@@ -33,39 +34,35 @@ public class DecoderAPI
         body = body.TrimEnd(',') + "}";
         Debug.Log($"Initializing decoder with body: {body}");
 
-        while (decoderId.Length == 0)
+        UnityWebRequest startRequest = UnityWebRequest.Post($"{baseUrl}/decoder/{decoderType}", body, "application/json");
+        var startOperation = startRequest.SendWebRequest();
+        while (!startOperation.isDone)
         {
-            UnityWebRequest startRequest = UnityWebRequest.Post($"{baseUrl}/decoder/suffix", body, "application/json");
-            var operation = startRequest.SendWebRequest();
-            while (!operation.isDone)
+            yield return null;
+        }
+        if (startRequest.result == UnityWebRequest.Result.ConnectionError || startRequest.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.Log($"Error in request: {startRequest.error}");
+            yield return null;
+        }
+        else
+        {
+            try
             {
-                yield return null;
+                string jsonResponse = startRequest.downloadHandler.text;
+                DecoderResponse responseData = JsonUtility.FromJson<DecoderResponse>(jsonResponse);
+                isReady = responseData.status == "ready";
             }
-            if (startRequest.result == UnityWebRequest.Result.ConnectionError || startRequest.result == UnityWebRequest.Result.ProtocolError)
+            catch (Exception e)
             {
-                Debug.Log($"Error in request: {startRequest.error}");
-                yield return null;
-            }
-            else
-            {
-                try
-                {
-                    string jsonResponse = startRequest.downloadHandler.text;
-                    DecoderResponse responseData = JsonUtility.FromJson<DecoderResponse>(jsonResponse);
-                    decoderId = responseData.decoder_id;
-                    isReady = responseData.status == "ready";
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"Error parsing JSON response: {e.Message}");
-                }
+                Debug.LogError($"Error parsing JSON response: {e.Message}");
             }
         }
 
         while (!isReady)
         {
             yield return new WaitForSeconds(1f);
-            UnityWebRequest statusRequest = UnityWebRequest.Get($"{baseUrl}/decoder/{decoderId}");
+            UnityWebRequest statusRequest = UnityWebRequest.Get($"{baseUrl}/decoder/{decoderType}");
             statusRequest.SetRequestHeader("Content-Type", "application/json");
             var statusOperation = statusRequest.SendWebRequest();
             while (!statusOperation.isDone)
@@ -101,8 +98,8 @@ public class DecoderAPI
             {
                 var request = requestQueue.Dequeue();
                 UnityWebRequest webRequest = request.BuildRequest(baseUrl);
-                var operation = webRequest.SendWebRequest();
-                while (!operation.isDone)
+                var gestureOperation = webRequest.SendWebRequest();
+                while (!gestureOperation.isDone)
                 {
                     yield return null;
                 }
@@ -126,7 +123,7 @@ public class DecoderAPI
         Debug.Log($"Setting context: {body}");
         var request = new DecoderRequest
         {
-            endpoint = "/context",
+            endpoint = $"/decoder/{decoderType}/context",
             method = "POST",
             data = body,
         };
@@ -139,7 +136,7 @@ public class DecoderAPI
         {
             requestQueue.Enqueue(new DecoderRequest
             {
-                endpoint = "/points/reset",
+                endpoint = $"/decoder/{decoderType}/points/reset",
                 method = "POST",
             });
             shouldReset = false;
@@ -148,7 +145,7 @@ public class DecoderAPI
         // If last request is not an AddGesturePointsRequest, create a new one
         if (requestQueue.Count == 0 || requestQueue.PeekEnd() is not AddGesturePointsRequest)
         {
-            requestQueue.Enqueue(new AddGesturePointsRequest());
+            requestQueue.Enqueue(new AddGesturePointsRequest(decoderType));
         }
         var addGesturePointsRequest = requestQueue.PeekEnd() as AddGesturePointsRequest;
         addGesturePointsRequest?.AddPoint(timestamp, x, y);
@@ -158,7 +155,7 @@ public class DecoderAPI
     {
         requestQueue.Enqueue(new DecoderRequest
         {
-            endpoint = $"/decoder/{decoderId}/decode",
+            endpoint = $"/decoder/{decoderType}/decode",
             method = "POST",
             callback = (response) =>
             {
@@ -211,9 +208,9 @@ public class AddGesturePointsRequest : DecoderRequest
 {
     private readonly List<string> points = new();
 
-    public AddGesturePointsRequest()
+    public AddGesturePointsRequest(string decoderType)
     {
-        endpoint = "/points";
+        endpoint = $"/decoder/{decoderType}/points";
         method = "POST";
     }
 

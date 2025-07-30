@@ -13,6 +13,7 @@ public class GreenKeyboard : AbstractKeyboard
     private List<WordCandidates> wordSequence = new();
     private Color backgroundColor = new(0.01f, 0.55f, 0.01f);
     private Color keyColor = new(0.01f, 0.25f, 0.01f);
+    private Color keyHighlightColor = new(0.01f, 0.35f, 0.01f);
     private bool decodingGesture = false;
 
     public GreenKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners, List<IKeyPressListener> keyPressListeners)
@@ -29,11 +30,12 @@ public class GreenKeyboard : AbstractKeyboard
             {
                 new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
                 new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
-                new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'", "." },
+                new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'" },
             }, 5, new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "'" });
             keyboardContexts.Add(context);
             context.backgroundColor = backgroundColor;
             context.keyColor = keyColor;
+            context.highlightColor = keyHighlightColor;
             context.State = states[i];
             context.Depth = context.TargetDepth;
 
@@ -140,6 +142,10 @@ public class GreenKeyboard : AbstractKeyboard
                     {
                         Debug.Log("No words decoded.");
                     }
+                }, (error) =>
+                {
+                    Debug.Log($"Error decoding gesture: {error}");
+                    decodingGesture = false;
                 });
             }
         }

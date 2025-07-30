@@ -6,6 +6,7 @@ public class TextOutput : MonoBehaviour
 {
     public string text = "Hello, World!";
     private TextMeshPro textMeshPro;
+    public Color textColor = Color.white;
 
     void Start()
     {
@@ -19,7 +20,7 @@ public class TextOutput : MonoBehaviour
         textMeshPro.text = text;
         textMeshPro.fontSize = 0.3f;
         textMeshPro.alignment = TextAlignmentOptions.Center;
-        textMeshPro.color = Color.white;
+        textMeshPro.color = textColor;
     }
 
     void Update()
@@ -27,6 +28,7 @@ public class TextOutput : MonoBehaviour
         if (textMeshPro != null)
         {
             textMeshPro.text = text;
+            textMeshPro.color = textColor;
         }
     }
 }

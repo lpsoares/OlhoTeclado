@@ -168,7 +168,7 @@ public class KeyboardContext : MonoBehaviour
             Vector3 gazePosition = CurrentGaze;
             if (gazePosition != Vector3.zero)
             {
-                float margin = 0.1f; // Margin to consider for gaze within keys
+                float margin = keySize; // Margin to consider for gaze within keys
                 Vector3 localGazePosition = transform.InverseTransformPoint(gazePosition);
                 GazeInKeys = Mathf.Abs(localGazePosition.x - backgroundRect.transform.localPosition.x) <= margin + backgroundRect.transform.localScale.x / 2 &&
                              Mathf.Abs(localGazePosition.y - backgroundRect.transform.localPosition.y) <= margin + backgroundRect.transform.localScale.y / 2;
@@ -189,11 +189,10 @@ public class KeyboardContext : MonoBehaviour
         keyLayout = newLayout;
         CleanUp();
 
-        float keyboardOffsetY = -0.4f;
-        float keyboardY0 = keyboardOffsetY + 3 * keySpacing + 2.5f * keySize;
+        float keyboardY0 = -5 * (keySize + keySpacing);
 
         // Create background rectangle
-        float padding = 2 * keySpacing;
+        float padding = keySize;
         float width = keyLayout[0].Count * (keySize + keySpacing) - keySpacing + padding * 2;
         float height = keyLayout.Count * (keySize + keySpacing) - keySpacing + padding * 2;
         backgroundRect = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -202,13 +201,12 @@ public class KeyboardContext : MonoBehaviour
         backgroundMaterial.SetTransparent((int)UnityEngine.Rendering.RenderQueue.AlphaTest);
 
         // Position the background rectangle slightly behind the keys and centered at the keyboard
-        backgroundRect.transform.localPosition = new Vector3(0, keyboardY0 - keyLayout.Count / 2 * keySpacing - keyLayout.Count / 2f * keySize, keySize / 5);
+        backgroundRect.transform.localPosition = new Vector3(0, keyboardY0 - (keyLayout.Count - 1) * (keySpacing + keySize) / 2f, keySize / 5);
         backgroundRect.transform.localScale = new Vector3(width, height, keySize / 10);
 
         float x0 = -(keyLayout[0].Count - 1) * (keySpacing + keySize) / 2.0f; // Center the row (x0 is the center of the leftmost key)
         for (int row = 0; row < keyLayout.Count; row++)
         {
-            x0 += (keySpacing + keySize) / 2; // Adjust x0 for each row
             float y0 = keyboardY0 - row * (keySpacing + keySize);
 
             for (int col = 0; col < keyLayout[row].Count; col++)
@@ -217,9 +215,11 @@ public class KeyboardContext : MonoBehaviour
                 Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys == null || nonKeys.IndexOf(label) < 0, false, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf(label) >= 0, keyPressListener);
                 Keys.Add(key);
             }
+
+            x0 += (keySpacing + keySize) / 2; // Adjust x0 for next row
         }
 
-        float candidateButtonWidth = width / candidateButtonCount;
+        float candidateButtonWidth = (width - keySpacing * (candidateButtonCount - 1)) / candidateButtonCount;
         float candidateButtonsX0 = (candidateButtonWidth - width) / 2;
         float candidateButtonsY0 = keyboardY0 + 3 * (keySpacing + keySize);
         for (int i = 0; i < candidateButtonCount; i++)

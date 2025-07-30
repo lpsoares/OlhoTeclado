@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class KeyboardManager : MonoBehaviour
 {
     public Camera mainCamera; // Assign in Inspector or find in Start
-    public float distanceInFront = 2f; // Distance in front of the camera
+    public float distanceInFront = 0.65f; // Distance in front of the camera
     
     public GameObject keyboardContextPrefab;
     
@@ -78,12 +78,13 @@ public class KeyboardManager : MonoBehaviour
 
         textReference = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textReference.transform.SetParent(transform);
-        textReference.transform.localPosition = new Vector3(0, 0.30f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textReference.transform.localPosition = new Vector3(0, OneDegreeInMeters, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textReference.text = "";
+        textReference.textColor = new Color(0.5f, 0.5f, 0.5f);
 
         textOutput = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textOutput.transform.SetParent(transform);
-        textOutput.transform.localPosition = new Vector3(0, 0.25f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textOutput.transform.localPosition = new Vector3(0, -2 * OneDegreeInMeters, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textOutput.text = "";
 
         // Instantiate a red sphere for gaze debugging
@@ -146,13 +147,15 @@ public class KeyboardManager : MonoBehaviour
                 break;
             case KeyboardType.Blue:
                 decoderAPI = new DecoderAPI("glancewriter");
-                StartCoroutine(decoderAPI.StartRequestLoop());
                 Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
+                // Must be started after the keyboard is instantiated because it needs the key positions
+                StartCoroutine(decoderAPI.StartRequestLoop());
                 break;
             case KeyboardType.Green:
                 decoderAPI = new DecoderAPI("suffix");
-                StartCoroutine(decoderAPI.StartRequestLoop());
                 Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
+                // Must be started after the keyboard is instantiated because it needs the key positions
+                StartCoroutine(decoderAPI.StartRequestLoop());
                 break;
             default:
                 Debug.LogError($"Unknown keyboard type: {type}. Using RedKeyboard as default.");
@@ -164,7 +167,18 @@ public class KeyboardManager : MonoBehaviour
     {
         KeyboardContext context = Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>();
         context.transform.SetParent(transform);
+        // Key size is 1 degree of visual angle at distanceInFront
+        context.keySize = 2 * OneDegreeInMeters;
+        context.keySpacing = OneDegreeInMeters;
         return context;
+    }
+
+    private float OneDegreeInMeters
+    {
+        get
+        {
+            return 2 * Mathf.Tan(Mathf.Deg2Rad * 0.5f) * distanceInFront;
+        }
     }
 
     private void CleanUpContexts()

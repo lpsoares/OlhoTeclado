@@ -106,6 +106,7 @@ public class DecoderAPI
                 if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
                 {
                     Debug.Log($"Error in request: {webRequest.error}");
+                    request.errorCallback?.Invoke(webRequest.error);
                     yield return null;
                 }
                 else
@@ -151,7 +152,7 @@ public class DecoderAPI
         addGesturePointsRequest?.AddPoint(timestamp, x, y);
     }
 
-    public void DecodeGesture(Action<List<string>> onDecoded)
+    public void DecodeGesture(Action<List<string>> onDecoded, Action<string> onError = null)
     {
         requestQueue.Enqueue(new DecoderRequest
         {
@@ -162,6 +163,7 @@ public class DecoderAPI
                 DecodeGestureResponse decoded = JsonUtility.FromJson<DecodeGestureResponse>(response);
                 onDecoded?.Invoke(decoded.decoded_words);
             },
+            errorCallback = onError,
         });
     }
 
@@ -177,6 +179,7 @@ public class DecoderRequest
     public string method;  // GET or POST
     public string data;  // JSON data for POST requests
     public Action<string> callback;  // Callback to handle the response
+    public Action<string> errorCallback;  // Callback for errors
     public Type T;
 
     public UnityWebRequest BuildRequest(string baseUrl)

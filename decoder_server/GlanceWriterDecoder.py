@@ -82,14 +82,16 @@ class GlanceWriterDecoder(BaseDecoder):
         for candidate in top_candidates:
             lm_score = 1.0
             if predictions:
-                # We use the square root of the LM score to balance it with the gesture score
+                # We use the power of the LM score to balance it with the gesture score
                 # This is a heuristic to ensure that the LM score does not overpower the gesture score
-                lm_score = predictions.get(candidate.word, 0.0) ** 0.5
+                lm_score = predictions.get(candidate.word, 0.0) ** 0.1
             prob = candidate.score * lm_score
-            results.append((candidate.word, prob))
+            results.append((candidate.word, prob, candidate.score, lm_score))
         results.sort(key=lambda x: x[1], reverse=True)
+        for result in results:
+            print(f"Word: {result[0]}, Score: {result[1]}, Gesture Score: {result[2]}, LM Score: {result[3]}")
 
-        return [word for word, _ in results[:top_n]]
+        return [word for word, *_ in results[:top_n]]
 
     def add_points(self, points: list[tuple[float, float, float]]):
         """

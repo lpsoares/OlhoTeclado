@@ -16,6 +16,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
     private Color highlightColor = new(0.7f, 0.7f, 1.0f);
     private Color dwellColor = new(0.6f, 0.6f, 0.8f);
     private bool decodingGesture = false;
+    private float lastDecodeTime = 0f;
     private bool isOutside = true;
 
     public BlueKeyboard(ContextGazeInteraction contextGazeInteraction, Func<KeyboardContext> instantiateContext, DecoderAPI decoderAPI, List<ITextChangeListener> textChangeListeners, List<IContextChangeListener> contextChangeListeners, List<IContextPositionsListener> contextPositionListeners, List<ICandidateListListener> candidateListListeners, List<IKeyPressListener> keyPressListeners)
@@ -29,7 +30,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
         {
             new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
             new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
-            new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'", "." },
+            new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'" },
         }, 5, dwellEnabledKeys: new List<string> { "Candidate_Keys", "Backspace" }, keyPressListener: this, withBackspace: true);
         keyboardContexts.Add(context);
         context.backgroundColor = backgroundColor;
@@ -70,6 +71,11 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             }
 
             decoderAPI.AddGesturePoint(Time.time * 1000, gaze2DInContext.x, gaze2DInContext.y);
+            if (!decodingGesture && Time.time - lastDecodeTime > 0.5f)
+            {
+                lastDecodeTime = Time.time;
+                DecodeGazePath();
+            }
         }
         else
         {
@@ -85,12 +91,10 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
 
     private void DecodeGazePath()
     {
-        ResetAllContextCandidates();
-     
         decodingGesture = true;
-        context.Candidates = Enumerable.Repeat("...", 10).ToList();
         decoderAPI.DecodeGesture((decodedWords) =>
         {
+            List<string> prevCandidates = context.Candidates.ToList();
             decodingGesture = false;
             if (decodedWords.Count > 0)
             {
@@ -112,16 +116,15 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
                     context.Candidates = new List<string>();
                 }
             }
-            NotifyCandidateListListeners(context.Candidates.ToArray());
-        });
-    }
-
-    private void ResetAllContextCandidates()
-    {
-        foreach (var ctx in keyboardContexts)
+            if (prevCandidates.Count != context.Candidates.Count || !prevCandidates.SequenceEqual(context.Candidates))
+            {
+                NotifyCandidateListListeners(context.Candidates.ToArray());
+            }
+        }, (error) =>
         {
-            ctx.Candidates = new List<string>();
-        }
+            Debug.Log($"Error decoding gesture: {error}");
+            decodingGesture = false;
+        });
     }
 
     private void UpdateTextFromSequence()
@@ -161,7 +164,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
     {
         base.ResetText();
         wordSequence.Clear();
-        ResetAllContextCandidates();
+        context.Candidates = new List<string>();
         decoderAPI.SetContext(Text);
     }
 

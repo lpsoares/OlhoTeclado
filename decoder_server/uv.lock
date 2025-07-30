@@ -1312,6 +1312,7 @@ dev = [
     { name = "fastapi", extra = ["standard"] },
     { name = "httpx" },
     { name = "pytest" },
+    { name = "tqdm" },
 ]
 
 [package.metadata]
@@ -1331,6 +1332,7 @@ dev = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.116.1" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pytest", specifier = ">=8.4.1" },
+    { name = "tqdm", specifier = ">=4.67.1" },
 ]
 
 [[package]]

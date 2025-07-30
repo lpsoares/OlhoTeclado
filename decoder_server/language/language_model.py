@@ -110,7 +110,7 @@ class GPT2LanguageModel:
 
     @lru_cache(maxsize=1000)
     def _get_sentence_encoding(self, sentence: str) -> torch.Tensor:
-        sentence = sentence.strip() + " "  # Ensure there's a space at the end
+        sentence = sentence.strip() or " "
         return self.tokenizer.encode(sentence, return_tensors="pt").to(self.device)
 
     def _get_next_token_probabilities(
@@ -133,5 +133,4 @@ class GPT2LanguageModel:
 
     def clear_cache(self):
         self._tokenize_cached.cache_clear()
-        self._get_sentence_encoding.cache_clear()
         self._get_sentence_encoding.cache_clear()

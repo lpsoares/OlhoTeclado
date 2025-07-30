@@ -9830,3 +9830,6 @@ configurations
 poison
 minimization
 cognizant
+jumps
+barked
+sang

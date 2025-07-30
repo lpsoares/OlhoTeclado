@@ -78,7 +78,7 @@ public class KeyboardManager : MonoBehaviour
 
         textReference = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textReference.transform.SetParent(transform);
-        textReference.transform.localPosition = new Vector3(0, 0.20f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textReference.transform.localPosition = new Vector3(0, 0.30f, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textReference.text = "";
 
         textOutput = Instantiate(textOutputPrefab).GetComponent<TextOutput>();

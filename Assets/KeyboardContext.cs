@@ -222,7 +222,12 @@ public class KeyboardContext : MonoBehaviour
             for (int col = 0; col < keyLayout[row].Count; col++)
             {
                 string label = keyLayout[row][col];
-                Key key = InstantiateKey("Key_" + label, label, x0 + col * (keySpacing + keySize), y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys == null || nonKeys.IndexOf(label) < 0, false, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf(label) >= 0, keyPressListener);
+                float x = x0 + col * (keySpacing + keySize);
+                if (label == " ")
+                {
+                    x = 0; // Center space key
+                }
+                Key key = InstantiateKey("Key_" + label, label, x, y0, keySize * (1 + 0.25f * (label == " " ? 8 : 0)), keySize, keySize / 10, nonKeys == null || nonKeys.IndexOf(label) < 0, false, dwellEnabledKeys != null && dwellEnabledKeys.IndexOf(label) >= 0, keyPressListener);
                 Keys.Add(key);
             }
 

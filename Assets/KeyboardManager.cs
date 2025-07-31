@@ -132,7 +132,7 @@ public class KeyboardManager : MonoBehaviour
 
     public void SetKeyboardType(KeyboardType type)
     {
-        if (keyboardType == type)
+        if (keyboardType == type && Keyboard != null)
         {
             return; // No change needed
         }
@@ -144,18 +144,21 @@ public class KeyboardManager : MonoBehaviour
         {
             case KeyboardType.Red:
                 Keyboard = new RedKeyboard(contextGazeInteraction, InstantiateContext, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
+                Debug.Log("Using Red Keyboard");
                 break;
             case KeyboardType.Blue:
                 decoderAPI = new DecoderAPI("glancewriter");
                 Keyboard = new BlueKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 // Must be started after the keyboard is instantiated because it needs the key positions
                 StartCoroutine(decoderAPI.StartRequestLoop());
+                Debug.Log("Using Blue Keyboard");
                 break;
             case KeyboardType.Green:
                 decoderAPI = new DecoderAPI("suffix");
                 Keyboard = new GreenKeyboard(contextGazeInteraction, InstantiateContext, decoderAPI, textChangeListeners, contextChangeListeners, contextPositionListeners, candidateListListeners, keyPressListeners);
                 // Must be started after the keyboard is instantiated because it needs the key positions
                 StartCoroutine(decoderAPI.StartRequestLoop());
+                Debug.Log("Using Green Keyboard");
                 break;
             default:
                 Debug.LogError($"Unknown keyboard type: {type}. Using RedKeyboard as default.");

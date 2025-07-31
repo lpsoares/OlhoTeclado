@@ -25,6 +25,7 @@ public class RedKeyboard : AbstractKeyboard
             });
             keyboardContexts.Add(context);
             context.keyColor = new Color(0.55f, 0.01f, 0.01f);
+            context.highlightColor = new Color(0.85f, 0.01f, 0.01f);
             context.State = states[i];
             context.Depth = context.TargetDepth;
         }
@@ -71,6 +72,7 @@ public class RedKeyboard : AbstractKeyboard
                 }
                 if (stateDiff != 0)
                 {
+                    RichText = Text;
                     NotifyTextChangeListeners(Text);
                     foreach (var ctx in keyboardContexts)
                     {

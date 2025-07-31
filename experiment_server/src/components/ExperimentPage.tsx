@@ -1,4 +1,4 @@
-import { Method } from "@/models/method";
+import { Method, methods } from "@/models/method";
 import { Participant } from "@/models/participant";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -106,6 +106,7 @@ export default function ExperimentPage({
             className={clsx("font-bold", {
               "text-green-600": method === "green",
               "text-blue-600": method === "blue",
+              "text-red-600": method === "red",
             })}
           >
             {method.toLocaleUpperCase()}
@@ -202,8 +203,12 @@ function SelectMethod({ onChange, value, disabled }: SelectMethodProps) {
         <SelectValue placeholder="Select a method" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="green">Green</SelectItem>
-        <SelectItem value="blue">Blue</SelectItem>
+        {
+          methods.map((method) => (
+            <SelectItem key={method} value={method}>
+              {method.charAt(0).toUpperCase() + method.slice(1)}
+            </SelectItem>
+          ))}
       </SelectContent>
     </Select>
   );

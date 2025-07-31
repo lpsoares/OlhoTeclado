@@ -9,8 +9,11 @@ public class Key : MonoBehaviour
     public Material keyMaterial;
     public Color backgroundColor = new(0.15f, 0.15f, 0.15f);
     public Color textColor = new(1.0f, 1.0f, 1.0f);
-    public Color highlightColor = new(0.3f, 0.3f, 0.3f, 1.0f);
-    public Color dwellColor = new(0.5f, 0.5f, 1.0f, 0.5f);
+    public Color highlightColor = new(0.3f, 0.3f, 0.3f);
+    public Color dwellColor = new(0.5f, 0.5f, 1.0f);
+    public Color disabledColor = new(0.3f, 0.3f, 0.3f);
+    public Color disabledTextColor = new(0.7f, 0.7f, 0.7f);
+    public bool isDisabled = false;
     public float alpha = 1.0f;
     private TextMesh textMesh;
 
@@ -72,7 +75,7 @@ public class Key : MonoBehaviour
 
     void Update()
     {
-        if (dwellEnabled)
+        if (dwellEnabled && !isDisabled)
         {
             if (IsCurrent)
             {
@@ -121,8 +124,16 @@ public class Key : MonoBehaviour
         }
 
         textMesh.text = label;
-        keyMaterial.color = IsKey ? (IsCurrent ? highlightColor : backgroundColor).WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
-        textMesh.color = textColor.WithAlpha(alpha);
+        if (isDisabled)
+        {
+            keyMaterial.color = disabledColor.WithAlpha(alpha);
+            textMesh.color = disabledTextColor.WithAlpha(alpha);
+        }
+        else
+        {
+            keyMaterial.color = IsKey ? (IsCurrent ? highlightColor : backgroundColor).WithAlpha(Math.Min(backgroundColor.a, alpha)) : Color.clear;
+            textMesh.color = textColor.WithAlpha(alpha);
+        }
 
         float z = 0.0f;
         float scaleFactor = 1.0f;

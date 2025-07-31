@@ -112,8 +112,8 @@ public class GreenKeyboard : AbstractKeyboard
                 if (lastKey.IsCandidateKey)
                 {
                     wordSequence[^1].CurrentWord = lastKey.label.ToLower();
-                    curContext.Candidates = wordSequence[^1].Candidates;
-                    NotifyCandidateListListeners(curContext.Candidates.ToArray());
+                    curContext.CandidateData = wordSequence[^1];
+                    NotifyCandidateListListeners(curContext.CandidateData.Candidates.ToArray());
                 }
                 else
                 {
@@ -125,26 +125,29 @@ public class GreenKeyboard : AbstractKeyboard
             else
             {
                 decodingGesture = true;
-                curContext.Candidates = Enumerable.Repeat("...", 10).ToList();
+                curContext.CandidateData = new WordCandidates(string.Empty, Enumerable.Repeat("...", 10).ToList());
                 decoderAPI.DecodeGesture((decodedWords) =>
                 {
                     decodingGesture = false;
-                    curContext.Candidates = decodedWords;
-                    NotifyCandidateListListeners(curContext.Candidates.ToArray());
+                    curContext.CandidateData = new WordCandidates(string.Empty, decodedWords);
+                    NotifyCandidateListListeners(curContext.CandidateData.Candidates.ToArray());
                     if (decodedWords.Count > 0)
                     {
                         var candidates = new List<string>(decodedWords);
+                        curContext.CandidateData.CurrentWord = candidates[0];
                         wordSequence.Add(new WordCandidates(candidates[0], candidates));
                         Debug.Log($"Decoded words: {string.Join(", ", decodedWords)}");
                         UpdateTextFromSequence();
                     }
                     else
                     {
+                        curContext.CandidateData = WordCandidates.Empty;
                         Debug.Log("No words decoded.");
                     }
                 }, (error) =>
                 {
                     Debug.Log($"Error decoding gesture: {error}");
+                    curContext.CandidateData = WordCandidates.Empty;
                     decodingGesture = false;
                 });
             }
@@ -158,7 +161,7 @@ public class GreenKeyboard : AbstractKeyboard
                 wordSequence = wordSequence.GetRange(0, wordSequence.Count - 1);
                 if (wordSequence.Count > 0)
                 {
-                    curContext.Candidates = wordSequence[^1].Candidates;
+                    curContext.CandidateData = wordSequence[^1];
                 }
                 UpdateTextFromSequence();
             }
@@ -182,13 +185,13 @@ public class GreenKeyboard : AbstractKeyboard
     {
         foreach (var ctx in keyboardContexts)
         {
-            ctx.Candidates = new List<string>();
+            ctx.CandidateData = WordCandidates.Empty;
         }
     }
 
     private void UpdateTextFromSequence()
     {
-        bool markLast = curContext.Candidates.Count > 0;
+        bool markLast = curContext.CandidateData.Candidates.Count > 0;
 
         string previousText = Text;
         string text = string.Empty;

@@ -83,7 +83,7 @@ public class KeyboardContext : MonoBehaviour
 
     public readonly List<Key> Keys = new();
     public readonly List<Key> CandidateKeys = new();
-    public List<string> Candidates { get; set; } = new();
+    public WordCandidates CandidateData { get; set; } = WordCandidates.Empty;
     private List<List<string>> keyLayout;
     private KeyboardStateMachine keyboardStateMachine;
     private GameObject backgroundRect;
@@ -96,12 +96,19 @@ public class KeyboardContext : MonoBehaviour
 
     void Update()
     {
-        // Only show candidate keys if in current context
         for (int i = 0; i < CandidateKeys.Count; i++)
         {
             Key key = CandidateKeys[i];
-            string label = i < Candidates.Count ? Candidates[i] : string.Empty;
-            key.label = label;
+            if (i < CandidateData.Candidates.Count)
+            {
+                key.label = CandidateData.Candidates[i];
+                key.isDisabled = key.label == CandidateData.CurrentWord;
+            }
+            else
+            {
+                key.label = string.Empty;
+                key.isDisabled = true;
+            }
             key.gameObject.SetActive(State == KeyboardState.Current);
         }
 

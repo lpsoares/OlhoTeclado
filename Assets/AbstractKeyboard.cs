@@ -150,6 +150,8 @@ public class ContextPositionData
 
 public class WordCandidates
 {
+    internal static readonly WordCandidates Empty = new(string.Empty, new List<string>());
+
     public List<string> Candidates { get; } = new();
     public string CurrentWord { get; set; } = string.Empty;
 

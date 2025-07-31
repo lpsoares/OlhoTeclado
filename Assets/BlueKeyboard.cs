@@ -9,7 +9,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
     private readonly DecoderAPI decoderAPI;
     private readonly ContextGazeInteraction contextGazeInteraction;
     private readonly KeyboardContext context = null;
-    private List<WordCandidates> wordSequence = new();
+    private readonly List<WordCandidates> wordSequence = new();
     private Color backgroundColor = Color.clear;
     private Color keyColor = new(1.0f, 1.0f, 1.0f);
     private Color textColor = new(0.0f, 0.0f, 0.0f);
@@ -94,13 +94,14 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
         decodingGesture = true;
         decoderAPI.DecodeGesture((decodedWords) =>
         {
-            List<string> prevCandidates = context.Candidates.ToList();
+            List<string> prevCandidates = context.CandidateData.Candidates.ToList();
             decodingGesture = false;
             if (decodedWords.Count > 0)
             {
-                context.Candidates = decodedWords;
                 var candidates = new List<string>(decodedWords);
-                wordSequence.Add(new WordCandidates(string.Empty, candidates));
+                var newCandidates = new WordCandidates(string.Empty, candidates);
+                context.CandidateData = newCandidates;
+                wordSequence.Add(newCandidates);
                 Debug.Log($"Decoded words: {string.Join(", ", decodedWords)}");
                 UpdateTextFromSequence();
             }
@@ -109,16 +110,16 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
                 Debug.Log("No words decoded. Going back to previous state.");
                 if (wordSequence.Count > 0)
                 {
-                    context.Candidates = wordSequence.Last().Candidates;
+                    context.CandidateData = wordSequence.Last();
                 }
                 else
                 {
-                    context.Candidates = new List<string>();
+                    context.CandidateData = WordCandidates.Empty;
                 }
             }
-            if (prevCandidates.Count != context.Candidates.Count || !prevCandidates.SequenceEqual(context.Candidates))
+            if (prevCandidates.Count != context.CandidateData.Candidates.Count || !prevCandidates.SequenceEqual(context.CandidateData.Candidates))
             {
-                NotifyCandidateListListeners(context.Candidates.ToArray());
+                NotifyCandidateListListeners(context.CandidateData.Candidates.ToArray());
             }
         }, (error) =>
         {
@@ -129,7 +130,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
 
     private void UpdateTextFromSequence()
     {
-        bool markLast = context.Candidates.Count > 0;
+        bool markLast = context.CandidateData.Candidates.Count > 0;
 
         string previousText = Text;
         string text = string.Empty;
@@ -164,7 +165,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
     {
         base.ResetText();
         wordSequence.Clear();
-        context.Candidates = new List<string>();
+        context.CandidateData = WordCandidates.Empty;
         decoderAPI.SetContext(Text);
     }
 
@@ -177,7 +178,7 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
             {
                 var lastWord = wordSequence.Last();
                 lastWord.CurrentWord = key.label.ToLower();
-                context.Candidates = lastWord.Candidates;
+                context.CandidateData = lastWord;
                 NotifyCandidateListListeners(lastWord.Candidates.ToArray());
                 UpdateTextFromSequence();
             }
@@ -192,12 +193,12 @@ public class BlueKeyboard : AbstractKeyboard, IKeyPressListener
                 PopRightWhileEmpty();
                 if (wordSequence.Count > 0)
                 {
-                    context.Candidates = wordSequence.Last().Candidates;
-                    NotifyCandidateListListeners(context.Candidates.ToArray());
+                    context.CandidateData = wordSequence.Last();
+                    NotifyCandidateListListeners(context.CandidateData.Candidates.ToArray());
                 }
                 else
                 {
-                    context.Candidates = new List<string>();
+                    context.CandidateData = WordCandidates.Empty;
                 }
                 UpdateTextFromSequence();
             }

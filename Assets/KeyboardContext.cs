@@ -133,7 +133,10 @@ public class KeyboardContext : MonoBehaviour
             key.highlightColor = highlightColor;
             key.dwellColor = dwellColor;
         }
-        transform.localPosition = new Vector3(0, 0, Depth);
+        // y = 0 in Current context, but moves with the context depth
+        float degrees = 15f; 
+        float y = -Mathf.Tan(degrees * Mathf.Deg2Rad) * Depth;
+        transform.localPosition = new Vector3(0, y, Depth);
 
         UpdateGazeInKeys();
         if (backgroundColor.a == 0)

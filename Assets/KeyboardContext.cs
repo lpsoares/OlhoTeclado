@@ -109,7 +109,7 @@ public class KeyboardContext : MonoBehaviour
                 key.label = string.Empty;
                 key.isDisabled = true;
             }
-            key.gameObject.SetActive(State == KeyboardState.Current);
+            key.gameObject.SetActive(State == KeyboardState.Current || State == KeyboardState.Next);
         }
 
         if (Depth != TargetDepth)

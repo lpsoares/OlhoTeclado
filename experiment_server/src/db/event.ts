@@ -72,6 +72,12 @@ export type TextChangeEvent = {
   text: string;
 }
 
+export type CandidatesEvent = {
+  timestamp: number;
+  type: 'CANDIDATES';
+  candidates: string[];
+}
+
 export type GazeEvent = {
   timestamp: number;
   type: 'GAZE';
@@ -91,6 +97,7 @@ export type TrialEvent =
   | ContextPositionsEvent
   | ContextChangeEvent
   | TextChangeEvent
+  | CandidatesEvent
   | GazeEvent;
 
 export function parseTrialEvent(rawDataLine: string): TrialEvent | null {
@@ -177,6 +184,12 @@ export function parseTrialEvent(rawDataLine: string): TrialEvent | null {
         timestamp,
         type: 'TEXT_CHANGE',
         text: rawData,
+      };
+    case 'CANDIDATES':
+      return {
+        timestamp,
+        type: 'CANDIDATES',
+        candidates: dataParts,
       };
     case 'GAZE':
       const [

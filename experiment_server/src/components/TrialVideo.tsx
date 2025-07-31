@@ -70,6 +70,7 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
   const [gazePositions, setGazePositions] = useState<Vector2[]>([]);
   const [targetText, setTargetText] = useState<string>("");
   const [currentText, setCurrentText] = useState<string>("");
+  const [candidates, setCandidates] = useState<string[]>([]);
 
   useEffect(() => {
     const start = trialEvents[0]?.timestamp || 0;
@@ -77,6 +78,7 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
     let keyPositions: KeyPosition[] = [];
     let gazePositions: Vector2[] | null = [];
     let curText = "";
+    let curCandidates: string[] = [];
 
     for (const event of trialEvents) {
       if (event.timestamp > currentTime) {
@@ -94,17 +96,41 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
       } else if (event.type === "CONTEXT_CHANGE") {
         if (event.newContext === "Current") gazePositions = [];
         else gazePositions = null;
+      } else if (event.type === "CANDIDATES") {
+        curCandidates = event.candidates;
       }
     }
+
+    for (const keyPos of keyPositions) {
+      if (keyPos.keyName.startsWith("Candidate")) {
+        const idx = parseInt(keyPos.keyName.split("_")[1], 10) - 1;
+        keyPos.keyLabel = curCandidates[idx] || "-";
+      }
+    }
+
     setKeyPositions(keyPositions);
     setGazePositions(gazePositions ?? []);
     setCurrentText(curText);
+    setCandidates(curCandidates);
   }, [trialEvents, frame, fps]);
 
   // viewBox is originally a 1.1x1.1 square centered at (0, 0)
   // We need to scale it to 1000x1000
   // Also, the y axis is inverted in SVG, so we need to flip it
-  const scaleFactor = 1000 / 1.1; // Scale from 1.1 to 1000
+  const scaleFactor = 1000 / 0.6;
+  const offsetY = -250; // Adjust for the vertical offset
+  const targetTextPos = keyPositions.find(
+    (pos) => pos.keyName === "textReference"
+  );
+  const targetTextX = (targetTextPos?.keyCenter2D.x || 0) * scaleFactor;
+  const targetTextY =
+    (targetTextPos?.keyCenter2D.y || -0.1) * scaleFactor + offsetY;
+  const currentTextPos = keyPositions.find(
+    (pos) => pos.keyName === "textField"
+  );
+  const currentTextX = (currentTextPos?.keyCenter2D.x || 0) * scaleFactor;
+  const currentTextY =
+    (currentTextPos?.keyCenter2D.y || -0.05) * scaleFactor + offsetY;
 
   return (
     <svg
@@ -112,20 +138,27 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
       className="w-full h-full bg-white"
       preserveAspectRatio="xMidYMid meet"
     >
-      <text x={0} y={-0.1 * scaleFactor} fontSize={32} textAnchor="middle">
+      <text x={targetTextX} y={targetTextY} fontSize={32} textAnchor="middle">
         {targetText}
       </text>
-      <text x={0} y={-0.05 * scaleFactor} fontSize={32} textAnchor="middle">
+      <text x={currentTextX} y={currentTextY} fontSize={32} textAnchor="middle">
         {currentText}
       </text>
-      {keyPositions.map((keyPos, index) => (
-        <Key
-          key={`${keyPos.keyName}--${index}`}
-          keyPos={keyPos}
-          scaleFactor={scaleFactor}
-        />
-      ))}
-      <ScanPath gazePositions={gazePositions} scaleFactor={scaleFactor} />
+      {keyPositions.map((keyPos, index) =>
+        keyPos.keyName.startsWith("text") ? null : (
+          <Key
+            key={`${keyPos.keyName}--${index}`}
+            keyPos={keyPos}
+            scaleFactor={scaleFactor}
+            offsetY={offsetY}
+          />
+        )
+      )}
+      <ScanPath
+        gazePositions={gazePositions}
+        scaleFactor={scaleFactor}
+        offsetY={offsetY}
+      />
     </svg>
   );
 }
@@ -133,13 +166,17 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
 type KeyProps = {
   keyPos: KeyPosition;
   scaleFactor: number;
+  offsetY?: number;
 };
-function Key({ keyPos, scaleFactor }: KeyProps) {
+function Key({ keyPos, scaleFactor, offsetY }: KeyProps) {
   return (
     <>
       <rect
         x={(keyPos.keyCenter2D.x - keyPos.width / 2) * scaleFactor}
-        y={-((keyPos.keyCenter2D.y + keyPos.height / 2) * scaleFactor)}
+        y={
+          -((keyPos.keyCenter2D.y + keyPos.height / 2) * scaleFactor) +
+          (offsetY ?? 0)
+        }
         width={keyPos.width * scaleFactor}
         height={keyPos.height * scaleFactor}
         fill="lightblue"
@@ -147,7 +184,7 @@ function Key({ keyPos, scaleFactor }: KeyProps) {
       />
       <text
         x={keyPos.keyCenter2D.x * scaleFactor}
-        y={-keyPos.keyCenter2D.y * scaleFactor}
+        y={-keyPos.keyCenter2D.y * scaleFactor + (offsetY ?? 0)}
         fontSize={16}
         textAnchor="middle"
         dominantBaseline="middle"
@@ -161,14 +198,16 @@ function Key({ keyPos, scaleFactor }: KeyProps) {
 type ScanPathProps = {
   gazePositions: Vector2[];
   scaleFactor: number;
+  offsetY?: number;
 };
-function ScanPath({ gazePositions, scaleFactor }: ScanPathProps) {
+function ScanPath({ gazePositions, scaleFactor, offsetY }: ScanPathProps) {
   return (
     <>
       <polyline
         points={gazePositions
           .map(
-            (pos) => `${pos.x * scaleFactor},${-pos.y * scaleFactor}` // Invert y for SVG
+            (pos) =>
+              `${pos.x * scaleFactor},${-pos.y * scaleFactor + (offsetY ?? 0)}` // Invert y for SVG
           )
           .join(" ")}
         fill="none"
@@ -179,7 +218,7 @@ function ScanPath({ gazePositions, scaleFactor }: ScanPathProps) {
         <circle
           key={`gaze-${index}`}
           cx={pos.x * scaleFactor}
-          cy={-pos.y * scaleFactor} // Invert y for SVG
+          cy={-pos.y * scaleFactor + (offsetY ?? 0)} // Invert y for SVG
           r={5}
           fill="red"
         />

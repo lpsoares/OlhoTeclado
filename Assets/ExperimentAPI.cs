@@ -56,7 +56,7 @@ public class KeyPositionData
 
     internal object ToCSV(string delimiter = ",")
     {
-        return $"{keyName}{delimiter}{keyLabel}{delimiter}{context}{delimiter}{width}{delimiter}{height}{delimiter}{key2DPosition.x}{delimiter}{key2DPosition.y}";
+        return $"{keyName}{delimiter}{keyLabel}{delimiter}{context}{delimiter}{width.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{height.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{key2DPosition.x.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{key2DPosition.y.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
     }
 }
 
@@ -64,7 +64,7 @@ public static class CsvExtensions
 {
     public static string ToCSV(this ContextPositionData data, string delimiter = ",")
     {
-        return $"{data.contextName}{delimiter}{data.origin.x}{delimiter}{data.origin.y}{delimiter}{data.origin.z}{delimiter}{data.upVector.x}{delimiter}{data.upVector.y}{delimiter}{data.upVector.z}{delimiter}{data.rightVector.x}{delimiter}{data.rightVector.y}{delimiter}{data.rightVector.z}{delimiter}{data.forwardVector.x}{delimiter}{data.forwardVector.y}{delimiter}{data.forwardVector.z}";
+        return $"{data.contextName}{delimiter}{data.origin.x.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.origin.y.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.origin.z.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.upVector.x.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.upVector.y.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.upVector.z.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.rightVector.x.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.rightVector.y.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.rightVector.z.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.forwardVector.x.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.forwardVector.y.ToString(System.Globalization.CultureInfo.InvariantCulture)}{delimiter}{data.forwardVector.z.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
     }
 }
 
@@ -88,7 +88,7 @@ public class ExperimentAPI
     public IEnumerator StartTrial(Participant participant, string method, int session, float timestamp, Action<TrialData> onComplete = null)
     {
         string uri = $"{baseUrl}/participants/{participant.id}/{method}/sessions/{session}/start";
-        string jsonData = $"{{\"timestamp\":\"{timestamp}\"}}";
+        string jsonData = $"{{\"timestamp\":\"{timestamp.ToString(System.Globalization.CultureInfo.InvariantCulture)}\"}}";
         UnityWebRequest request = UnityWebRequest.Post(uri, jsonData, "application/json");
         yield return RequestAndWait(request, onComplete);
     }
@@ -181,12 +181,12 @@ public class EventBuilder
 
     public static string BuildGazeEvent(float timestamp, Vector2 gaze2D, Vector3 gaze3D, Vector3 leftEyePosition, Vector3 rightEyePosition, Vector3 leftEyeDirection, Vector3 rightEyeDirection)
     {
-        string data = $"{gaze2D.x};{gaze2D.y};{gaze3D.x};{gaze3D.y};{gaze3D.z};{leftEyePosition.x};{leftEyePosition.y};{leftEyePosition.z};{rightEyePosition.x};{rightEyePosition.y};{rightEyePosition.z};{leftEyeDirection.x};{leftEyeDirection.y};{leftEyeDirection.z};{rightEyeDirection.x};{rightEyeDirection.y};{rightEyeDirection.z}";
+        string data = $"{gaze2D.x.ToString(System.Globalization.CultureInfo.InvariantCulture)};{gaze2D.y.ToString(System.Globalization.CultureInfo.InvariantCulture)};{gaze3D.x.ToString(System.Globalization.CultureInfo.InvariantCulture)};{gaze3D.y.ToString(System.Globalization.CultureInfo.InvariantCulture)};{gaze3D.z.ToString(System.Globalization.CultureInfo.InvariantCulture)};{leftEyePosition.x.ToString(System.Globalization.CultureInfo.InvariantCulture)};{leftEyePosition.y.ToString(System.Globalization.CultureInfo.InvariantCulture)};{leftEyePosition.z.ToString(System.Globalization.CultureInfo.InvariantCulture)};{rightEyePosition.x.ToString(System.Globalization.CultureInfo.InvariantCulture)};{rightEyePosition.y.ToString(System.Globalization.CultureInfo.InvariantCulture)};{rightEyePosition.z.ToString(System.Globalization.CultureInfo.InvariantCulture)};{leftEyeDirection.x.ToString(System.Globalization.CultureInfo.InvariantCulture)};{leftEyeDirection.y.ToString(System.Globalization.CultureInfo.InvariantCulture)};{leftEyeDirection.z.ToString(System.Globalization.CultureInfo.InvariantCulture)};{rightEyeDirection.x.ToString(System.Globalization.CultureInfo.InvariantCulture)};{rightEyeDirection.y.ToString(System.Globalization.CultureInfo.InvariantCulture)};{rightEyeDirection.z.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
         return BuildEvent(timestamp, GazeData, data);
     }
 
     private static string BuildEvent(float timestamp, string type, string data)
     {
-        return $"{timestamp},{type},{data}";
+        return $"{timestamp.ToString(System.Globalization.CultureInfo.InvariantCulture)},{type},{data}";
     }
 }

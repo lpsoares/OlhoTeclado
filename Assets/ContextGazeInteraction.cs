@@ -29,8 +29,8 @@ public class ContextGazeInteraction
             return null;
 
         GazePoint gaze = eyeTracker.CurrentGazePoint();
-        Vector3 cameraPos = Camera.main.transform.position;
-        KeyboardContext bestContext = GetClosestContext(keyboardContexts, cameraPos, gaze.GazeDepth);
+        KeyboardContext bestContext = GetClosestContext(keyboardContexts, gaze);
+        Debug.Log($"Best context found: {bestContext?.name ?? "None"} at gaze position {gaze.Position}");
         if (bestContext == null)
         {
             return null;
@@ -40,6 +40,7 @@ public class ContextGazeInteraction
         {
             return null;
         }
+        Debug.Log($"Gaze in plane enter: {gazeInPlaneEnter}");
         gaze3DInContext = gaze.CyclopsRay.GetPoint(gazeInPlaneEnter);
         gaze2DInContext = bestContext.transform.InverseTransformPoint(gaze3DInContext);
 
@@ -59,13 +60,12 @@ public class ContextGazeInteraction
     /// Finds the closest keyboard context based on the camera position and estimated gaze depth.
     /// </summary>
     /// <param name="keyboardContexts"></param>
-    /// <param name="cameraPos"></param>
     /// <param name="gazeDepth"></param>
     /// <returns></returns>
-    private static KeyboardContext GetClosestContext(List<KeyboardContext> keyboardContexts, Vector3 cameraPos, float gazeDepth)
+    private static KeyboardContext GetClosestContext(List<KeyboardContext> keyboardContexts, GazePoint gaze)
     {
         KeyboardContext bestContext = null;
-        float minDepthDiff = float.MaxValue;
+        float minDist = float.MaxValue;
         foreach (var context in keyboardContexts)
         {
             if (context == null || !context.State.IsActive())
@@ -73,11 +73,10 @@ public class ContextGazeInteraction
 
             Plane contextPlane = context.TargetPlane;
             // Get distance from camera position
-            float distance = Vector3.Dot(contextPlane.normal, cameraPos - contextPlane.ClosestPointOnPlane(cameraPos));
-            float depthDiff = Mathf.Abs(distance - gazeDepth);
-            if (depthDiff < minDepthDiff)
+            float distance = (gaze.Position - contextPlane.ClosestPointOnPlane(gaze.Position)).magnitude;
+            if (distance < minDist)
             {
-                minDepthDiff = depthDiff;
+                minDist = distance;
                 bestContext = context;
             }
         }

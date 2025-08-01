@@ -31,7 +31,8 @@ public class GreenKeyboard : AbstractKeyboard
                 new List<string> { "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P" },
                 new List<string> { "A", "S", "D", "F", "G", "H", "J", "K", "L" },
                 new List<string> { "Z", "X", "C", "V", "B", "N", "M", "'" },
-            }, 5, new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "'" });
+            }, 5, new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "'" },
+            withBackspace: true);
             keyboardContexts.Add(context);
             context.backgroundColor = backgroundColor;
             context.keyColor = keyColor;
@@ -115,6 +116,10 @@ public class GreenKeyboard : AbstractKeyboard
                     curContext.CandidateData = wordSequence[^1];
                     NotifyCandidateListListeners(curContext.CandidateData.Candidates.ToArray());
                 }
+                else if (lastKey.name == "Backspace")
+                {
+                    DeleteLastWordFromSequence();
+                }
                 else
                 {
                     wordSequence.Add(new WordCandidates(previousContext.LastSelectedKey.label.ToLower(), new List<string>()));
@@ -156,15 +161,7 @@ public class GreenKeyboard : AbstractKeyboard
         {
             ResetAllContextCandidates();
             stateDiff = -1;
-            if (wordSequence.Count > 0)
-            {
-                wordSequence = wordSequence.GetRange(0, wordSequence.Count - 1);
-                if (wordSequence.Count > 0)
-                {
-                    curContext.CandidateData = wordSequence[^1];
-                }
-                UpdateTextFromSequence();
-            }
+            DeleteLastWordFromSequence();
         }
         else if (curState == KeyboardState.Current)
         {
@@ -227,5 +224,18 @@ public class GreenKeyboard : AbstractKeyboard
         wordSequence.Clear();
         ResetAllContextCandidates();
         decoderAPI.SetContext(Text);
+    }
+    
+    private void DeleteLastWordFromSequence()
+    {
+        if (wordSequence.Count > 0)
+            {
+                wordSequence = wordSequence.GetRange(0, wordSequence.Count - 1);
+                if (wordSequence.Count > 0)
+                {
+                    curContext.CandidateData = wordSequence[^1];
+                }
+                UpdateTextFromSequence();
+            }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.Linq;
 
 public class DecoderAPI
 {
@@ -29,7 +30,7 @@ public class DecoderAPI
         string body = "{";
         foreach (var key in Keys)
         {
-            body += $"\"{key.Key}\": [{string.Join(", ", key.Value)}],";
+            body += $"\"{key.Key}\": [{string.Join(", ", key.Value.Select(v => v.ToString(System.Globalization.CultureInfo.InvariantCulture)).ToList())}],";
         }
         body = body.TrimEnd(',') + "}";
         Debug.Log($"Initializing decoder with body: {body}");
@@ -219,7 +220,7 @@ public class AddGesturePointsRequest : DecoderRequest
 
     public void AddPoint(float timestamp, float x, float y)
     {
-        points.Add($"[{timestamp}, {x}, {y}]");
+        points.Add($"[{timestamp.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {x.ToString(System.Globalization.CultureInfo.InvariantCulture)}, {y.ToString(System.Globalization.CultureInfo.InvariantCulture)}]");
     }
 
     protected override string GetData()

@@ -4,12 +4,15 @@
 {
     "distutils": {
         "depends": [
-            "decoder/cython/prefixTree.hpp"
+            "decoder\\cython\\prefixTree.hpp"
         ],
         "extra_compile_args": [
-            "-std=c++17"
+            "-std=c++17",
+            "/std:c++17",
+            "/D_USE_MATH_DEFINES"
         ],
         "include_dirs": [
+            "decoder\\cython",
             "decoder/cython"
         ],
         "language": "c++",

@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class KeyboardManager : MonoBehaviour
 {
     public Camera mainCamera; // Assign in Inspector or find in Start
-    public float distanceInFront = 0.65f; // Distance in front of the camera
+    private float distanceInFront = 0.5f; // Distance in front of the camera
     
     public GameObject keyboardContextPrefab;
     
@@ -78,13 +78,13 @@ public class KeyboardManager : MonoBehaviour
 
         textReference = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textReference.transform.SetParent(transform);
-        textReference.transform.localPosition = new Vector3(0, OneDegreeInMeters, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textReference.transform.localPosition = new Vector3(0, 2 * OneDegreeInMeters, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textReference.text = "";
         textReference.textColor = new Color(0.5f, 0.5f, 0.5f);
 
         textOutput = Instantiate(textOutputPrefab).GetComponent<TextOutput>();
         textOutput.transform.SetParent(transform);
-        textOutput.transform.localPosition = new Vector3(0, -2 * OneDegreeInMeters, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
+        textOutput.transform.localPosition = new Vector3(0, -1 * OneDegreeInMeters, KeyboardContext.DEPTHS[(int)KeyboardState.Current]);
         textOutput.text = "";
 
         // Instantiate a red sphere for gaze debugging
@@ -171,8 +171,8 @@ public class KeyboardManager : MonoBehaviour
         KeyboardContext context = Instantiate(keyboardContextPrefab).GetComponent<KeyboardContext>();
         context.transform.SetParent(transform);
         // Key size is 1 degree of visual angle at distanceInFront
-        context.keySize = 2 * OneDegreeInMeters;
-        context.keySpacing = OneDegreeInMeters;
+        context.keySize = 3 * OneDegreeInMeters;
+        context.keySpacing = 2 * OneDegreeInMeters;
         return context;
     }
 

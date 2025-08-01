@@ -7,6 +7,7 @@ EditorBuildSettings:
   m_Scenes: []
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 7d28af5dc05acc6418d53e19d38b5e7d, type: 2}
+    Varjo.XR.Settings: {fileID: 11400000, guid: b53aa45e17dbd9f40952687e9b1d1f82, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: ddd084d3b650e1946b5ef112ef415e83, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 0d20f6a0290499e4c81ebed4cae8827a, type: 3}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: ada257d8eb959cd4083a379f01dc6856, type: 2}

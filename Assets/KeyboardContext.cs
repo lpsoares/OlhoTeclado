@@ -13,9 +13,9 @@ public class KeyboardContext : MonoBehaviour
     public Color dwellColor = new(0.5f, 0.5f, 1.0f, 0.5f);
     public bool GazeInKeys { get; private set; } = true;
     private const float INACTIVE_NEXT_DEPTH = 3.0f;
-    private const float NEXT_DEPTH = 1.0f;
+    private const float NEXT_DEPTH = 1.5f;
     private const float CURR_DEPTH = 0.0f;
-    private const float PREV_DEPTH = -0.5f;
+    private const float PREV_DEPTH = -1.5f;
     private const float INACTIVE_PREV_DEPTH = -10.0f;
     private const float DEPTH_MOV_TIME_SEC = 0.1f; // Time to move between depths in seconds
     public static readonly float[] DEPTHS = { INACTIVE_NEXT_DEPTH, NEXT_DEPTH, CURR_DEPTH, PREV_DEPTH, INACTIVE_PREV_DEPTH };
@@ -30,7 +30,7 @@ public class KeyboardContext : MonoBehaviour
     public bool hasAlpha = true;
     public float Alpha
     {
-        get => hasAlpha ? Mathf.Clamp(Depth > 0 ? 1.0f - Depth * 0.5f : 1.0f + Depth * 1.9f, 0.0f, 1.0f) : 1.0f;
+        get => hasAlpha ? Mathf.Clamp(Depth > 0 ? 1.0f - Depth * 0.65f : 1.0f + Depth * 1.9f, 0.0f, 1.0f) : 1.0f;
     }
     public Plane Plane
     {
@@ -134,9 +134,11 @@ public class KeyboardContext : MonoBehaviour
             key.dwellColor = dwellColor;
         }
         // y = 0 in Current context, but moves with the context depth
-        float degrees = 15f; 
+        float degrees = -5f;
         float y = -Mathf.Tan(degrees * Mathf.Deg2Rad) * Depth;
         transform.localPosition = new Vector3(0, y, Depth);
+        float scale = Mathf.Max(1.0f + Depth * 2f, 1.0f); // Scale based on depth
+        transform.localScale = new Vector3(scale, scale, scale);
 
         UpdateGazeInKeys();
         if (backgroundColor.a == 0)
@@ -236,7 +238,7 @@ public class KeyboardContext : MonoBehaviour
 
         float candidateButtonWidth = (width - keySpacing * (candidateButtonCount - 1)) / candidateButtonCount;
         float candidateButtonsX0 = (candidateButtonWidth - width) / 2;
-        float candidateButtonsY0 = keyboardY0 + 3 * (keySpacing + keySize);
+        float candidateButtonsY0 = keyboardY0 + 4 * (keySpacing + keySize);
         for (int i = 0; i < candidateButtonCount; i++)
         {
             float candidatesX0 = candidateButtonsX0 + i * (candidateButtonWidth + keySpacing);

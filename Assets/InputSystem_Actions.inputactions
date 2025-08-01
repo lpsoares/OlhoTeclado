@@ -1039,6 +1039,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Calibrate gaze",
+                    "type": "Button",
+                    "id": "baec70a2-3b5d-4d57-8534-897d6cf728ce",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1138,6 +1147,17 @@
                     "processors": "",
                     "groups": ";XR",
                     "action": "Fixate gaze",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bdc5826c-c706-4a8e-ba38-3645b9614f63",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";XR",
+                    "action": "Calibrate gaze",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

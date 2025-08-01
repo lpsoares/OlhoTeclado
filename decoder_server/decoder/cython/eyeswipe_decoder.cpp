@@ -4,14 +4,17 @@
 {
     "distutils": {
         "depends": [
-            "decoder/cython/eyeswipeDecoder.hpp",
-            "decoder/cython/prefixTree.hpp"
+            "decoder\\cython\\eyeswipeDecoder.hpp",
+            "decoder\\cython\\prefixTree.hpp"
         ],
         "extra_compile_args": [
-            "-std=c++17"
+            "-std=c++17",
+            "/std:c++17",
+            "/D_USE_MATH_DEFINES"
         ],
         "include_dirs": [
-            "decoder/cython"
+            "decoder/cython",
+            "decoder\\cython"
         ],
         "language": "c++",
         "name": "decoder.cython.eyeswipe_decoder",

@@ -70,8 +70,7 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
   const [gazePositions, setGazePositions] = useState<Vector2[]>([]);
   const [targetText, setTargetText] = useState<string>("");
   const [currentText, setCurrentText] = useState<string>("");
-  const [candidates, setCandidates] = useState<string[]>([]);
-
+  
   useEffect(() => {
     const start = trialEvents[0]?.timestamp || 0;
     const currentTime = start + (frame / fps) * 1000; // Convert frame to milliseconds
@@ -111,7 +110,6 @@ function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
     setKeyPositions(keyPositions);
     setGazePositions(gazePositions ?? []);
     setCurrentText(curText);
-    setCandidates(curCandidates);
   }, [trialEvents, frame, fps]);
 
   // viewBox is originally a 1.1x1.1 square centered at (0, 0)

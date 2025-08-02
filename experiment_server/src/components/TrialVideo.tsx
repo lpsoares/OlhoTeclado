@@ -66,123 +66,105 @@ type TrialCompositionProps = {
 };
 function TrialComposition({ trialEvents, fps }: TrialCompositionProps) {
   const frame = useCurrentFrame();
-  const [keyPositions, setKeyPositions] = useState<KeyPosition[]>([]);
-  const [gazePositions, setGazePositions] = useState<Vector2[]>([]);
-  const [targetText, setTargetText] = useState<string>("");
-  const [currentText, setCurrentText] = useState<string>("");
-  
-  useEffect(() => {
-    const start = trialEvents[0]?.timestamp || 0;
-    const currentTime = start + (frame / fps) * 1000; // Convert frame to milliseconds
-    let keyPositions: KeyPosition[] = [];
-    let gazePositions: Vector2[] | null = [];
-    let curText = "";
-    let curCandidates: string[] = [];
-
-    for (const event of trialEvents) {
-      if (event.timestamp > currentTime) {
-        break; // Stop processing events after the current time
-      }
-      if (event.type === "TRIAL_START") {
-        setTargetText(event.targetSentence);
-      } else if (event.type === "KEY_POS") {
-        keyPositions = getKeyPositions(event, "Current") || [];
-      } else if (event.type === "GAZE") {
-        gazePositions?.push(event.gaze2D);
-      } else if (event.type === "TEXT_CHANGE") {
-        gazePositions = []; // Reset gaze positions on text change
-        curText = event.text;
-      } else if (event.type === "CONTEXT_CHANGE") {
-        if (event.newContext === "Current") gazePositions = [];
-        else gazePositions = null;
-      } else if (event.type === "CANDIDATES") {
-        curCandidates = event.candidates;
-      }
-    }
-
-    for (const keyPos of keyPositions) {
-      if (keyPos.keyName.startsWith("Candidate")) {
-        const idx = parseInt(keyPos.keyName.split("_")[1], 10) - 1;
-        keyPos.keyLabel = curCandidates[idx] || "-";
-      }
-    }
-
-    setKeyPositions(keyPositions);
-    setGazePositions(gazePositions ?? []);
-    setCurrentText(curText);
-  }, [trialEvents, frame, fps]);
 
   // viewBox is originally a 1.1x1.1 square centered at (0, 0)
   // We need to scale it to 1000x1000
   // Also, the y axis is inverted in SVG, so we need to flip it
   const scaleFactor = 1000 / 0.6;
-  const offsetY = -250; // Adjust for the vertical offset
-  const targetTextPos = keyPositions.find(
-    (pos) => pos.keyName === "textReference"
-  );
-  const targetTextX = (targetTextPos?.keyCenter2D.x || 0) * scaleFactor;
-  const targetTextY =
-    (targetTextPos?.keyCenter2D.y || -0.1) * scaleFactor + offsetY;
+
+  const start = trialEvents[0]?.timestamp || 0;
+  const currentTime = start + (frame / fps) * 1000; // Convert frame to milliseconds
+  let targetText = "";
+  let keyPositions: KeyPosition[] = [];
+  let gazePositions: Vector2[] = [];
+  let curText = "";
+  let curCandidates: string[] = [];
+
+  for (const event of trialEvents) {
+    if (event.type === "TRIAL_START") {
+      targetText = event.targetSentence;
+    } else if (event.type === "KEY_POS") {
+      keyPositions = getKeyPositions(event, "Current", scaleFactor) || [];
+    }
+
+    if (event.timestamp <= currentTime) {
+      if (event.type === "GAZE") {
+        gazePositions?.push({
+          x: event.gaze2D.x * scaleFactor,
+          y: event.gaze2D.y * scaleFactor,
+        });
+      } else if (event.type === "TEXT_CHANGE") {
+        gazePositions = []; // Reset gaze positions on text change
+        curText = event.text;
+      } else if (event.type === "CONTEXT_CHANGE") {
+        if (event.newContext === "Current") gazePositions = [];
+        else gazePositions = [];
+      } else if (event.type === "CANDIDATES") {
+        curCandidates = event.candidates;
+      }
+    }
+  }
+
+  let targetTextPos: KeyPosition | undefined;
+  for (const keyPos of keyPositions) {
+    if (keyPos.keyName.startsWith("Candidate")) {
+      const idx = parseInt(keyPos.keyName.split("_")[1], 10) - 1;
+      keyPos.keyLabel = curCandidates[idx] || "-";
+    }
+    if (keyPos.keyName === "textReference") {
+      targetTextPos = keyPos;
+    }
+  }
+
+  const targetTextX = targetTextPos?.keyCenter2D.x || 0;
+  const targetTextY = -(targetTextPos?.keyCenter2D.y || -0.1);
   const currentTextPos = keyPositions.find(
     (pos) => pos.keyName === "textField"
   );
-  const currentTextX = (currentTextPos?.keyCenter2D.x || 0) * scaleFactor;
-  const currentTextY =
-    (currentTextPos?.keyCenter2D.y || -0.05) * scaleFactor + offsetY;
+  const currentTextX = currentTextPos?.keyCenter2D.x || 0;
+  const currentTextY = -(currentTextPos?.keyCenter2D.y || -0.05);
+
+  const viewBox = getViewBox(keyPositions);
 
   return (
     <svg
-      viewBox="-500 -500 1000 1000"
+      viewBox={viewBox}
       className="w-full h-full bg-white"
       preserveAspectRatio="xMidYMid meet"
     >
-      <text x={targetTextX} y={targetTextY} fontSize={32} textAnchor="middle">
+      <text x={targetTextX} y={targetTextY} fontSize={24} textAnchor="middle">
         {targetText}
       </text>
-      <text x={currentTextX} y={currentTextY} fontSize={32} textAnchor="middle">
-        {currentText}
+      <text x={currentTextX} y={currentTextY} fontSize={24} textAnchor="middle">
+        {curText}
       </text>
       {keyPositions.map((keyPos, index) =>
         keyPos.keyName.startsWith("text") ? null : (
-          <Key
-            key={`${keyPos.keyName}--${index}`}
-            keyPos={keyPos}
-            scaleFactor={scaleFactor}
-            offsetY={offsetY}
-          />
+          <Key key={`${keyPos.keyName}--${index}`} keyPos={keyPos} />
         )
       )}
-      <ScanPath
-        gazePositions={gazePositions}
-        scaleFactor={scaleFactor}
-        offsetY={offsetY}
-      />
+      <ScanPath gazePositions={gazePositions} />
     </svg>
   );
 }
 
 type KeyProps = {
   keyPos: KeyPosition;
-  scaleFactor: number;
-  offsetY?: number;
 };
-function Key({ keyPos, scaleFactor, offsetY }: KeyProps) {
+function Key({ keyPos }: KeyProps) {
   return (
     <>
       <rect
-        x={(keyPos.keyCenter2D.x - keyPos.width / 2) * scaleFactor}
-        y={
-          -((keyPos.keyCenter2D.y + keyPos.height / 2) * scaleFactor) +
-          (offsetY ?? 0)
-        }
-        width={keyPos.width * scaleFactor}
-        height={keyPos.height * scaleFactor}
+        x={keyPos.keyCenter2D.x - keyPos.width / 2}
+        y={-(keyPos.keyCenter2D.y + keyPos.height / 2)}
+        width={keyPos.width}
+        height={keyPos.height}
         fill="lightblue"
         stroke="black"
       />
       <text
-        x={keyPos.keyCenter2D.x * scaleFactor}
-        y={-keyPos.keyCenter2D.y * scaleFactor + (offsetY ?? 0)}
+        x={keyPos.keyCenter2D.x}
+        y={-keyPos.keyCenter2D.y}
         fontSize={16}
         textAnchor="middle"
         dominantBaseline="middle"
@@ -195,17 +177,14 @@ function Key({ keyPos, scaleFactor, offsetY }: KeyProps) {
 
 type ScanPathProps = {
   gazePositions: Vector2[];
-  scaleFactor: number;
-  offsetY?: number;
 };
-function ScanPath({ gazePositions, scaleFactor, offsetY }: ScanPathProps) {
+function ScanPath({ gazePositions }: ScanPathProps) {
   return (
     <>
       <polyline
         points={gazePositions
           .map(
-            (pos) =>
-              `${pos.x * scaleFactor},${-pos.y * scaleFactor + (offsetY ?? 0)}` // Invert y for SVG
+            (pos) => `${pos.x},${-pos.y}` // Invert y for SVG
           )
           .join(" ")}
         fill="none"
@@ -215,8 +194,8 @@ function ScanPath({ gazePositions, scaleFactor, offsetY }: ScanPathProps) {
       {gazePositions.map((pos, index) => (
         <circle
           key={`gaze-${index}`}
-          cx={pos.x * scaleFactor}
-          cy={-pos.y * scaleFactor + (offsetY ?? 0)} // Invert y for SVG
+          cx={pos.x}
+          cy={-pos.y} // Invert y for SVG
           r={5}
           fill="red"
         />
@@ -227,9 +206,38 @@ function ScanPath({ gazePositions, scaleFactor, offsetY }: ScanPathProps) {
 
 function getKeyPositions(
   trialEvent: KeyPositionsEvent,
-  context: Context
+  context: Context,
+  scaleFactor: number
 ): KeyPosition[] | null {
-  return trialEvent.positions.filter(
-    (position) => position.context === context
-  );
+  return trialEvent.positions
+    .filter((position) => position.context === context)
+    .map((position) => ({
+      ...position,
+      keyCenter2D: {
+        x: position.keyCenter2D.x * scaleFactor,
+        y: position.keyCenter2D.y * scaleFactor,
+      },
+      width: position.width * scaleFactor,
+      height: position.height * scaleFactor,
+    }));
+}
+
+function getViewBox(keyPositions: KeyPosition[]): string {
+  if (keyPositions.length === 0) {
+    return "0 0 1000 1000"; // Default viewBox
+  }
+
+  const allPositions = keyPositions.map((pos) => pos.keyCenter2D);
+
+  const minX = Math.floor(Math.min(...allPositions.map((pos) => pos.x)));
+  const maxX = Math.ceil(Math.max(...allPositions.map((pos) => pos.x)));
+  // Invert y for SVG, so we use -pos.y
+  const minY = Math.floor(Math.min(...allPositions.map((pos) => -pos.y)));
+  const maxY = Math.ceil(Math.max(...allPositions.map((pos) => -pos.y)));
+
+  const padding = 100; // Add some padding around the content
+  const width = maxX - minX + padding * 2;
+  const height = maxY - minY + padding * 2;
+
+  return `${minX - padding} ${minY - padding} ${width} ${height}`;
 }

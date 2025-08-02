@@ -100,9 +100,13 @@ export type TrialEvent =
   | CandidatesEvent
   | GazeEvent;
 
-export function parseTrialEvent(rawDataLine: string): TrialEvent | null {
+export function parseTrialEvent(rawDataLine: string, index: number): TrialEvent | null {
   const [timestampStr, type, rawData] = rawDataLine.split(',');
   const timestamp = parseFloat(timestampStr);
+  if (isNaN(timestamp)) {
+    console.error(`Invalid timestamp: ${timestampStr} at line ${index + 1}`);
+    return null;
+  }
   const dataParts = rawData.split(';').map(part => part.trim());
   switch (type) {
     case 'TRIAL_START':
@@ -211,7 +215,7 @@ export function parseTrialEvent(rawDataLine: string): TrialEvent | null {
         rightEyeDirection3D: { x: parseFloat(rightEyeDirX), y: parseFloat(rightEyeDirY), z: parseFloat(rightEyeDirZ) },
       };
     default:
-      console.error(`Unknown event type: ${type}`);
+      console.error(`Unknown event type: ${type} at line ${index + 1}`);
       return null;
   }
 }
@@ -219,8 +223,8 @@ export function parseTrialEvent(rawDataLine: string): TrialEvent | null {
 export function parseTrialData(rawData: string): TrialEvent[] {
   const lines = rawData.split('\n').filter((line, idx) => line.trim() !== '' && idx > 0); // Skip header line
   const trialData: TrialEvent[] = [];
-  for (const line of lines) {
-    const event = parseTrialEvent(line);
+  for (const [idx, line] of lines.entries()) {
+    const event = parseTrialEvent(line, idx);
     if (event) trialData.push(event);
   }
   return trialData.sort((a, b) => a.timestamp - b.timestamp);
